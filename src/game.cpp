@@ -2,77 +2,86 @@
 #include "game.hpp"
 #include "config.h"
 
-std::string contents_path = RESOURCE_PATH;
-
 Game::Game() {
-    // Create a window
-    init_window(1368, 768);
-    init_enemies();
+    // setup game
+    this->init_window(1368, 768);
+    this->init_textures();
+    this->init_background();
+    this->init_player();
 };
 
 Game::~Game() {
     delete window;
+    delete player;
+
+    for (auto &i : this->textures) {
+        delete i.second;
+    }
 }
 
 void Game::init_window(int width, int height) {
-    videoMode.width = width;
-    videoMode.height = height;
+    this->window = new sf::RenderWindow(sf::VideoMode(width, height), "test");
 
-    window = new sf::RenderWindow(videoMode, "test");
+    this->window->setFramerateLimit(60);
 }
 
-void Game::init_enemies() {
-    enemy.setPosition(10.f, 10.f);
-    enemy.setSize(sf::Vector2f(100.f, 100.f));
-    enemy.setScale(sf::Vector2f(0.5f, 0.5f));
-    enemy.setFillColor(sf::Color::Cyan);
-    enemy.setOutlineColor(sf::Color::Green);
-    enemy.setOutlineThickness(1.f);
+void Game::init_background() {
+    std::string path = RESOURCE_PATH;
+    if (!this->background_tex.loadFromFile(path+"ghost_bg_large.png")) {
+        std::cout << "ERROR:GAME::COULD NOT LOAD BACKGROUND TEXTURE." << std::endl;
+    }
+
+    this->background.setTexture(this->background_tex);
 }
+
+void Game::init_textures() {
+}
+
+void Game::init_player() {
+    this->player = new Player();
+}
+
 
 void Game::game_loop() {
 
-    while (window->isOpen()) {
-        handle_events();
-        render();
-        update();
+    while (this->window->isOpen()) {
+        this->update();
+        this->render();
     }
 }
 
 void Game::handle_events() {
      
-     while (window->pollEvent(event)) {
+     while (this->window->pollEvent(event)) {
 
-         switch (event.type) {
+         switch (this->event.type) {
 
             case sf::Event::Closed:
-                window->close();
+                this->window->close();
                 break;
 
             case sf::Event::KeyPressed:
-                if (event.key.code == sf::Keyboard::Escape) {
-                    window->close();
-                } 
+                if (this->event.key.code == sf::Keyboard::Escape) {
+                    this->window->close();
+                }
          }
     }
 }
 
+void Game::render_bg() {
+    this->window->draw(this->background);
+}
+
 void Game::render() {
-
-    sf::Texture texture;
-    texture.loadFromFile(contents_path+"ghost_bg_large.png");
-
-    sf::Sprite sprite;
-    sprite.setTexture(texture);
-    sprite.setPosition(0.f, 0.f);
-
-    window->draw(sprite);
-    window->draw(enemy);
-    window->display();
+    this->window->clear();
+    this->render_bg();
+    this->player->render(*this->window);
+    this->window->display();
 }
 
 void Game::update() {
-    std::cout << sf::Mouse::getPosition(*window).x << " " << sf::Mouse::getPosition(*window).y << "\n";
+    handle_events();
+
 }
 
 void Game::exec() {
