@@ -1,27 +1,40 @@
+#include <iostream>
 #include "game.hpp"
-#include <SFML/Graphics.hpp>
-#include <string.h>
+#include "config.h"
+
+std::string contents_path = RESOURCE_PATH;
 
 Game::Game() {
     // Create a window
-    create_window("Game", 1368, 768);
+    init_window(1368, 768);
+    init_enemies();
 };
 
 Game::~Game() {
     delete window;
 }
 
-void Game::create_window(char *name, int width, int height) {
+void Game::init_window(int width, int height) {
     videoMode.width = width;
     videoMode.height = height;
 
-    window = new sf::RenderWindow(videoMode, name);
+    window = new sf::RenderWindow(videoMode, "test");
+}
+
+void Game::init_enemies() {
+    enemy.setPosition(10.f, 10.f);
+    enemy.setSize(sf::Vector2f(100.f, 100.f));
+    enemy.setScale(sf::Vector2f(0.5f, 0.5f));
+    enemy.setFillColor(sf::Color::Cyan);
+    enemy.setOutlineColor(sf::Color::Green);
+    enemy.setOutlineThickness(1.f);
 }
 
 void Game::game_loop() {
 
     while (window->isOpen()) {
         handle_events();
+        render();
         update();
     }
 }
@@ -45,12 +58,21 @@ void Game::handle_events() {
 }
 
 void Game::render() {
-    window->clear(sf::Color(0, 0, 0, 255)); // RGBA
+
+    sf::Texture texture;
+    texture.loadFromFile(contents_path+"ghost_bg_large.png");
+
+    sf::Sprite sprite;
+    sprite.setTexture(texture);
+    sprite.setPosition(0.f, 0.f);
+
+    window->draw(sprite);
+    window->draw(enemy);
     window->display();
 }
 
 void Game::update() {
-    render();
+    std::cout << sf::Mouse::getPosition(*window).x << " " << sf::Mouse::getPosition(*window).y << "\n";
 }
 
 void Game::exec() {
