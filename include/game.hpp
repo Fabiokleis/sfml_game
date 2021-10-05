@@ -9,7 +9,6 @@ class Game {
         sf::RenderWindow* window;
         sf::Sprite background;
         sf::Texture background_tex;
-        std::map<std::string, sf::Texture*> textures;
         sf::Event event;
 
 
@@ -20,10 +19,10 @@ class Game {
         void init_textures();
         void init_player();
         void game_loop();
-        void handle_events();
-        void render();
         void update();
-
+        void render();
+        void handle_events();
+        void update_window_collision();
         void render_bg();
 
     public:

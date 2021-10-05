@@ -5,7 +5,7 @@
 
 Player::Player() {
     this->init_texture();
-    this->movement_speed = 5.f;
+    this->movement_speed = 10.f;
 }
 
 Player::~Player() {
@@ -26,6 +26,18 @@ void Player::move(const float dirX, const float dirY) {
     this->sprite.move(this->movement_speed * dirX, this->movement_speed * dirY);
 }
 
+void Player::setPosition(const float x, const float y) {
+    this->sprite.setPosition(x, y);
+}
+
+const sf::Vector2f& Player::getPosition() const{
+    return this->sprite.getPosition();
+}
+
+const sf::FloatRect Player::getBounds() const{
+    return this->sprite.getGlobalBounds();
+}
+
 void Player::update_input() {
 
     // player movement - kb
@@ -40,15 +52,7 @@ void Player::update_input() {
     }
 }
 
-void Player::update_window_collision(sf::RenderTarget* target) {
-
-
-}
-
 void Player::update(sf::RenderTarget* target) {
-    
-    this->update_window_collision(target);
-    
     this->update_input();
 }
 

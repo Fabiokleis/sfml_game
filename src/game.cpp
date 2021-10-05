@@ -13,10 +13,6 @@ Game::Game() {
 Game::~Game() {
     delete window;
     delete player;
-
-    for (auto &i : this->textures) {
-        delete i.second;
-    }
 }
 
 void Game::init_window(int width, int height) {
@@ -35,12 +31,21 @@ void Game::init_background() {
 }
 
 void Game::init_textures() {
+    // ...
 }
 
 void Game::init_player() {
     this->player = new Player();
 }
 
+
+void Game::update_window_collision() {
+    // getBounds -> returns a Vector thats contains 4 cordinates
+    if (this->player->getBounds().left < 0.f) {
+        this->player->setPosition(0.f, this->player->getBounds().top);
+    }
+
+}
 
 void Game::game_loop() {
 
@@ -81,9 +86,12 @@ void Game::render() {
 
 void Game::update() {
     this->handle_events();
+    this->update_window_collision();
     this->player->update(this->window);
 
 }
+
+
 
 void Game::exec() {
     this->game_loop();
