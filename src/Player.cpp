@@ -5,6 +5,7 @@
 
 Player::Player() {
     this->init_texture();
+    this->movement_speed = 5.f;
 }
 
 Player::~Player() {
@@ -21,10 +22,36 @@ void Player::init_texture() {
     this->sprite.setPosition(0.f, 0.f);
 }
 
-void Player::update() {
+void Player::move(const float dirX, const float dirY) {
+    this->sprite.move(this->movement_speed * dirX, this->movement_speed * dirY);
+}
+
+void Player::update_input() {
+
+    // player movement - kb
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
+        this->move(-1.f, 0.f);
+    } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
+        this->move(0.f, 1.f);
+    } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
+        this->move(1.f, 0.f);
+    } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
+        this->move(0.f, -1.f);
+    }
+}
+
+void Player::update_window_collision(sf::RenderTarget* target) {
+
 
 }
 
-void Player::render(sf::RenderTarget& target) {
-    target.draw(this->sprite);
+void Player::update(sf::RenderTarget* target) {
+    
+    this->update_window_collision(target);
+    
+    this->update_input();
+}
+
+void Player::render(sf::RenderTarget* target) {
+    target->draw(this->sprite);
 }

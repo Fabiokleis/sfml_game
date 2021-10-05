@@ -75,15 +75,16 @@ void Game::render_bg() {
 void Game::render() {
     this->window->clear();
     this->render_bg();
-    this->player->render(*this->window);
+    this->player->render(this->window);
     this->window->display();
 }
 
 void Game::update() {
-    handle_events();
+    this->handle_events();
+    this->player->update(this->window);
 
 }
 
 void Game::exec() {
-    game_loop();
+    this->game_loop();
 }
