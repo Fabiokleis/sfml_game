@@ -4,7 +4,7 @@
 
 Game::Game() {
     // setup game
-    this->init_window(1368, 768);
+    this->init_window(800, 600);
     this->init_textures();
     this->init_background();
     this->init_player();
@@ -38,11 +38,23 @@ void Game::init_player() {
     this->player = new Player();
 }
 
-
 void Game::update_window_collision() {
-    // getBounds -> returns a Vector thats contains 4 cordinates
-    if (this->player->getBounds().left < 0.f) {
-        this->player->setPosition(0.f, this->player->getBounds().top);
+    // getBounds -> returns a Vector thats contains 2 cordinates top and left, 2 properties width and height
+
+    float left_pos =  this->player->getBounds().left;
+    float top_pos = this->player->getBounds().top;
+    float right_pos = this->player->getBounds().left + this->player->getBounds().width;
+    float bottom_pos = this->player->getBounds().top + this->player->getBounds().height;
+
+    if (left_pos < 0.f) {
+        this->player->setPosition(0.f, top_pos);
+    } else if (right_pos >= this->window->getSize().x) {
+        this->player->setPosition(this->window->getSize().x - this->player->getBounds().width, top_pos);
+    }
+    if (top_pos < 0.f) {
+        this->player->setPosition(left_pos, 0.f);
+    } else if (bottom_pos >= this->window->getSize().y) {
+        this->player->setPosition(left_pos, this->window->getSize().y - this->player->getBounds().height);
     }
 
 }

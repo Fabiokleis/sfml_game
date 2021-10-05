@@ -19,7 +19,7 @@ void Player::init_texture() {
     };
 
     this->sprite.setTexture(this->texture);
-    this->sprite.setPosition(0.f, 0.f);
+    this->sprite.setPosition(200.f, 200.f);
 }
 
 void Player::move(const float dirX, const float dirY) {
