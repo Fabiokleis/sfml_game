@@ -11,6 +11,8 @@ class Game {
         sf::Sprite background;
         sf::Texture background_tex;
         sf::Event event;
+        sf::Clock delta_clock;
+        float delta;
 
         Map* map;
         Player *player;
@@ -25,6 +27,7 @@ class Game {
         void handle_events();
         void update_window_collision();
         void render_bg();
+        void update_delta();
 
     public:
         Game();

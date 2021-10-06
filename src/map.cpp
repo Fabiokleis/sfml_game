@@ -1,11 +1,14 @@
+#include <iostream>
+#include "config.h"
 #include "map.hpp"
 #include "tile.hpp"
 
-Map::Map() {
-    this->grid_size_f = 32;
+
+Map::Map(const float grid, const unsigned max_x, const unsigned max_y) {
+    this->grid_size_f = grid;
     this->grid_size_u = static_cast<unsigned>(this->grid_size_f);
-    this->max_size.x = 32;
-    this->max_size.y = 16;
+    this->max_size.x = max_x;
+    this->max_size.y = max_y;
     this->layers = 1;
 
     this->map.resize(this->max_size.x, std::vector<std::vector<Tile*>>());
@@ -18,16 +21,21 @@ Map::Map() {
 
             for (size_t z = 0; z < this->layers; z++) {
 
-                this->map[x][y].resize(this->layers,
-                    new Tile(
-                        x * this->grid_size_f, 
-                        y * this->grid_size_f,
-                        this->grid_size_f
-                    )
+                this->map[x][y].resize(this->layers, NULL
+                    // new Tile(
+                    //     x * this->grid_size_f, 
+                    //     y * this->grid_size_f,
+                    //     this->grid_size_f
+                    // )
                 );
             }
         }
     }
+    // std::string path = RESOURCE_PATH;
+    // this->tile_texture_sheet = new sf::Texture();
+    // if(!this->tile_texture_sheet->loadFromFile(path+"map/EmptyBlock.png")) {
+    //     std::cout << "ERROR:MAP::FAILED TO LOAD TEXTURESHEET." << std::endl;
+    // }
 }
 
 Map::~Map() {
@@ -51,7 +59,9 @@ void Map::add_tile(const unsigned x, const unsigned y, const unsigned z) {
             this->map[x][y][z] = new Tile(
                 x * this->grid_size_f, 
                 y * this->grid_size_f, 
-                this->grid_size_f);
+                this->grid_size_f,
+                this->tile_texture_sheet
+            );
         }
     }
 }
@@ -69,6 +79,8 @@ void Map::remove_tile(const unsigned x, const unsigned y, const unsigned z) {
         }
     }
 }
+
+
 
 void Map::update() {
 
