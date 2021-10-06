@@ -5,7 +5,7 @@
 
 Player::Player() {
     this->init_texture();
-    this->movement_speed = 1.5f;
+    this->movement_speed = 4.f;
 }
 
 Player::~Player() {

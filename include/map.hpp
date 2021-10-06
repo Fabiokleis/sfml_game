@@ -19,4 +19,8 @@ class Map {
         void update();
         void render(sf::RenderTarget* target);
 
+        void add_tile(const unsigned x, const unsigned y, const unsigned z);
+        void remove_tile(const unsigned x, const unsigned y, const unsigned z);
+        void remove_tile();
+
 };

@@ -15,7 +15,7 @@ class Game {
         Map* map;
         Player *player;
 
-        void init_window(int width, int height);
+        void init_window();
         void init_background();
         void init_map();
         void init_player();

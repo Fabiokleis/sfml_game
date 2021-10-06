@@ -4,7 +4,7 @@
 
 Game::Game() {
     // setup game
-    this->init_window(800, 600);
+    this->init_window();
     this->init_background();
     this->init_map();
     this->init_player();
@@ -16,10 +16,10 @@ Game::~Game() {
     delete window;
 }
 
-void Game::init_window(int width, int height) {
-    this->window = new sf::RenderWindow(sf::VideoMode(width, height), "test");
+void Game::init_window() {
+    this->window = new sf::RenderWindow(sf::VideoMode(), "test", sf::Style::Fullscreen);
 
-    this->window->setFramerateLimit(144);
+    this->window->setFramerateLimit(60);
 }
 
 void Game::init_background() {
