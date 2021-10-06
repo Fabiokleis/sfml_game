@@ -5,7 +5,7 @@
 
 Player::Player() {
     this->init_texture();
-    this->movement_speed = 10.f;
+    this->movement_speed = 1.5f;
 }
 
 Player::~Player() {
@@ -43,10 +43,10 @@ void Player::update_input() {
     // player movement - kb
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
         this->move(-1.f, 0.f);
-    } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
-        this->move(0.f, 1.f);
     } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
         this->move(1.f, 0.f);
+    } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
+        this->move(0.f, 1.f);
     } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
         this->move(0.f, -1.f);
     }

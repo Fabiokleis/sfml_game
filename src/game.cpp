@@ -18,7 +18,7 @@ Game::~Game() {
 void Game::init_window(int width, int height) {
     this->window = new sf::RenderWindow(sf::VideoMode(width, height), "test");
 
-    this->window->setFramerateLimit(60);
+    this->window->setFramerateLimit(144);
 }
 
 void Game::init_background() {
@@ -39,6 +39,7 @@ void Game::init_player() {
 }
 
 void Game::update_window_collision() {
+
     // getBounds -> returns a Vector thats contains 2 cordinates top and left, 2 properties width and height
 
     float left_pos =  this->player->getBounds().left;
@@ -53,7 +54,7 @@ void Game::update_window_collision() {
     }
     if (top_pos < 0.f) {
         this->player->setPosition(left_pos, 0.f);
-    } else if (bottom_pos >= this->window->getSize().y) {
+    } else if (bottom_pos >= this->window->getSize().y + 1.f) {
         this->player->setPosition(left_pos, this->window->getSize().y - this->player->getBounds().height);
     }
 
@@ -102,8 +103,6 @@ void Game::update() {
     this->player->update(this->window);
 
 }
-
-
 
 void Game::exec() {
     this->game_loop();
