@@ -1,5 +1,6 @@
 #include <SFML/Graphics.hpp>
 #include <vector>
+#include "map.hpp"
 #include "player.hpp"
 #include "config.h"
 
@@ -11,12 +12,12 @@ class Game {
         sf::Texture background_tex;
         sf::Event event;
 
-
+        Map* map;
         Player *player;
 
         void init_window(int width, int height);
         void init_background();
-        void init_textures();
+        void init_map();
         void init_player();
         void game_loop();
         void update();

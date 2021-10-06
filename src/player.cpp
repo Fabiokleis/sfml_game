@@ -30,7 +30,7 @@ void Player::setPosition(const float x, const float y) {
     this->sprite.setPosition(x, y);
 }
 
-const sf::Vector2f& Player::getPosition() const{
+const sf::Vector2f Player::getPosition() const{
     return this->sprite.getPosition();
 }
 
@@ -52,7 +52,7 @@ void Player::update_input() {
     }
 }
 
-void Player::update(sf::RenderTarget* target) {
+void Player::update() {
     this->update_input();
 }
 

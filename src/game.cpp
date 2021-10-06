@@ -5,14 +5,15 @@
 Game::Game() {
     // setup game
     this->init_window(800, 600);
-    this->init_textures();
     this->init_background();
+    this->init_map();
     this->init_player();
 };
 
 Game::~Game() {
-    delete window;
     delete player;
+    delete map;
+    delete window;
 }
 
 void Game::init_window(int width, int height) {
@@ -30,8 +31,8 @@ void Game::init_background() {
     this->background.setTexture(this->background_tex);
 }
 
-void Game::init_textures() {
-    // ...
+void Game::init_map() {
+    this->map = new Map();
 }
 
 void Game::init_player() {
@@ -93,6 +94,7 @@ void Game::render_bg() {
 void Game::render() {
     this->window->clear();
     this->render_bg();
+    this->map->render(this->window);
     this->player->render(this->window);
     this->window->display();
 }
@@ -100,7 +102,7 @@ void Game::render() {
 void Game::update() {
     this->handle_events();
     this->update_window_collision();
-    this->player->update(this->window);
+    this->player->update();
 
 }
 

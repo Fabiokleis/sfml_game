@@ -14,10 +14,10 @@ class Player {
         Player();
         ~Player();
 
-        const sf::Vector2f& getPosition() const;
+        const sf::Vector2f getPosition() const;
         const sf::FloatRect getBounds() const;
 
-        void update(sf::RenderTarget* target);
+        void update();
         void update_input();
         void setPosition(const float x, const float y);
         void move(const float dirX, const float dirY);
