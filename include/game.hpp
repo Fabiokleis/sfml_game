@@ -8,6 +8,7 @@
 class Game {
     private:
         sf::RenderWindow* window;
+        std::vector<sf::VideoMode> video_modes;
         sf::Sprite background;
         sf::Texture background_tex;
         sf::Event event;
@@ -18,7 +19,7 @@ class Game {
         Player *player;
 
         void init_window();
-        void init_background();
+        void init_textures();
         void init_map();
         void init_player();
         void game_loop();

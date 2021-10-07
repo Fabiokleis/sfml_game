@@ -25,7 +25,8 @@ Map::Map(const float grid, const unsigned max_x, const unsigned max_y) {
                     // new Tile(
                     //     x * this->grid_size_f, 
                     //     y * this->grid_size_f,
-                    //     this->grid_size_f
+                    //     this->grid_size_f,
+                    //     this->tile_texture_sheet
                     // )
                 );
             }
