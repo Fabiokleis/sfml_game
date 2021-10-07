@@ -37,8 +37,8 @@ void Game::init_textures() {
 
 void Game::init_map() {
     const float grid = 32;
-    const unsigned max_x = this->window->getSize().x/grid;
-    const unsigned max_y = this->window->getSize().y/grid;
+    const unsigned max_x = 1 + this->window->getSize().x/grid;
+    const unsigned max_y = 1 + this->window->getSize().y/grid;
     this->map = new Map(grid, max_x, max_y);
 }
 
