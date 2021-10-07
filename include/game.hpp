@@ -8,15 +8,18 @@
 class Game {
     private:
         sf::RenderWindow* window;
+        std::vector<sf::VideoMode> video_modes;
         sf::Sprite background;
         sf::Texture background_tex;
         sf::Event event;
+        sf::Clock delta_clock;
+        float delta;
 
         Map* map;
         Player *player;
 
-        void init_window(int width, int height);
-        void init_background();
+        void init_window();
+        void init_textures();
         void init_map();
         void init_player();
         void game_loop();
@@ -25,6 +28,7 @@ class Game {
         void handle_events();
         void update_window_collision();
         void render_bg();
+        void update_delta();
 
     public:
         Game();

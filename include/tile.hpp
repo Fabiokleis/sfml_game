@@ -7,9 +7,9 @@ class Tile {
 
     public:
         Tile();
-        Tile(float x, float y, float grid_size_f);
+        Tile(float x, float y, float grid_size_f, sf::Texture* texture);
         ~Tile();
-        const sf::FloatRect getBounds() const;
+
         void update();
         void render(sf::RenderTarget* target);
 
