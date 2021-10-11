@@ -10,16 +10,15 @@ configure_file(./include/config.h.in config.h)
 
 add_executable(game "${SOURCE}")
 
-include_directories(
-    ./include/game/ 
-    ./include/map/ 
-    ./include/player/
-)
-
 find_package(SFML 2 REQUIRED graphics window)
 
-# Link executable to required SFML modules
-target_link_libraries(game sfml-graphics sfml-window sfml-system sfml-audio)
+target_link_libraries(game 
+    sfml-graphics 
+    sfml-window 
+    sfml-system 
+    sfml-audio
+    tmx-loader
+)
 
 # Set include directory search paths
 target_include_directories(game

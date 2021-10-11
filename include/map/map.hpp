@@ -1,26 +1,31 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
+#include <tmx/MapLoader.hpp>
+#include "player.hpp"
 #include "tile.hpp"
-
+#include "config.h"
 
 #pragma once
 class Map {
+
     private:
-        float grid_size_f;
-        unsigned grid_size_u;
-        sf::Vector2u max_size;
-        unsigned layers;
-        std::vector<std::vector<std::vector<Tile*>>> map;
-        sf::Texture* tile_texture_sheet;
+        sf::Vector2u tile_size;
+        sf::Vector2u map_bounds;
+        std::vector<tmx::MapLayer> layers;
+        tmx::MapLoader* ml;
 
 
     public:
-        Map(const float, const unsigned max_x, const unsigned max_y);
+        Map();
         ~Map();
-        void update();
-        void render(sf::RenderTarget* target);
 
-        void add_tile(const unsigned x, const unsigned y, const unsigned z);
-        void remove_tile(const unsigned x, const unsigned y, const unsigned z);
+        sf::Vector2u get_bounds();
+
+        void init_ml();
+        void load_map();
+        void init_variables();
+        void map_collision(Player* player);
+        void render(sf::RenderTarget* target);
+        void update(Player* player);
 
 };
