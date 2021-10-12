@@ -13,6 +13,8 @@ class Map {
         sf::Vector2u map_bounds;
         std::vector<tmx::MapLayer> layers;
         tmx::MapLoader* ml;
+        tmx::MapObjects objs;
+
 
 
     public:
@@ -20,12 +22,15 @@ class Map {
         ~Map();
 
         sf::Vector2u get_bounds();
+        tmx::MapObjects get_objs();
+        sf::Vector2u get_tile_size();
 
         void init_ml();
         void load_map();
         void init_variables();
-        void map_collision(Player* player);
+        void map_objs();
+        void set_objs(tmx::MapObject obj);
         void render(sf::RenderTarget* target);
-        void update(Player* player);
+        void update();
 
 };

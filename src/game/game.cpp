@@ -21,9 +21,8 @@ Game::~Game() {
 void Game::init_window() {
     sf::VideoMode window_bounds = sf::VideoMode::getDesktopMode();
 
-    this->window = new sf::RenderWindow(sf::VideoMode(800, 608), "test");
-    sf::View view = window->getView();
-    view.setCenter(window_bounds.width/2,window_bounds.height/2);
+    this->window = new sf::RenderWindow(sf::VideoMode(800, 640), "test");
+
     this->window->setFramerateLimit(60);
 }
 
@@ -43,7 +42,7 @@ void Game::init_map() {
 }
 
 void Game::init_player() {
-    this->player = new Player(0.f, 0.f);
+    this->player = new Player(0.f, 500.f);
 }
 
 void Game::handle_events() {
@@ -86,15 +85,6 @@ void Game::handle_events() {
                     this->player->reset_animation_timer();
                 }
 
-                if (
-                    this->event.key.code == sf::Keyboard::W ||
-                    this->event.key.code == sf::Keyboard::Space
-                ) 
-                {
-
-                    this->player->set_current_key(JUMP, false);
-                }
-
                 break;
 
             default:
@@ -111,22 +101,27 @@ void Game::update_window_collision() {
 
     // getBounds -> returns a Vector thats contains 2 cordinates top and left, 2 properties width and height
 
-    float top_pos = this->player->get_bounds().top;
-    float left_pos = this->player->get_bounds().left;
-    float player_height = this->player->get_bounds().height;
 
-    // bottom side collision
-    if (top_pos + player_height > this->window->getSize().y) {
-        // this->player->reset_velocity_y();
-        this->player->set_position(left_pos, this->window->getSize().y - player_height);
+    tmx::MapObjects objs = this->map->get_objs();
+
+    // collision detect
+
+    for (auto obj : objs) {
+        sf::FloatRect shape = obj.getAABB();
+        if (shape.intersects(this->player->get_bounds()) && obj.getType() == "horizontal_obj") { 
+
+            this->player->reset_velocity_y();
+
+            this->player->set_position(this->player->get_position().x, shape.top - 80);
+        }
+
+        if (shape.intersects(this->player->get_bounds()) && obj.getType() == "vertical_obj") {
+            this->player->set_position(shape.left - 48, this->player->get_position().y);
+            this->player->reset_velocity_y();
+        }
 
     }
 
-    // left side collision
-    if (left_pos < 0.f) {
-        // this->player->reset_velocity_y();
-        this->player->set_position(0.f, floor(this->window->getSize().y - player_height));
-    }
 }
 
 void Game::update_delta() {
@@ -145,8 +140,8 @@ void Game::game_loop() {
 void Game::update() {
     this->handle_events();
     this->player->update();
+    this->map->update();
     this->update_window_collision();
-    this->map->update(this->player);
 }
 
 void Game::render() {

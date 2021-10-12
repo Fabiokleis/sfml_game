@@ -24,7 +24,7 @@ void Player::init_texture(const float x, const float y) {
     this->sprite.setTexture(this->texture);
     this->sprite.setTextureRect(this->shape);
     this->sprite.setPosition(x, y);
-
+    
 }
 
 void Player::init_physics() {
@@ -213,7 +213,6 @@ void Player::update() {
     this->update_physics();
     this->update_animations();
     this->update_player_state();
-    // std::cout << "jumping: " << this->jumping << "\n";
 }
 
 void Player::render(sf::RenderTarget* target) {

@@ -3,8 +3,9 @@
  <image source="wood_block.png" width="32" height="32"/>
  <tile id="0" type="collision_block">
   <objectgroup draworder="index" id="2">
-   <object id="2" x="0" y="0" width="32" height="32"/>
-   <object id="3" name="wood_block" type="collision_block" x="0" y="0" width="32" height="32"/>
+   <object id="4" x="0.375" y="0.125">
+    <polyline points="-0.355556,-0.144444 31.5815,-0.168478 31.6563,31.8125 -0.375,31.8315 -0.363889,-0.102778"/>
+   </object>
   </objectgroup>
  </tile>
 </tileset>
