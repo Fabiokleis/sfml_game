@@ -24,7 +24,6 @@ void Player::init_texture(const float x, const float y) {
     this->sprite.setTexture(this->texture);
     this->sprite.setTextureRect(this->shape);
     this->sprite.setPosition(x, y);
-    
 }
 
 void Player::init_physics() {
@@ -32,10 +31,9 @@ void Player::init_physics() {
     this->velocity_min = 1.f;
     this->velocity_max_y = 8.f;
     this->acceleration = 2.f;
-    this->gravity = 2.f;
+    this->gravity = 1.f;
     this->drag = 0.80f;
-    this->jumping = false;
-
+    this->on_ground = false;
 }
 
 void Player::init_animations() {
@@ -69,6 +67,19 @@ bool Player::get_animation_switch() {
     return anim_switch;
 }
 
+void Player::reset_animation_timer() {
+    this->clock.restart();
+    this->animation_switch = true;
+}
+
+void Player::set_current_key(KEYS_STATES key, bool flag) {
+    this->state_key[key] = flag;
+}
+
+void Player::set_on_ground(bool flag) {
+    this->on_ground = flag;
+}
+
 void Player::move(const float dir_x, const float dir_y) {
 
     this->velocity.x = dir_x * this->acceleration;
@@ -77,20 +88,12 @@ void Player::move(const float dir_x, const float dir_y) {
         this->velocity.x = this->velocity_max * ((this->velocity.x < 0.f) ? -1.f: 1.f);
     }
 
-    if (this->jumping) {
+    if (this->on_ground) {
         this->velocity.y = dir_y * this->acceleration * 8;
+        this->set_on_ground(false);
     }
 
     this->sprite.move(this->velocity);
-}
-
-void Player::reset_animation_timer() {
-    this->clock.restart();
-    this->animation_switch = true;
-}
-
-void Player::set_current_key(KEYS_STATES key, bool flag) {
-    this->state_key[key] = flag;
 }
 
 void Player::update_physics() {
@@ -121,17 +124,21 @@ void Player::update_input() {
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
         this->animation_state = MOVING_LEFT;
         this->move(-1.f, 0.f);
+        this->set_current_key(LEFT, true);
 
     } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
         this->animation_state = MOVING_RIGHT;
         this->move(1.f, 0.f);
+        this->set_current_key(RIGHT, true);
 
     } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
         this->animation_state = MOVING_DOWN;
-        this->move(0.f, 1.f);
+        this->set_current_key(DOWN, true);
+        // this->move(0.f, 1.f);
 
-    } else if ((sf::Keyboard::isKeyPressed(sf::Keyboard::Space) || sf::Keyboard::isKeyPressed(sf::Keyboard::W)) && (!this->state_key[JUMP])){
+    } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) && (this->on_ground)){
         this->animation_state = JUMPING;
+        this->set_current_key(JUMP, true);
         this->move(0.f, -1.f);
     }
 
@@ -139,18 +146,9 @@ void Player::update_input() {
 
 void Player::update_animations() {
 
-    // if (this->jumping) {
-    //     if (this->clock.getElapsedTime().asSeconds() >= 0.1 || this->get_animation_switch()) {
-    //         this->shape.top = 240;
-    //         this->shape.left = 48;
-    //         this->jumping = false;
-    //         this->clock.restart();
-    //         this->sprite.setTextureRect(this->shape);
-    //     }
-    // }
 
     if (this->animation_state == IDLE) {
-        if (this->clock.getElapsedTime().asSeconds() >= 0.1 || this->get_animation_switch()) {
+        if (this->clock.getElapsedTime().asSeconds() >= 0.08) {
             this->shape.top = 0;
             this->shape.left += 48;
             if (this->shape.left >= 96.f) {
@@ -160,7 +158,7 @@ void Player::update_animations() {
             this->sprite.setTextureRect(this->shape);
         }
     } else if (this->animation_state == MOVING_LEFT) {
-        if (this->clock.getElapsedTime().asSeconds() >= 0.1 || this->get_animation_switch()) {
+        if (this->clock.getElapsedTime().asSeconds() >= 0.08) {
             this->shape.top = 160;
             this->shape.left += 48;
             if (this->shape.left >= 96.f) {
@@ -170,7 +168,7 @@ void Player::update_animations() {
             this->sprite.setTextureRect(this->shape);
         }
     } else if (this->animation_state == MOVING_RIGHT) {
-        if (this->clock.getElapsedTime().asSeconds() >= 0.1 || this->get_animation_switch()) {
+        if (this->clock.getElapsedTime().asSeconds() >= 0.08) {
             this->shape.top = 80;
             this->shape.left += 48;
             if (this->shape.left >= 96.f) {
@@ -181,16 +179,14 @@ void Player::update_animations() {
         }
 
     } else if (this->animation_state == JUMPING) {
-        if (this->clock.getElapsedTime().asSeconds() >= 0.1 || this->get_animation_switch()) {
+        if (this->clock.getElapsedTime().asSeconds() >= 0.08) {
             this->shape.top = 240;
             this->shape.left = 0;
-            this->animation_state = FALLING;
-            this->jumping = true;
             this->clock.restart();
             this->sprite.setTextureRect(this->shape);
         }
     } else if (this->animation_state == MOVING_DOWN) {
-        if (this->clock.getElapsedTime().asSeconds() >= 0.1 || this->get_animation_switch()) {
+        if (this->clock.getElapsedTime().asSeconds() >= 0.08) {
             this->shape.top = 400;
             this->shape.left = 0;
             this->clock.restart();
@@ -199,6 +195,7 @@ void Player::update_animations() {
     } else {
         this->clock.restart();
     }
+
 
 }
 
@@ -210,8 +207,8 @@ void Player::update_player_state() {
 
 void Player::update() {
     this->update_input();
-    this->update_physics();
     this->update_animations();
+    this->update_physics();
     this->update_player_state();
 }
 

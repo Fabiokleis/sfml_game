@@ -23,7 +23,7 @@ class Player {
         float velocity_max_y;
         short animation_state;
         short last_state;
-        bool jumping;
+        bool on_ground;
         bool animation_switch;
         std::map<KEYS_STATES, bool> state_key;
 
@@ -48,6 +48,7 @@ class Player {
         void reset_animation_timer();
         void reset_velocity_y();
         void set_position(const float x, const float y);
+        void set_on_ground(bool flag);
         void move(const float dir_x, const float dir_y);
         void render(sf::RenderTarget* target);
 };

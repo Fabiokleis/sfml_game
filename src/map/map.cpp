@@ -40,23 +40,21 @@ void Map::map_objs() {
     for (auto layer : this->layers) {
         for (auto obj : layer.objects) {
             if (layer.name == "collision_layer") {
-                set_objs(obj);
+                this->objs.push_back(obj);
             }
         }
     }
 }
 
-void Map::set_objs(tmx::MapObject obj) {
-    this->objs.push_back(obj);
-}
 
 tmx::MapObjects Map::get_objs() {
     return this->objs;
 }
 
+
 void Map::update() {}
 
 void Map::render(sf::RenderTarget* target) {
     target->draw(*this->ml);
-    this->ml->drawLayer(*target, tmx::MapLayer::Debug);
+    this->ml->drawLayer(*target, tmx::MapLayer::Debug); // debug
 }

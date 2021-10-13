@@ -13,10 +13,9 @@ class Game {
         std::vector<sf::VideoMode> video_modes;
         sf::Sprite background;
         sf::Texture background_tex;
-        sf::Clock delta_clock;
 
-        float delta;
-
+        tmx::MapObjects objs;
+        sf::FloatRect obj_shape;
 
         Map* map;
 
@@ -26,14 +25,16 @@ class Game {
         void init_textures();
         void init_map();
         void init_player();
-        void init_state();
+        void init_objs();
         void game_loop();
+        void handle_events();
+        void obj_and_player_collision(tmx::MapObject obj);
+        void objs_collision_update();
+        void render_bg();
         void update();
         void render();
-        void handle_events();
-        void update_window_collision();
-        void render_bg();
-        void update_delta();
+
+
 
     public:
         Game();
