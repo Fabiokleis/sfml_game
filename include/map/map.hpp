@@ -1,36 +1,61 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
-#include <tmx/MapLoader.hpp>
-#include "player.hpp"
-#include "tile.hpp"
+#include "istreamwrapper.h"
+#include "rapidjson.h"
+#include "document.h"
+#include "layer.hpp"
+#include "tilemap.hpp"
+#include "tilesetmap.hpp"
+#include "tileset.hpp"
 #include "config.h"
 
 #pragma once
 class Map {
 
     private:
-        sf::Vector2u tile_size;
-        sf::Vector2u map_bounds;
-        std::vector<tmx::MapLayer> layers;
-        tmx::MapLoader* ml;
-        tmx::MapObjects objs;
-
+        const char* map_str;
+        const char* tileset_buffer;
+        int height;
+        int width;
+        bool infinite;
+        std::vector<Layer> layers;
+        int next_layer_id;
+        int next_object_id;
+        std::string orientation;
+        std::string render_order;
+        std::vector<TileSet> tilesets;
+        std::vector<TileSetMap> tileset_maps;
+        int tile_height;
+        int tile_width;
+        std::vector<TileMap> tilemap_render;
 
 
     public:
         Map();
         ~Map();
 
-        sf::Vector2u get_bounds();
-        tmx::MapObjects get_objs();
-        sf::Vector2u get_tile_size();
-
-        void init_ml();
-        void load_map();
         void init_variables();
-        void map_objs();
-        void set_objs(tmx::MapObject obj);
-        void render(sf::RenderTarget* target);
+        int get_height();
+        int get_width();
+        int get_next_layer_id();
+        int get_next_object_id();
+        int get_tile_width();
+        int get_tile_height();
+        bool is_infinite();
+
+        std::string get_orientation();
+        std::string get_render_order();
+        std::vector<TileSet> get_tilesets();
+        std::vector<TileSetMap> get_tile_set_map();
+        std::vector<Layer> get_layers();
+        TileSet find_tileset(Layer& layer, std::vector<TileSet>& tilesets);
+
+        void load_tileset_buffer(std::string filename);
+        const char* read_file(std::string filename);
+        void load_map();
+        void load_tilesets();
+        void load_tilemap();
         void update();
+        void render(sf::RenderTarget* target);
 
 };

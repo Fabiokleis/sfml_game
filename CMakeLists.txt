@@ -17,7 +17,6 @@ target_link_libraries(game
     sfml-window 
     sfml-system 
     sfml-audio
-    tmx-loader
 )
 
 # Set include directory search paths
@@ -27,4 +26,5 @@ target_include_directories(game
     "${CMAKE_CURRENT_SOURCE_DIR}/include/game"
     "${CMAKE_CURRENT_SOURCE_DIR}/include/map"
     "${CMAKE_CURRENT_SOURCE_DIR}/include/player"
+    "${CMAKE_CURRENT_SOURCE_DIR}/include/rapidjson"
   )
