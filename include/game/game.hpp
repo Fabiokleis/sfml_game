@@ -14,8 +14,7 @@ class Game {
         sf::Sprite background;
         sf::Texture background_tex;
 
-        tmx::MapObjects objs;
-        sf::FloatRect obj_shape;
+        std::vector<tmx::MapTile> tiles;
 
         Map* map;
 
@@ -28,8 +27,6 @@ class Game {
         void init_objs();
         void game_loop();
         void handle_events();
-        void obj_and_player_collision(tmx::MapObject obj);
-        void objs_collision_update();
         void render_bg();
         void update();
         void render();

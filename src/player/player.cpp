@@ -5,7 +5,7 @@
 
 Player::Player(const float x, const float y) {
     this->init_texture(x, y);
-    this->init_animations();
+    // this->init_animations();
     this->init_physics();
 }
 
@@ -207,7 +207,7 @@ void Player::update_player_state() {
 
 void Player::update() {
     this->update_input();
-    this->update_animations();
+    // this->update_animations();
     this->update_physics();
     this->update_player_state();
 }

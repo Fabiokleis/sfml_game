@@ -1,10 +1,9 @@
 # SFML GAME
 
-A mario-game project using sfml, tiled editor to create tilemaps and sfml-tmxloader to load.
+A mario-game project using sfml, tiled editor to create tilemaps and rapidjson to parse.
 
 To run this source u already installed cmake, a c++ compiler
-and two libs [sfml](https://en.sfml-dev.org/) [sfml-tmxloader](https://github.com/fallahn/sfml-tmxloader)
-
+and two libs [sfml](https://en.sfml-dev.org/) and [rapidjson](https://github.com/Tencent/rapidjson)
 # compile and run:
 
 ```
