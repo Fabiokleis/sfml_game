@@ -48,7 +48,7 @@ class Map {
         std::vector<TileSet> get_tilesets();
         std::vector<TileSetMap> get_tile_set_map();
         std::vector<Layer> get_layers();
-        TileSet find_tileset(Layer& layer, std::vector<TileSet>& tilesets);
+        void find_tileset(Layer& layer, std::vector<TileSet>& tilesets);
 
         void load_tileset_buffer(std::string filename);
         const char* read_file(std::string filename);
