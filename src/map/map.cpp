@@ -140,23 +140,7 @@ inline const char* Map::read_file(std::string filename) {
 	return buffer;
 }
 
-// get by firstg_id if a tile is set or not
-TileSet Map::find_tileset(Layer& layer, std::vector<TileSet>& tilesets) {
-    for (auto data : layer.get_data()) {
-        if (data != 0) {
-            for (auto& tile : tilesets) {
-                std::cout << data << "\n";
-                std::cout << tile.get_firstg_id() << "\n";
-
-                if (tile.get_firstg_id() == data) {
-                    return tile;
-                }
-            }
-        }
-    }
-}
-
-// initialize each tile of map puttin into vactor of tiles
+// initialize each tile of map puttin into vector of tiles
 void Map::load_tilesets() {
     for (size_t i = 0; i < this->tileset_maps.size(); i++) {
         std::string file = this->tileset_maps[i].get_source();
@@ -173,8 +157,21 @@ void Map::load_tilemap() {
     for (size_t i = 0; i < this->layers.size(); i++) {
         if (this->layers[i].get_type() == "tilelayer") {
             this->tilemap_render.push_back(TileMap());
-            this->tilemap_render.back()
-            .load(this->find_tileset(this->layers[i], this->tilesets),this->layers[i]);
+            this->find_tileset(this->layers[i], this->tilesets);
+        }
+    }
+}
+
+// get by firstg_id if a tile is set or not
+void Map::find_tileset(Layer& layer, std::vector<TileSet>& tilesets) {
+    for (auto data : layer.get_data()) {
+        if (data > 0) {
+            for (auto &tile : tilesets) {
+                if (tile.get_firstg_id() <= data) {
+                    // load a tile if is set on layer
+                    this->tilemap_render.back().load(tile, layer);
+                }
+            }
         }
     }
 }
@@ -182,7 +179,7 @@ void Map::load_tilemap() {
 void Map::update() {}
 
 void Map::render(sf::RenderTarget* target) {
-    for (int i = this->tilemap_render.size() - 1; i >= 0; i--) {
+    for (int i = this->tilemap_render.size()-1; i >= 0; i--) {
         target->draw(this->tilemap_render[i]);
     }
 }
