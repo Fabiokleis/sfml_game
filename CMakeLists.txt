@@ -1,18 +1,22 @@
 cmake_minimum_required(VERSION 3.21)
 
-project(game)
+project(game VERSION 0.1)
 
-file(GLOB SOURCE src/main.cpp src/**/*.cpp)
+file(GLOB SOURCE ./src/main.cpp src/**/*.cpp)
 
 set(RESOURCE_PATH "${PROJECT_SOURCE_DIR}/contents/")
 
+#set(SFML_STATIC_LIBRARIES TRUE)
+
 configure_file(./include/config.h.in config.h)
+
+#set(SFML_DIR /usr/lib64/cmake/SFML)
+
+find_package(SFML REQUIRED graphics window)
 
 add_executable(game "${SOURCE}")
 
-find_package(SFML 2 REQUIRED graphics window)
-
-target_link_libraries(game 
+target_link_libraries(game
     sfml-graphics 
     sfml-window 
     sfml-system 
