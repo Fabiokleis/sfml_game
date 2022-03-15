@@ -1,0 +1,31 @@
+name: C/C++ CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    
+    - name: Setup cmake
+      uses: jwlawson/actions-setup-cmake@v1.12
+      with:
+        cmake-version: '3.21.x'
+    
+    - name: setup sfml
+      run: sudo apt-get install sfml
+        
+    - name: configure
+      run: | 
+        mkdir -p build/ &&
+        cd build/ && cmake ..
+      
+    - name: build
+      run: make 
