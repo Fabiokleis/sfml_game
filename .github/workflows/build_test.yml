@@ -24,10 +24,8 @@ jobs:
         sudo apt-get update -y &&
         sudo apt-get install libsfml-dev -y
         
-    - name: configure
+    - name: configure and make
       run: | 
         mkdir -p build/ &&
         cd build/ && cmake ..
-      
-    - name: build
-      run: make 
+        && make
