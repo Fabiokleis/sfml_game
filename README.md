@@ -8,7 +8,7 @@ and two libs [sfml](https://en.sfml-dev.org/) and (already in include directory)
 
 ```
 mkdir build && cd build
-cmake .. && make .
+cmake .. && make
 
 ./game
 ```
