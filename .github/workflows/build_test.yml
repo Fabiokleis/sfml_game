@@ -20,7 +20,9 @@ jobs:
         cmake-version: '3.21.x'
     
     - name: setup sfml
-      run: sudo apt-get install libsfml-dev
+      run: | 
+        sudo apt-get update -y &&
+        sudo apt-get install libsfml-dev -y
         
     - name: configure
       run: | 
