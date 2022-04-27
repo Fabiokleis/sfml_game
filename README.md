@@ -8,7 +8,7 @@ and two libs [sfml](https://en.sfml-dev.org/) and (already in include directory)
 
 `cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=1 -S . -B ./build`` # if needs compile_commands.json
 mkdir build && cd build
-cmake .. && make .
+cmake .. && make
 
 ./game
 ```

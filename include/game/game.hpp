@@ -1,5 +1,4 @@
 #include <SFML/Graphics.hpp>
-#include <tmx/MapLoader.hpp>
 #include <vector>
 #include "player.hpp"
 #include "config.h"
@@ -13,8 +12,6 @@ class Game {
         std::vector<sf::VideoMode> video_modes;
         sf::Sprite background;
         sf::Texture background_tex;
-
-        std::vector<tmx::MapTile> tiles;
 
         Map* map;
 
