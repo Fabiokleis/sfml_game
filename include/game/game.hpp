@@ -3,6 +3,7 @@
 #include "player.hpp"
 #include "config.h"
 #include "map.hpp"
+#include "tile.hpp"
 
 #pragma once
 class Game {
@@ -12,6 +13,7 @@ class Game {
         std::vector<sf::VideoMode> video_modes;
         sf::Sprite background;
         sf::Texture background_tex;
+        std::vector<Tile> tiles;
 
         Map* map;
 
@@ -27,7 +29,7 @@ class Game {
         void render_bg();
         void update();
         void render();
-
+        void handle_collision();
 
 
     public:

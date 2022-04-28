@@ -22,7 +22,7 @@ void Game::init_window() {
 
     this->window = new sf::RenderWindow(sf::VideoMode(1024, 640), "test");
 
-    this->window->setFramerateLimit(60);
+    // this->window->setFramerateLimit(60);
 }
 
 void Game::init_textures() {
@@ -38,10 +38,37 @@ void Game::init_textures() {
 
 void Game::init_map() {
     this->map = new Map();
+    this->tiles = this->map->get_tiles();
 }
 
 void Game::init_player() {
     this->player = new Player(96.f, 100.f);
+}
+
+
+void Game::handle_collision() {
+
+    // window global collision
+    if (this->player->get_position().x < 0) {
+        this->player->set_position(0.0f, this->player->get_position().y);
+    }
+    if (this->player->get_position().y < 0) {
+        this->player->set_position(this->player->get_position().x, 0.0f);
+    }
+    if (this->player->get_position().x + this->player->get_bounds().width > this->window->getSize().x) {
+        this->player->set_position(this->window->getSize().x - this->player->get_bounds().width, this->player->get_position().y);
+    }
+    if (this->player->get_position().y + this->player->get_bounds().height > this->window->getSize().y) {
+        this->player->set_position(this->player->get_position().x, this->window->getSize().y - this->player->get_bounds().height);
+    }
+
+    // map and player collision
+    for (auto& tile : this->tiles) {
+        std::cout << "tx: " << tile.get_position().x << std::endl;
+        std::cout << "ty: " << tile.get_position().y << std::endl;
+        std::cout << "px: " << this->player->get_position().x << std::endl;
+        std::cout << "py: " << this->player->get_position().y << std::endl;
+    }
 }
 
 void Game::handle_events() {
@@ -97,6 +124,7 @@ void Game::update() {
     this->handle_events();
     this->map->update();
     this->player->update();
+    this->handle_collision();
 }
 
 void Game::render() {

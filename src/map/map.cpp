@@ -176,6 +176,11 @@ void Map::find_tileset(Layer& layer, std::vector<TileSet>& tilesets) {
     }
 }
 
+std::vector<Tile> Map::get_tiles() {
+    this->tiles = this->tilemap_render.back().get_tiles();
+    return this->tiles;
+}
+
 void Map::update() {}
 
 void Map::render(sf::RenderTarget* target) {

@@ -9,7 +9,7 @@ enum KEYS_STATES {JUMP, LEFT, RIGHT, DOWN};
 class Player {
     private:
         sf::IntRect shape;
-        sf::Sprite sprite;
+        sf::RectangleShape sprite;
         sf::Texture texture;
         sf::Vector2f velocity;
         sf::Clock clock;
@@ -34,6 +34,7 @@ class Player {
 
         sf::Vector2f get_position();
         sf::FloatRect get_bounds();
+        sf::RectangleShape get_body();
         bool get_animation_switch();
         void set_current_key(KEYS_STATES key, bool flag);
 

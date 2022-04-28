@@ -1,3 +1,4 @@
+#include <SFML/Graphics.hpp>
 #include "document.h"
 #include "rapidjson.h"
 #include "config.h"

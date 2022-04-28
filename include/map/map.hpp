@@ -28,6 +28,7 @@ class Map {
         int tile_height;
         int tile_width;
         std::vector<TileMap> tilemap_render;
+        std::vector<Tile> tiles;
 
 
     public:
@@ -45,6 +46,7 @@ class Map {
 
         std::string get_orientation();
         std::string get_render_order();
+        std::vector<Tile> get_tiles();
         std::vector<TileSet> get_tilesets();
         std::vector<TileSetMap> get_tile_set_map();
         std::vector<Layer> get_layers();

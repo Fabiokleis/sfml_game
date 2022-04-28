@@ -21,9 +21,10 @@ void Player::init_texture(const float x, const float y) {
     }
 
     this->shape = sf::IntRect(0, 0, 48, 80);
-    this->sprite.setTexture(this->texture);
+    this->sprite.setTexture(&this->texture);
     this->sprite.setTextureRect(this->shape);
     this->sprite.setPosition(x, y);
+    this->sprite.setSize(sf::Vector2f(48.0f, 80.0f));
 }
 
 void Player::init_physics() {
@@ -51,6 +52,10 @@ sf::Vector2f Player::get_position() {
 
 sf::FloatRect Player::get_bounds() {
     return this->sprite.getGlobalBounds();
+}
+
+sf::RectangleShape Player::get_body() {
+    return this->sprite;
 }
 
 void Player::reset_velocity_y() {
