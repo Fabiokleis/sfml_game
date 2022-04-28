@@ -22,7 +22,7 @@ void Game::init_window() {
 
     this->window = new sf::RenderWindow(sf::VideoMode(1024, 640), "test");
 
-    // this->window->setFramerateLimit(60);
+    this->window->setFramerateLimit(60);
 }
 
 void Game::init_textures() {
@@ -64,10 +64,7 @@ void Game::handle_collision() {
 
     // map and player collision
     for (auto& tile : this->tiles) {
-        std::cout << "tx: " << tile.get_position().x << std::endl;
-        std::cout << "ty: " << tile.get_position().y << std::endl;
-        std::cout << "px: " << this->player->get_position().x << std::endl;
-        std::cout << "py: " << this->player->get_position().y << std::endl;
+        tile.check_collision(this->player->get_body(), 0.0f);
     }
 }
 
@@ -113,10 +110,22 @@ void Game::render_bg() {
 }
 
 void Game::game_loop() {
+    
+    float fps;
+    sf::Clock clock = sf::Clock();
+    sf::Time previousTime = clock.getElapsedTime();
+    sf::Time currentTime;
 
     while (this->window->isOpen()) {
         this->update();
         this->render();
+
+        currentTime = clock.getElapsedTime();
+        fps = 1.0f / (currentTime.asSeconds() - previousTime.asSeconds()); // the asSeconds returns a float 
+        previousTime = currentTime;
+
+        std::cout << "fps: " << floor(fps) << std::endl;
+
     }
 }
 

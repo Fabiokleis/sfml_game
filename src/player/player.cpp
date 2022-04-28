@@ -25,6 +25,7 @@ void Player::init_texture(const float x, const float y) {
     this->sprite.setTextureRect(this->shape);
     this->sprite.setPosition(x, y);
     this->sprite.setSize(sf::Vector2f(48.0f, 80.0f));
+    this->sprite.setOrigin(sf::Vector2f(48.0f, 80.0f) / 2.0f);
 }
 
 void Player::init_physics() {
