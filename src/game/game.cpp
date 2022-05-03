@@ -7,6 +7,7 @@ Game::Game() {
     // setup game
     this->init_window();
     this->init_textures();
+    this->init_font();
     this->init_map();
     this->init_player();
 }
@@ -20,7 +21,7 @@ Game::~Game() {
 void Game::init_window() {
     sf::VideoMode window_bounds = sf::VideoMode::getDesktopMode();
 
-    this->window = new sf::RenderWindow(sf::VideoMode(1024, 640), "test");
+    this->window = new sf::RenderWindow(sf::VideoMode(1024, 640), "c++ game");
 
     this->window->setFramerateLimit(60);
 }
@@ -32,7 +33,10 @@ void Game::init_textures() {
     if (!this->background_tex.loadFromFile(path+"ghost_bg_large.png")) {
         std::cout << "ERROR:GAME::COULD NOT LOAD BACKGROUND TEXTURE." << std::endl;
     }
-
+    
+    if (!this->font.loadFromFile(path+"fonts/free_pixel.ttf")) {
+        std::cout << "ERROR:GAME::COULD NOT LOAD PIXEL FONT." << std::endl;
+    }
     this->background.setTexture(this->background_tex);
 }
 
@@ -42,29 +46,25 @@ void Game::init_map() {
 }
 
 void Game::init_player() {
-    this->player = new Player(96.f, 100.f);
+    this->player = new Player(512, 320.f);
 }
 
+void Game::init_font() {
+    this->text.setFont(this->font);
+    this->text.setCharacterSize(30);
+    this->text.setPosition(996, 0.0f);
+    this->text.setFillColor(sf::Color::Yellow);
+}
+
+void Game::set_fps(float fps) {
+    this->text.setString(std::to_string((int)fps));
+}
 
 void Game::handle_collision() {
 
-    // window global collision
-    if (this->player->get_position().x < 0) {
-        this->player->set_position(0.0f, this->player->get_position().y);
-    }
-    if (this->player->get_position().y < 0) {
-        this->player->set_position(this->player->get_position().x, 0.0f);
-    }
-    if (this->player->get_position().x + this->player->get_bounds().width > this->window->getSize().x) {
-        this->player->set_position(this->window->getSize().x - this->player->get_bounds().width, this->player->get_position().y);
-    }
-    if (this->player->get_position().y + this->player->get_bounds().height > this->window->getSize().y) {
-        this->player->set_position(this->player->get_position().x, this->window->getSize().y - this->player->get_bounds().height);
-    }
-
     // map and player collision
     for (auto& tile : this->tiles) {
-        tile.check_collision(this->player->get_body(), 0.0f);
+        this->player->set_collide(tile.check_collision(this->player->get_body(), this->player->get_velocity()));
     }
 }
 
@@ -109,6 +109,10 @@ void Game::render_bg() {
     this->window->draw(this->background);
 }
 
+void Game::render_text() {
+    this->window->draw(this->text);
+}
+
 void Game::game_loop() {
     
     float fps;
@@ -117,15 +121,13 @@ void Game::game_loop() {
     sf::Time currentTime;
 
     while (this->window->isOpen()) {
-        this->update();
-        this->render();
 
         currentTime = clock.getElapsedTime();
         fps = 1.0f / (currentTime.asSeconds() - previousTime.asSeconds()); // the asSeconds returns a float 
         previousTime = currentTime;
-
-        std::cout << "fps: " << floor(fps) << std::endl;
-
+        this->set_fps(fps);
+        this->update(); 
+        this->render();
     }
 }
 
@@ -141,6 +143,7 @@ void Game::render() {
     this->render_bg();
     this->player->render(this->window);
     this->map->render(this->window);
+    this->render_text();
     this->window->display();
 }
 

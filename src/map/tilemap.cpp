@@ -60,8 +60,8 @@ bool TileMap::load(TileSet tileset, Layer layer) {
             quad[3].position = sf::Vector2f(xPos1, yPos2);
             
             // populate the vector of tilesets with enabled tiles
-            this->set_tilehitbox(tileset.get_tile_width(), xPos2,tileset.get_tile_height(), yPos2);
-
+            this->set_tilehitbox(tileset.get_tile_width(), xPos2, tileset.get_tile_height(), yPos2);
+            
             // set into quad the position of tex vertices
             quad[0].texCoords = sf::Vector2f(x1, y1);
             quad[1].texCoords = sf::Vector2f(x2, y1);

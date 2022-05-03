@@ -16,26 +16,30 @@ Player::~Player() {
 void Player::init_texture(const float x, const float y) {
     std::string path = RESOURCE_PATH;
 
-    if (!this->texture.loadFromFile(path+"player/player_sprite.png")) {
+    if (!this->texture.loadFromFile(path+"player/player_sprite2.png")) {
         std::cout << "ERROR::PLAYER::COULD NOT LOAD TEXTURE FILE." << std::endl;
     }
 
-    this->shape = sf::IntRect(0, 0, 48, 80);
+    this->size = sf::Vector2f(41, 73);
+    this->shape = sf::IntRect(0, 0, size.x, size.y);
     this->sprite.setTexture(&this->texture);
     this->sprite.setTextureRect(this->shape);
     this->sprite.setPosition(x, y);
-    this->sprite.setSize(sf::Vector2f(48.0f, 80.0f));
-    this->sprite.setOrigin(sf::Vector2f(48.0f, 80.0f) / 2.0f);
+    this->sprite.setSize(size);
+    this->sprite.setOrigin(size / 2.0f);
+    this->sprite.setOutlineThickness(2.0f);
+    this->sprite.setOutlineColor(sf::Color::Cyan);
 }
 
 void Player::init_physics() {
     this->velocity_max = 2.f;
     this->velocity_min = 1.f;
-    this->velocity_max_y = 8.f;
+    this->velocity_max_y = 10.f;
     this->acceleration = 2.f;
-    this->gravity = 1.f;
+    this->gravity = 8.f;
     this->drag = 0.80f;
     this->on_ground = false;
+    this->collide = false;
 }
 
 void Player::init_animations() {
@@ -47,15 +51,27 @@ void Player::set_position(const float x, const float y) {
     this->sprite.setPosition(x, y);
 }
 
+void Player::set_collide(bool collide) {
+    this->collide = collide;
+}
+
 sf::Vector2f Player::get_position() {
     return this->sprite.getPosition();
+}
+
+sf::Vector2f Player::get_size() {
+    return this->size;
+}
+
+sf::Vector2f Player::get_velocity() {
+    return this->velocity;
 }
 
 sf::FloatRect Player::get_bounds() {
     return this->sprite.getGlobalBounds();
 }
 
-sf::RectangleShape Player::get_body() {
+sf::RectangleShape& Player::get_body() {
     return this->sprite;
 }
 
@@ -88,7 +104,7 @@ void Player::set_on_ground(bool flag) {
 
 void Player::move(const float dir_x, const float dir_y) {
 
-    this->velocity.x = dir_x * this->acceleration;
+    this->velocity.x += dir_x * this->acceleration;
 
     if (std::abs(this->velocity.x) > this->velocity_max) {
         this->velocity.x = this->velocity_max * ((this->velocity.x < 0.f) ? -1.f: 1.f);
@@ -104,14 +120,14 @@ void Player::move(const float dir_x, const float dir_y) {
 
 void Player::update_physics() {
 
-    this->velocity.y += 1 * this->gravity;
+    this->velocity.y += 1.0f * this->gravity;
 
-    if (std::abs(this->velocity.x) > this->velocity_max_y) {
+    if (std::abs(this->velocity.y) > this->velocity_max_y) {
         this->velocity.y = this->velocity_max_y * ((this->velocity.y < 0.f) ? -1.f: 1.f);
     }
 
     // deceleration velocity
-    this->velocity.x *= this->drag;
+    this->velocity *= this->drag;
 
     if (std::abs(this->velocity.x) < this->velocity_min) {
         this->velocity.x = 0.f;
@@ -152,12 +168,11 @@ void Player::update_input() {
 
 void Player::update_animations() {
 
-
     if (this->animation_state == IDLE) {
         if (this->clock.getElapsedTime().asSeconds() >= 0.08) {
             this->shape.top = 0;
-            this->shape.left += 48;
-            if (this->shape.left >= 96.f) {
+            this->shape.left += this->size.x;
+            if (this->shape.left >= this->size.x * 2.0f) {
                 shape.left = 0;
             }
             this->clock.restart();
@@ -166,8 +181,8 @@ void Player::update_animations() {
     } else if (this->animation_state == MOVING_LEFT) {
         if (this->clock.getElapsedTime().asSeconds() >= 0.08) {
             this->shape.top = 160;
-            this->shape.left += 48;
-            if (this->shape.left >= 96.f) {
+            this->shape.left += this->size.x;
+            if (this->shape.left >= this->size.x * 2.0f) {
                 this->shape.left = 0;
             }
             this->clock.restart();
@@ -176,8 +191,8 @@ void Player::update_animations() {
     } else if (this->animation_state == MOVING_RIGHT) {
         if (this->clock.getElapsedTime().asSeconds() >= 0.08) {
             this->shape.top = 80;
-            this->shape.left += 48;
-            if (this->shape.left >= 96.f) {
+            this->shape.left += this->size.x;
+            if (this->shape.left >= this->size.x * 2.0f) {
                 this->shape.left = 0.f;
             }
             this->clock.restart();

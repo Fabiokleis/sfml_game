@@ -12,6 +12,7 @@ class Player {
         sf::RectangleShape sprite;
         sf::Texture texture;
         sf::Vector2f velocity;
+        sf::Vector2f size;
         sf::Clock clock;
 
 
@@ -25,6 +26,7 @@ class Player {
         short last_state;
         bool on_ground;
         bool animation_switch;
+        bool collide;
         std::map<KEYS_STATES, bool> state_key;
 
 
@@ -34,10 +36,12 @@ class Player {
 
         sf::Vector2f get_position();
         sf::FloatRect get_bounds();
-        sf::RectangleShape get_body();
+        sf::RectangleShape& get_body();
         bool get_animation_switch();
+        sf::Vector2f get_size();
         void set_current_key(KEYS_STATES key, bool flag);
-
+        sf::Vector2f get_velocity();
+        
         void init_texture(const float x, const float y);
         void init_physics();
         void init_animations();
@@ -50,6 +54,7 @@ class Player {
         void reset_velocity_y();
         void set_position(const float x, const float y);
         void set_on_ground(bool flag);
+        void set_collide(bool collide);
         void move(const float dir_x, const float dir_y);
         void render(sf::RenderTarget* target);
 };

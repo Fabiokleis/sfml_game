@@ -22,40 +22,35 @@ sf::RectangleShape Tile::get_body() {
     return this->body;
 }
 
-bool Tile::check_collision(sf::RectangleShape body, float push) {
+bool Tile::check_collision(sf::RectangleShape &body, sf::Vector2f dir) {
     sf::Vector2f this_pos = this->get_position();
     sf::Vector2f this_siz = this->body.getSize() / 2.0f;
     sf::Vector2f other_pos = body.getPosition();
     sf::Vector2f other_siz = body.getSize() / 2.0f;
 
-    float mod_x = other_pos.x - this_pos.x;
-    float mod_y = other_pos.y - this_pos.y;
-    float intersect_x = abs(mod_x) - (other_pos.x + this_siz.x);
-    float intersect_y = abs(mod_y) - (other_pos.y + this_siz.y);
+    float delta_x = other_pos.x - this_pos.x + this_siz.x;
+    float delta_y = other_pos.y - this_pos.y + this_siz.y;
 
-    if (intersect_x < 0.0f && intersect_y < 0.0f) {
-        push = min(max(push, 0.0f), 1.0f);
+    float intersec_x = abs(delta_x) - (other_siz.x + this_siz.x);
+    float intersec_y = abs(delta_y) - (other_siz.y + this_siz.y);
 
-        if (abs(intersect_x) < abs(intersect_y)) {
-            if (mod_x > 0.0f) {
-                move(intersect_x * (1.0f - push), 0.0f);
-                body.move(-intersect_x * push, 0.0f);
-            } else {
-                move(-intersect_x * (1.0f - push), 0.0f);
-                body.move(intersect_x * push, 0.0f);
+    if (intersec_x < 0.0f && intersec_y < 0.0f) {
+        if (intersec_x > intersec_y) {
+            if (dir.x < 0.0f && delta_x > 0.0f) {
+                body.move(-dir.x, 0.0f);
+            } else if (dir.x > 0.0f && delta_x < 0.0f) {
+                body.move(-dir.x, 0.0f);
             }
         } else {
-            if (mod_y > 0.0f) {
-                move(0.0f, intersect_y * (1.0f - push));
-                body.move(0.0f, -intersect_y * push);
-            } else {
-                move(0.0f, -intersect_y * (1.0f - push));
-                body.move(0.0f, intersect_y * push);
+            if (delta_y > 0.0f && dir.y > 0.0f) {
+                body.move(0.0f, -dir.y);
+            } else if (delta_y < 0.0f) {
+                body.move(0.0f, -dir.y);
             }
         }
-
         return true;
     }
+
 
     return false;
 }
