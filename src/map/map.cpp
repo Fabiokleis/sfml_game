@@ -13,15 +13,13 @@ Map::Map() {
 }
 
 Map::~Map() {
-    delete map_str;
-    delete tileset_buffer;
 }
 
 void Map::init_variables() {
 
     rapidjson::Document map_doc;
 
-    map_doc.Parse(this->map_str);
+    map_doc.Parse(this->map_str.c_str());
 
     this->height = map_doc["height"].GetInt();
     this->infinite = map_doc["infinite"].GetBool();
@@ -111,33 +109,23 @@ std::vector<Layer> Map::get_layers() {
 void Map::load_map() {
     std::string path = RESOURCE_PATH;
     path += "map/platform.json";
-
     this->map_str = this->read_file(path);
 }
 
 void Map::load_tileset_buffer(std::string filename) {
     std::string path = RESOURCE_PATH;
     path += "map/" + filename;
-
     this->tileset_buffer = this->read_file(path);
 }
 
 // read a buffer of json file and returns
-inline const char* Map::read_file(std::string filename) {
-
+std::string Map::read_file(const std::string filename) {
     std::cout << filename << "\n";
-    FILE* f = fopen(filename.c_str(), "r");
-
-	fseek(f, 0, SEEK_END);
-	size_t size = ftell(f);
-
-	char* buffer = new char[size];
-
-	rewind(f);
-	fread(buffer, sizeof(char), size, f);
-
-    std::cout << buffer;
-	return buffer;
+    std::ostringstream buf; 
+    std::ifstream input(filename.c_str()); 
+    buf << input.rdbuf(); 
+    std::cout << buf.str();
+    return buf.str();
 }
 
 // initialize each tile of map puttin into vector of tiles

@@ -32,3 +32,4 @@ target_include_directories(game
     "${CMAKE_CURRENT_SOURCE_DIR}/include/player"
     "${CMAKE_CURRENT_SOURCE_DIR}/include/rapidjson"
   )
+

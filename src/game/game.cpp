@@ -30,7 +30,7 @@ void Game::init_textures() {
 
     std::string path = RESOURCE_PATH;
 
-    if (!this->background_tex.loadFromFile(path+"ghost_bg_large.png")) {
+    if (!this->background_tex.loadFromFile(path+"space_pixelart.png")) {
         std::cout << "ERROR:GAME::COULD NOT LOAD BACKGROUND TEXTURE." << std::endl;
     }
     
