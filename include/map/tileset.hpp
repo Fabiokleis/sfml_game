@@ -21,7 +21,7 @@ class TileSet {
 
     public:
         TileSet();
-        TileSet(int firstg_id, const char* tileset);
+        TileSet(int firstg_id, std::string tileset);
         ~TileSet();
 
         int get_firstg_id();

@@ -34,3 +34,4 @@ target_include_directories(game
     "${CMAKE_CURRENT_SOURCE_DIR}/include/rapidjson"
     "${CMAKE_CURRENT_SOURCE_DIR}/include/collider"
   )
+

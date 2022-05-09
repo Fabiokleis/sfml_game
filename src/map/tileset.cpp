@@ -1,10 +1,10 @@
 #include <iostream>
 #include "tileset.hpp"
 
-TileSet::TileSet (int firstg_id, const char* tileset) {
+TileSet::TileSet (int firstg_id, std::string tileset) {
     this->firstg_id = firstg_id;
     rapidjson::Document tileset_doc;
-    tileset_doc.Parse(tileset);
+    tileset_doc.Parse(tileset.c_str());
 
     this->columns = tileset_doc["columns"].GetInt();
     this->image = tileset_doc["image"].GetString();
