@@ -1,8 +1,7 @@
 #include "tilemap.hpp"
 
 void TileMap::set_tilehitbox(float width, float left, float height, float top) {
-    Tile tile(width, left, height, top);
-    this->tilesets_enabled.push_back(tile);
+    this->tilesets_enabled.emplace_back(width, left, height, top);
 }
 
 std::vector<Tile> TileMap::get_tiles() {
@@ -58,10 +57,11 @@ bool TileMap::load(TileSet tileset, Layer layer) {
             quad[1].position = sf::Vector2f(xPos2, yPos1);
             quad[2].position = sf::Vector2f(xPos2, yPos2);
             quad[3].position = sf::Vector2f(xPos1, yPos2);
-            
+
             // populate the vector of tilesets with enabled tiles
-            this->set_tilehitbox(tileset.get_tile_width(), xPos2, tileset.get_tile_height(), yPos2);
-            
+
+            this->set_tilehitbox(static_cast<float>(tileset.get_tile_width()), xPos2, static_cast<float>(tileset.get_tile_height()), yPos2);
+
             // set into quad the position of tex vertices
             quad[0].texCoords = sf::Vector2f(x1, y1);
             quad[1].texCoords = sf::Vector2f(x2, y1);

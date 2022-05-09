@@ -23,5 +23,4 @@ class TileMap : public sf::Drawable, public sf::Transformable {
 		std::vector<Tile> get_tiles();
 		bool load(TileSet tileset, Layer layer);
 		void set_tilehitbox(float width, float left, float height, float top);
-
 };

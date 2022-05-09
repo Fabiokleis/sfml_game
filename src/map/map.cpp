@@ -10,6 +10,7 @@ Map::Map() {
     this->init_variables();
     this->load_tilesets();
     this->load_tilemap();
+    this->init_tiles();
 }
 
 Map::~Map() {
@@ -52,7 +53,6 @@ void Map::init_variables() {
 
     this->tile_width = map_doc["tilewidth"].GetInt();
     this->width = map_doc["width"].GetInt();
-
 }
 
 /* GET */
@@ -97,13 +97,17 @@ std::vector<TileSetMap> Map::get_tile_set_map() {
     return this->tileset_maps;
 }
 
-std::vector<TileSet> Map::get_tilesets() {
+std::vector<TileSet>& Map::get_tilesets() {
     return this->tilesets;
 }
 
 std::vector<Layer> Map::get_layers() {
     return this->layers;
 }
+std::vector<Tile> Map::get_tiles() {
+    return this->tiles;
+}
+
 
 /* TEG */
 
@@ -123,7 +127,7 @@ void Map::load_tileset_buffer(std::string filename) {
 }
 
 // read a buffer of json file and returns
-inline const char* Map::read_file(std::string filename) {
+inline const char* Map::read_file(const std::string& filename) {
 
     std::cout << filename << "\n";
     FILE* f = fopen(filename.c_str(), "r");
@@ -156,7 +160,7 @@ void Map::load_tilesets() {
 void Map::load_tilemap() {
     for (size_t i = 0; i < this->layers.size(); i++) {
         if (this->layers[i].get_type() == "tilelayer") {
-            this->tilemap_render.push_back(TileMap());
+            this->tilemap_render.emplace_back();
             this->find_tileset(this->layers[i], this->tilesets);
         }
     }
@@ -164,21 +168,13 @@ void Map::load_tilemap() {
 
 // get by firstg_id if a tile is set or not
 void Map::find_tileset(Layer& layer, std::vector<TileSet>& tilesets) {
-    for (auto data : layer.get_data()) {
-        if (data > 0) {
-            for (auto &tile : tilesets) {
-                if (tile.get_firstg_id() <= data) {
-                    // load a tile if is set on layer
-                    this->tilemap_render.back().load(tile, layer);
-                }
-            }
-        }
+    for (auto& tile: tilesets) {
+        this->tilemap_render.back().load(tile, layer);
     }
 }
 
-std::vector<Tile> Map::get_tiles() {
+void Map::init_tiles() {
     this->tiles = this->tilemap_render.back().get_tiles();
-    return this->tiles;
 }
 
 void Map::update() {}

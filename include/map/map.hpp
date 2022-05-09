@@ -8,6 +8,7 @@
 #include "tilesetmap.hpp"
 #include "tileset.hpp"
 #include "config.h"
+#include "tile.hpp"
 
 #pragma once
 class Map {
@@ -30,7 +31,6 @@ class Map {
         std::vector<TileMap> tilemap_render;
         std::vector<Tile> tiles;
 
-
     public:
         Map();
         ~Map();
@@ -42,22 +42,21 @@ class Map {
         int get_next_object_id();
         int get_tile_width();
         int get_tile_height();
+        std::vector<Tile> get_tiles();
         bool is_infinite();
 
         std::string get_orientation();
         std::string get_render_order();
-        std::vector<Tile> get_tiles();
-        std::vector<TileSet> get_tilesets();
+        std::vector<TileSet> & get_tilesets();
         std::vector<TileSetMap> get_tile_set_map();
         std::vector<Layer> get_layers();
         void find_tileset(Layer& layer, std::vector<TileSet>& tilesets);
-
         void load_tileset_buffer(std::string filename);
-        const char* read_file(std::string filename);
+        static const char* read_file(const std::string& filename);
         void load_map();
         void load_tilesets();
         void load_tilemap();
+        void init_tiles();
         void update();
         void render(sf::RenderTarget* target);
-
 };

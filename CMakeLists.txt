@@ -4,7 +4,7 @@ project(game VERSION 0.1)
 
 file(GLOB SOURCE ./src/main.cpp src/**/*.cpp)
 
-set(RESOURCE_PATH "${PROJECT_SOURCE_DIR}/contents/")
+set(RESOURCE_PATH "${PROJECT_SOURCE_DIR}/assets/")
 
 #set(SFML_STATIC_LIBRARIES TRUE)
 
@@ -14,7 +14,7 @@ configure_file(./include/config.h.in config.h)
 
 find_package(SFML REQUIRED graphics window)
 
-add_executable(game "${SOURCE}")
+add_executable(game "${SOURCE}" src/map/tile.cpp)
 
 target_link_libraries(game
     sfml-graphics 
@@ -30,5 +30,7 @@ target_include_directories(game
     "${CMAKE_CURRENT_SOURCE_DIR}/include/game"
     "${CMAKE_CURRENT_SOURCE_DIR}/include/map"
     "${CMAKE_CURRENT_SOURCE_DIR}/include/player"
+    "${CMAKE_CURRENT_SOURCE_DIR}/include/animation"
     "${CMAKE_CURRENT_SOURCE_DIR}/include/rapidjson"
+    "${CMAKE_CURRENT_SOURCE_DIR}/include/collider"
   )

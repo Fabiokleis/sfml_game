@@ -13,9 +13,11 @@ class Game {
         std::vector<sf::VideoMode> video_modes;
         sf::Sprite background;
         sf::Texture background_tex;
-        std::vector<Tile> tiles;
+        sf::Clock clock;
+        float delta_time;
         sf::Text text;
         sf::Font font;
+        std::vector<Tile> tiles;
 
         Map* map;
 

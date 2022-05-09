@@ -46,7 +46,7 @@ void Game::init_map() {
 }
 
 void Game::init_player() {
-    this->player = new Player(512, 320.f);
+    this->player = new Player(512.0f, 320.f);
 }
 
 void Game::init_font() {
@@ -64,7 +64,7 @@ void Game::handle_collision() {
 
     // map and player collision
     for (auto& tile : this->tiles) {
-        this->player->set_collide(tile.check_collision(this->player->get_body(), this->player->get_velocity()));
+        tile.get_collider().check_collision(this->player->get_collider(), this->player->get_velocity(), 0.0f);
     }
 }
 
@@ -82,20 +82,20 @@ void Game::handle_events() {
                 if (this->event.key.code == sf::Keyboard::Escape) {
                     this->window->close();
                 }
-                this->player->reset_animation_timer();
+                this->player->reset_clock(this->delta_time);
                 break;
-            case sf::Event::KeyReleased:
-                
-                if (
-                    this->event.key.code == sf::Keyboard::A || 
-                    this->event.key.code == sf::Keyboard::D ||
-                    this->event.key.code == sf::Keyboard::S ||
-                    this->event.key.code == sf::Keyboard::W ||
-                    this->event.key.code == sf::Keyboard::Space
-                )
-                {
-                    this->player->reset_animation_timer();
-                }
+//            case sf::Event::KeyReleased:
+//
+                // if (
+                //     this->event.key.code == sf::Keyboard::A ||
+                //     this->event.key.code == sf::Keyboard::D ||
+                //     this->event.key.code == sf::Keyboard::S ||
+                //     this->event.key.code == sf::Keyboard::W ||
+                //     this->event.key.code == sf::Keyboard::Space
+                // )
+                // {
+//
+//                // }
 
                 break;
 
@@ -116,17 +116,19 @@ void Game::render_text() {
 void Game::game_loop() {
     
     float fps;
-    sf::Clock clock = sf::Clock();
-    sf::Time previousTime = clock.getElapsedTime();
+    sf::Clock local_clock;
+    sf::Time previousTime = local_clock.getElapsedTime();
     sf::Time currentTime;
 
     while (this->window->isOpen()) {
 
-        currentTime = clock.getElapsedTime();
+        currentTime = local_clock.getElapsedTime();
         fps = 1.0f / (currentTime.asSeconds() - previousTime.asSeconds()); // the asSeconds returns a float 
         previousTime = currentTime;
+
+        this->delta_time = this->clock.restart().asSeconds();
         this->set_fps(fps);
-        this->update(); 
+        this->update();
         this->render();
     }
 }

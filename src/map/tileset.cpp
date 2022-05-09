@@ -22,6 +22,7 @@ TileSet::TileSet (int firstg_id, const char* tileset) {
 TileSet::~TileSet() {}
 
 /* GET */
+
 int TileSet::get_firstg_id() {
     return this->firstg_id;
 }
