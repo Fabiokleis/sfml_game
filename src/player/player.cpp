@@ -20,22 +20,22 @@ void Player::init_texture(const float x, const float y) {
         std::cout << "ERROR::PLAYER::COULD NOT LOAD TEXTURE FILE." << std::endl;
     }
 
-    this->size = sf::Vector2f(45, 78);
+    this->size = sf::Vector2f(45, 80);
     this->shape = sf::IntRect(0, 0, static_cast<int>(size.x), static_cast<int>(size.y));
     this->sprite.setTexture(&this->texture);
     this->sprite.setTextureRect(this->shape);
     this->sprite.setPosition(x, y);
     this->sprite.setSize(size);
     this->sprite.setOrigin(size / 2.0f);
-//    this->sprite.setOutlineThickness(2.0f);
-//    this->sprite.setOutlineColor(sf::Color::Yellow);
+    this->sprite.setOutlineThickness(2.0f);
+    this->sprite.setOutlineColor(sf::Color::Yellow);
     this->player_animation = new Animation(&this->texture, sf::Vector2u(3, 5), 0.12f);
 }
 
 void Player::init_physics() {
     this->velocity_max = 200.0f;
-    this->velocity_min = 150.0f;
-    this->velocity_max_y = 200.f;
+    this->velocity_min = 1.0f;
+    this->velocity_max_y = 300.f;
     this->jump_height = 162.0f;
     this->acceleration = 200.0f;
     this->gravity = 981.0f;
@@ -74,7 +74,7 @@ void Player::on_collision() {
         this->can_jump = true;
     } else if (this->velocity.y > 0.0f) {
         // collision on top
-        this->velocity.y = 0.0f;
+        //this->velocity.y = 0.0f;
     }
 }
 
@@ -83,24 +83,16 @@ void Player::move(const float dir_x, const float dir_y) {
     this->velocity.x += dir_x * this->acceleration;
 
     // jump
-
-    float jump = -((2 * dir_y) * this->gravity * this->jump_height);
-    this->velocity.y = -sqrt(jump);
+    if (this->state == jumping) {
+        float jump = -((2 * dir_y) * this->gravity * this->jump_height);
+        this->velocity.y = -sqrt(jump);
+        this->state = falling;
+    }
 }
 
 void Player::update_physics() {
     this->velocity.y += this->gravity * this->delta_time;
 
-    if (std::abs(this->velocity.x) > this->velocity_max) {
-        this->velocity.x = this->velocity_max * ((this->velocity.x < 0.f) ? -1.f: 1.f);
-    }
-
-    if (std::abs(this->velocity.x) < this->velocity_min) {
-        this->velocity.x = 0.f;
-    }
-    if (std::abs(this->velocity.y) < this->velocity_min) {
-        this->velocity.y = this->velocity_min;
-    }
     this->sprite.move(this->velocity * this->delta_time);
 }
 

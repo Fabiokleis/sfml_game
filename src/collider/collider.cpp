@@ -39,20 +39,16 @@ bool Collider::check_collision(Collider other, sf::Vector2f& dir) {
             if (delta_x > 0.0f) {
                 other.move(-intersect_x, 0.0f);
                 dir.x = 1.0f;
-                dir.y = 0.0f;
             } else if (delta_x < 0.0f){
                 other.move(intersect_x, 0.0f);
                 dir.x = -1.0f;
-                dir.y = 0.0f;
             }
         } else {
             if (delta_y > 0.0f) {
                 other.move(0.0f, -intersect_y);
-                dir.x = 0.0f;
                 dir.y = 1.0f;
             } else if (delta_y < 0.0f) {
                 other.move(0.0f, intersect_y);
-                dir.x = 0.0f;
                 dir.y = -1.0f;
             }
         }

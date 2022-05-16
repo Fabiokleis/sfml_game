@@ -21,7 +21,7 @@ Game::~Game() {
 void Game::init_window() {
     sf::VideoMode window_bounds = sf::VideoMode::getDesktopMode();
 
-    this->window = new sf::RenderWindow(sf::VideoMode(1376,960), "c++ game");
+    this->window = new sf::RenderWindow(sf::VideoMode(1024, 640), "c++ game");
 
     this->window->setFramerateLimit(60);
 }
