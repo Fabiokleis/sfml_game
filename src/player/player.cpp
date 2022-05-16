@@ -16,7 +16,7 @@ Player::~Player() {
 void Player::init_texture(const float x, const float y) {
     std::string path = RESOURCE_PATH;
 
-    if (!this->texture.loadFromFile(path+"player/player_sprite2.png")) {
+    if (!this->texture.loadFromFile(path+"player/player_sprite.png")) {
         std::cout << "ERROR::PLAYER::COULD NOT LOAD TEXTURE FILE." << std::endl;
     }
 
