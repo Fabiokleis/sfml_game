@@ -1,5 +1,6 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
+#include <sstream>
 #include "istreamwrapper.h"
 #include "rapidjson.h"
 #include "document.h"
@@ -14,8 +15,8 @@
 class Map {
 
     private:
-        const char* map_str;
-        const char* tileset_buffer;
+        std::string map_str;
+        std::string tileset_buffer;
         int height;
         int width;
         bool infinite;
@@ -52,7 +53,7 @@ class Map {
         std::vector<Layer> get_layers();
         void find_tileset(Layer& layer, std::vector<TileSet>& tilesets);
         void load_tileset_buffer(std::string filename);
-        static const char* read_file(const std::string& filename);
+        std::string read_file(std::string filename);
         void load_map();
         void load_tilesets();
         void load_tilemap();

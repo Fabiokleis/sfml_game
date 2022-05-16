@@ -30,7 +30,7 @@ void Game::init_textures() {
 
     std::string path = RESOURCE_PATH;
 
-    if (!this->background_tex.loadFromFile(path+"ghost_bg_large.png")) {
+    if (!this->background_tex.loadFromFile(path+"space_pixelart.png")) {
         std::cout << "ERROR:GAME::COULD NOT LOAD BACKGROUND TEXTURE." << std::endl;
     }
     
@@ -46,13 +46,13 @@ void Game::init_map() {
 }
 
 void Game::init_player() {
-    this->player = new Player(512.0f, 320.f);
+    this->player = new Player(512.0f, 120.0f);
 }
 
 void Game::init_font() {
     this->text.setFont(this->font);
-    this->text.setCharacterSize(30);
-    this->text.setPosition(996, 0.0f);
+    this->text.setCharacterSize(32);
+    this->text.setPosition(static_cast<float>(this->window->getSize().x) - 32.0f, -8.0f);
     this->text.setFillColor(sf::Color::Yellow);
 }
 
@@ -64,7 +64,9 @@ void Game::handle_collision() {
 
     // map and player collision
     for (auto& tile : this->tiles) {
-        tile.get_collider().check_collision(this->player->get_collider(), this->player->get_velocity(), 0.0f);
+        if (tile.get_collider().check_collision(this->player->get_collider(), this->player->get_velocity())) {
+            this->player->on_collision();
+        }
     }
 }
 

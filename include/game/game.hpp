@@ -14,6 +14,7 @@ class Game {
         sf::Sprite background;
         sf::Texture background_tex;
         sf::Clock clock;
+        sf::Time total_time;
         float delta_time;
         sf::Text text;
         sf::Font font;
