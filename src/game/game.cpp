@@ -21,7 +21,7 @@ Game::~Game() {
 void Game::init_window() {
     sf::VideoMode window_bounds = sf::VideoMode::getDesktopMode();
 
-    this->window = new sf::RenderWindow(sf::VideoMode(1024, 640), "c++ game");
+    this->window = new sf::RenderWindow(sf::VideoMode(1376,960), "c++ game");
 
     this->window->setFramerateLimit(60);
 }
@@ -46,13 +46,13 @@ void Game::init_map() {
 }
 
 void Game::init_player() {
-    this->player = new Player(512.0f, 320.f);
+    this->player = new Player(512.0f, 120.0f);
 }
 
 void Game::init_font() {
     this->text.setFont(this->font);
-    this->text.setCharacterSize(30);
-    this->text.setPosition(996, 0.0f);
+    this->text.setCharacterSize(32);
+    this->text.setPosition(static_cast<float>(this->window->getSize().x) - 32.0f, -8.0f);
     this->text.setFillColor(sf::Color::Yellow);
 }
 
@@ -64,7 +64,9 @@ void Game::handle_collision() {
 
     // map and player collision
     for (auto& tile : this->tiles) {
-        tile.get_collider().check_collision(this->player->get_collider(), this->player->get_velocity(), 0.0f);
+        if (tile.get_collider().check_collision(this->player->get_collider(), this->player->get_velocity())) {
+            this->player->on_collision();
+        }
     }
 }
 
