@@ -1,5 +1,5 @@
 #include "tilesetmap.hpp"
-
+using namespace Maps;
 
 TileSetMap::TileSetMap() {}
 TileSetMap::~TileSetMap() {}

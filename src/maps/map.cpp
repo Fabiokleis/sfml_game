@@ -4,6 +4,7 @@
 #include "layer.hpp"
 #include "tilesetmap.hpp"
 #include "config.h"
+using namespace Maps;
 
 Map::Map() {
     this->load_map();

@@ -1,5 +1,6 @@
 #include <iostream>
 #include "tileset.hpp"
+using namespace Maps;
 
 TileSet::TileSet (int firstg_id, std::string tileset) {
     this->firstg_id = firstg_id;

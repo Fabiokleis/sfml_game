@@ -14,7 +14,7 @@ configure_file(./include/config.h.in config.h)
 
 find_package(SFML REQUIRED graphics window)
 
-add_executable(game "${SOURCE}" src/map/tile.cpp)
+add_executable(game "${SOURCE}")
 
 target_link_libraries(game
     sfml-graphics 
@@ -28,10 +28,8 @@ target_include_directories(game
   PRIVATE
     "${PROJECT_BINARY_DIR}"
     "${CMAKE_CURRENT_SOURCE_DIR}/include/game"
-    "${CMAKE_CURRENT_SOURCE_DIR}/include/map"
-    "${CMAKE_CURRENT_SOURCE_DIR}/include/player"
-    "${CMAKE_CURRENT_SOURCE_DIR}/include/animation"
-    "${CMAKE_CURRENT_SOURCE_DIR}/include/rapidjson"
-    "${CMAKE_CURRENT_SOURCE_DIR}/include/collider"
-  )
+    "${CMAKE_CURRENT_SOURCE_DIR}/include/maps"
+    "${CMAKE_CURRENT_SOURCE_DIR}/include/entities"
+    "${CMAKE_CURRENT_SOURCE_DIR}/include/controllers"
+)
 

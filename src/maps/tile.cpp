@@ -1,4 +1,5 @@
 #include "tile.hpp"
+using namespace Maps;
 
 Tile::Tile(float width, float left, float height, float top) {
     this->body.setSize(sf::Vector2f(width, height));
@@ -8,7 +9,7 @@ Tile::Tile(float width, float left, float height, float top) {
 
 Tile::~Tile() {}
 
-Collider Tile::get_collider() {
+Controllers::Collider Tile::get_collider() {
 
-    return Collider(this->body);
+    return Controllers::Collider(this->body);
 }

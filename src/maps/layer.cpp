@@ -1,4 +1,5 @@
 #include "layer.hpp"
+using namespace Maps;
 
 Layer::Layer(rapidjson::Value& value) {
 	if (value.HasMember("data")) {

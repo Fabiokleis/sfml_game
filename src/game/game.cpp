@@ -41,12 +41,12 @@ void Game::init_textures() {
 }
 
 void Game::init_map() {
-    this->map = new Map();
+    this->map = new Maps::Map();
     this->tiles = this->map->get_tiles();
 }
 
 void Game::init_player() {
-    this->player = new Player(512.0f, 120.0f);
+    this->player = new Entities::Player(512.0f, 0.0f);
 }
 
 void Game::init_font() {
@@ -84,21 +84,18 @@ void Game::handle_events() {
                 if (this->event.key.code == sf::Keyboard::Escape) {
                     this->window->close();
                 }
+                if (this->event.key.code == sf::Keyboard::Space) {
+                    this->player->set_state(Entities::jumping);
+                }
+
                 this->player->reset_clock(this->delta_time);
                 break;
-//            case sf::Event::KeyReleased:
-//
-                // if (
-                //     this->event.key.code == sf::Keyboard::A ||
-                //     this->event.key.code == sf::Keyboard::D ||
-                //     this->event.key.code == sf::Keyboard::S ||
-                //     this->event.key.code == sf::Keyboard::W ||
-                //     this->event.key.code == sf::Keyboard::Space
-                // )
-                // {
-//
-//                // }
+            case sf::Event::KeyReleased:
 
+                if (this->event.key.code == sf::Keyboard::Space) {
+                    this->player->set_state(Entities::falling);
+                }
+                
                 break;
 
             default:

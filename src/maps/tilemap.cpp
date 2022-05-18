@@ -1,4 +1,5 @@
 #include "tilemap.hpp"
+using namespace Maps;
 
 void TileMap::set_tilehitbox(float width, float left, float height, float top) {
     this->tilesets_enabled.emplace_back(width, left, height, top);
