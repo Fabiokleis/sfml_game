@@ -2,9 +2,9 @@
 #include "player.hpp"
 #include "config.h"
 #include <math.h>
+using namespace Entities;
 
-
-Player::Player(float x, float y) {
+Player::Player(const float x, const float y) {
     this->init_texture(x, y);
     this->init_physics();
 }
@@ -27,20 +27,17 @@ void Player::init_texture(const float x, const float y) {
     this->sprite.setPosition(x, y);
     this->sprite.setSize(size);
     this->sprite.setOrigin(size / 2.0f);
-    this->sprite.setOutlineThickness(2.0f);
-    this->sprite.setOutlineColor(sf::Color::Yellow);
-    this->player_animation = new Animation(&this->texture, sf::Vector2u(3, 5), 0.12f);
+    this->sprite.setOutlineThickness(1.0f);
+    this->sprite.setOutlineColor(sf::Color::Green);
+    this->player_animation = new Controllers::Animation(&this->texture, sf::Vector2u(3, 6), 0.1f);
 }
 
 void Player::init_physics() {
-    this->velocity_max = 200.0f;
-    this->velocity_min = 1.0f;
-    this->velocity_max_y = 300.f;
-    this->jump_height = 162.0f;
+    this->jump_height = 132.0f;
     this->acceleration = 200.0f;
     this->gravity = 981.0f;
     this->drag = 0.8f;
-    this->delta_time = 0.1f;
+    this->delta_time = 0.01f;
     this->can_jump = false;
     this->state = falling;
 }
@@ -49,8 +46,12 @@ sf::Vector2f& Player::get_velocity() {
     return this->velocity;
 }
 
-Collider Player::get_collider() {
-    return Collider{this->sprite};
+Controllers::Collider Player::get_collider() {
+    return Controllers::Collider{this->sprite};
+}
+
+void Player::set_state(const State s) {
+    this->state = s;
 }
 
 void Player::reset_clock(float dt) {
@@ -69,12 +70,11 @@ void Player::on_collision() {
     }
     if (this->velocity.y < 0.0f) {
         // collision on the bottom
-        this->velocity.y = 0.0f;
         state = ground;
         this->can_jump = true;
     } else if (this->velocity.y > 0.0f) {
         // collision on top
-        //this->velocity.y = 0.0f;
+        this->state = falling;
     }
 }
 
@@ -85,14 +85,13 @@ void Player::move(const float dir_x, const float dir_y) {
     // jump
     if (this->state == jumping) {
         float jump = -((2 * dir_y) * this->gravity * this->jump_height);
-        this->velocity.y = -sqrt(jump);
         this->state = falling;
+        this->velocity.y = -sqrt(jump);
     }
 }
 
 void Player::update_physics() {
     this->velocity.y += this->gravity * this->delta_time;
-
     this->sprite.move(this->velocity * this->delta_time);
 }
 
@@ -106,7 +105,6 @@ void Player::update_input() {
     } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
         this->sprite.move(0.0f, 10.0f);
     } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && this->can_jump) {
-        this->state = jumping;
         this->can_jump = false;
         this->move(0.f, -1.f);
     }
@@ -119,18 +117,34 @@ void Player::update_animation() {
         if (this->velocity.x == 0.0f) {
             this->player_animation->update(0, this->delta_time, true);
         } else {
-            if (this->velocity.x > 0.0f) {
-                this->player_animation->update(1, this->delta_time, true);
-            }
-            if (this->velocity.x < 0.0f) {
-                this->player_animation->update(1, this->delta_time, false);
+            if (state != jumping && state != falling) {
+                if (this->velocity.x > 0.0f) {
+                    this->player_animation->update(1, this->delta_time, true);
+                }
+                if (this->velocity.x < 0.0f) {
+                    this->player_animation->update(1, this->delta_time, false);
+                }
+                
+            } else {
+                if (this->state == jumping) {
+                    if (this->velocity.x > 0.0f) {
+                        this->player_animation->update(2, this->delta_time, true);
+                    }
+                    if (this->velocity.x < 0.0f) {
+                        this->player_animation->update(2, this->delta_time, false);
+                    }
+                } else if(this->state == falling) {
+                    if (this->velocity.x > 0.0f) {
+                        this->player_animation->update(3, this->delta_time, true);
+                    }
+                    if (this->velocity.x < 0.0f) {
+                        this->player_animation->update(3, this->delta_time, false);
+                    }
+                }
             }
         }
-
         this->sprite.setTextureRect(this->player_animation->rect);
     }
-
-
 }
 
 void Player::update() {

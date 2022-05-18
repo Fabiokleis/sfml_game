@@ -1,6 +1,6 @@
 #include <iostream>
 #include "collider.hpp"
-using namespace std;
+using namespace Controllers;
 
 Collider::Collider(sf::RectangleShape &body) : body(body) {}
 
@@ -31,8 +31,8 @@ bool Collider::check_collision(Collider other, sf::Vector2f& dir) {
     float delta_x = other_pos.x - this_pos.x + this_siz.x;
     float delta_y = other_pos.y - this_pos.y + this_siz.y;
 
-    float intersect_x = abs(delta_x) - (this_siz.x + other_siz.x);
-    float intersect_y = abs(delta_y) - (this_siz.y + other_siz.y);
+    float intersect_x = std::abs(delta_x) - (this_siz.x + other_siz.x);
+    float intersect_y = std::abs(delta_y) - (this_siz.y + other_siz.y);
 
     if (intersect_x < 0.0f && intersect_y < 0.0f) {
         if (intersect_x > intersect_y) {

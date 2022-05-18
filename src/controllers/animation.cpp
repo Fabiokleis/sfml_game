@@ -1,5 +1,5 @@
 #include "animation.hpp"
-
+using namespace Controllers;
 
 Animation::Animation(sf::Texture* texture, sf::Vector2u image_count, float switch_time) {
     this->rect.width = texture->getSize().x / (float) image_count.x;

@@ -1,3 +1,5 @@
+#ifndef GAME_HPP_WSHRPK2N
+#define GAME_HPP_WSHRPK2N
 #include <SFML/Graphics.hpp>
 #include <vector>
 #include "player.hpp"
@@ -5,7 +7,6 @@
 #include "map.hpp"
 #include "tile.hpp"
 
-#pragma once
 class Game {
     private:
         sf::RenderWindow* window;
@@ -18,11 +19,11 @@ class Game {
         float delta_time;
         sf::Text text;
         sf::Font font;
-        std::vector<Tile> tiles;
+        std::vector<Maps::Tile> tiles;
 
-        Map* map;
+        Maps::Map* map;
 
-        Player *player;
+        Entities::Player *player;
 
         void init_window();
         void init_textures();
@@ -45,3 +46,4 @@ class Game {
         ~Game();
         void exec();
 };
+#endif /* end of include guard: GAME_HPP_WSHRPK2N */
