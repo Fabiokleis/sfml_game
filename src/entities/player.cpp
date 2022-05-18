@@ -1,57 +1,30 @@
 #include <iostream>
+#include "character.hpp"
 #include "player.hpp"
-#include "config.h"
-#include <math.h>
+#include <cmath>
 using namespace Entities;
 
-Player::Player(const float x, const float y) {
-    this->init_texture(x, y);
+Player::Player(float x, float y) :
+    Character(sf::Vector2f(45, 80), sf::Vector2f(0.0f, 0.0f), sf::Vector2f(x, y), sf::Vector2f(0.0f, 0.0f), std::string("player/player_sprite.png"))
+{
     this->init_physics();
+    this->sprite.setOutlineThickness(1.0f);
+    this->sprite.setOutlineColor(sf::Color::Green);
+    this->player_animation = new Controllers::Animation(&this->texture, sf::Vector2u(3, 6), 0.1f);
 }
 
 Player::~Player() {
     delete player_animation;
 }
 
-void Player::init_texture(const float x, const float y) {
-    std::string path = RESOURCE_PATH;
-
-    if (!this->texture.loadFromFile(path+"player/player_sprite.png")) {
-        std::cout << "ERROR::PLAYER::COULD NOT LOAD TEXTURE FILE." << std::endl;
-    }
-
-    this->size = sf::Vector2f(45, 80);
-    this->shape = sf::IntRect(0, 0, static_cast<int>(size.x), static_cast<int>(size.y));
-    this->sprite.setTexture(&this->texture);
-    this->sprite.setTextureRect(this->shape);
-    this->sprite.setPosition(x, y);
-    this->sprite.setSize(size);
-    this->sprite.setOrigin(size / 2.0f);
-    this->sprite.setOutlineThickness(1.0f);
-    this->sprite.setOutlineColor(sf::Color::Green);
-    this->player_animation = new Controllers::Animation(&this->texture, sf::Vector2u(3, 6), 0.1f);
-}
-
 void Player::init_physics() {
     this->jump_height = 132.0f;
     this->acceleration = 200.0f;
     this->gravity = 981.0f;
-    this->drag = 0.8f;
+//    this->drag = 0.8f;
     this->delta_time = 0.01f;
     this->can_jump = false;
     this->state = falling;
-}
-
-sf::Vector2f& Player::get_velocity() {
-    return this->velocity;
-}
-
-Controllers::Collider Player::get_collider() {
-    return Controllers::Collider{this->sprite};
-}
-
-void Player::set_state(const State s) {
-    this->state = s;
 }
 
 void Player::reset_clock(float dt) {
@@ -86,7 +59,7 @@ void Player::move(const float dir_x, const float dir_y) {
     if (this->state == jumping) {
         float jump = -((2 * dir_y) * this->gravity * this->jump_height);
         this->state = falling;
-        this->velocity.y = -sqrt(jump);
+        this->velocity.y = static_cast<float>(-sqrt(static_cast<double>(jump)));
     }
 }
 
@@ -156,5 +129,3 @@ void Player::update() {
 void Player::render(sf::RenderTarget* target) {
     target->draw(this->sprite);
 }
-
-

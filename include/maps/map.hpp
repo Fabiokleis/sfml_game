@@ -20,18 +20,18 @@ namespace Maps {
         private:
             std::string map_str;
             std::string tileset_buffer;
-            int height;
-            int width;
-            bool infinite;
+            int height{};
+            int width{};
+            bool infinite{};
             std::vector<Layer> layers;
-            int next_layer_id;
-            int next_object_id;
+            int next_layer_id{};
+            int next_object_id{};
             std::string orientation;
             std::string render_order;
             std::vector<TileSet> tilesets;
             std::vector<TileSetMap> tileset_maps;
-            int tile_height;
-            int tile_width;
+            int tile_height{};
+            int tile_width{};
             std::vector<TileMap> tilemap_render;
             std::vector<Tile> tiles;
     

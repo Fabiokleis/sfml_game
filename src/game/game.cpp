@@ -3,7 +3,7 @@
 #include "config.h"
 
 
-Game::Game() {
+Game::Game() : player(512.0f, 0.0f) {
     // setup game
     this->init_window();
     this->init_textures();
@@ -13,7 +13,6 @@ Game::Game() {
 }
 
 Game::~Game() {
-    delete player;
     delete map;
     delete window;
 }
@@ -46,7 +45,7 @@ void Game::init_map() {
 }
 
 void Game::init_player() {
-    this->player = new Entities::Player(512.0f, 0.0f);
+//    this->player = new Entities::Player(512.0f, 0.0f);
 }
 
 void Game::init_font() {
@@ -64,8 +63,8 @@ void Game::handle_collision() {
 
     // map and player collision
     for (auto& tile : this->tiles) {
-        if (tile.get_collider().check_collision(this->player->get_collider(), this->player->get_velocity())) {
-            this->player->on_collision();
+        if (tile.get_collider().check_collision(this->player.get_collider(), this->player.get_velocity())) {
+            this->player.on_collision();
         }
     }
 }
@@ -85,15 +84,15 @@ void Game::handle_events() {
                     this->window->close();
                 }
                 if (this->event.key.code == sf::Keyboard::Space) {
-                    this->player->set_state(Entities::jumping);
+                    this->player.set_state(Entities::jumping);
                 }
 
-                this->player->reset_clock(this->delta_time);
+                this->player.reset_clock(this->delta_time);
                 break;
             case sf::Event::KeyReleased:
 
                 if (this->event.key.code == sf::Keyboard::Space) {
-                    this->player->set_state(Entities::falling);
+                    this->player.set_state(Entities::falling);
                 }
                 
                 break;
@@ -135,14 +134,14 @@ void Game::game_loop() {
 void Game::update() {
     this->handle_events();
     this->map->update();
-    this->player->update();
+    this->player.update();
     this->handle_collision();
 }
 
 void Game::render() {
     this->window->clear();
     this->render_bg();
-    this->player->render(this->window);
+    this->player.render(this->window);
     this->map->render(this->window);
     this->render_text();
     this->window->display();

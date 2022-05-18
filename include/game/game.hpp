@@ -11,11 +11,11 @@ class Game {
     private:
         sf::RenderWindow* window;
         sf::Event event;
-        std::vector<sf::VideoMode> video_modes;
+//        std::vector<sf::VideoMode> video_modes;
         sf::Sprite background;
         sf::Texture background_tex;
         sf::Clock clock;
-        sf::Time total_time;
+//        sf::Time total_time;
         float delta_time;
         sf::Text text;
         sf::Font font;
@@ -23,14 +23,13 @@ class Game {
 
         Maps::Map* map;
 
-        Entities::Player *player;
+        Entities::Player player;
 
         void init_window();
         void init_textures();
         void init_map();
         void init_player();
         void init_font();
-        void init_objs();
         void set_fps(float fps);
         void game_loop();
         void handle_events();
@@ -39,7 +38,6 @@ class Game {
         void update();
         void render();
         void handle_collision();
-
 
     public:
         Game();

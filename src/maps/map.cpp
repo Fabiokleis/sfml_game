@@ -14,8 +14,7 @@ Map::Map() {
     this->init_tiles();
 }
 
-Map::~Map() {
-}
+Map::~Map() = default;
 
 void Map::init_variables() {
 
