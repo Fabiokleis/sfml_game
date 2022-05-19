@@ -1,9 +1,10 @@
 #include "window_server.hpp"
 using namespace Controllers;
 
-WindowServer::WindowServer(unsigned int size_x, unsigned int size_y, unsigned int fps, const std::string& window_title) {
-    this->window = new sf::RenderWindow(sf::VideoMode(size_x, size_y), window_title);
-    this->window->setFramerateLimit(fps);
+WindowServer::WindowServer(const std::string& window_title) {
+    this->window = new sf::RenderWindow(sf::VideoMode(WINDOW_X,  WINDOW_Y), window_title);
+    this->window->setFramerateLimit(FPS);
+    this->view = sf::View (sf::Vector2f(VIEW_HEIGHT, VIEW_HEIGHT), sf::Vector2f(VIEW_HEIGHT, VIEW_HEIGHT));
 }
 
 WindowServer::~WindowServer() {
@@ -45,6 +46,17 @@ Entities::Image *WindowServer::create_image(const std::string &path_name) {
     return new Entities::Image{path_name};
 }
 
+void WindowServer::set_view() {
+    this->window->setView(this->view);
+}
+
+void WindowServer::set_view_center(const sf::Vector2f position) {
+    this->view.setCenter(position);
+}
+
+void WindowServer::move_view(sf::Vector2f dir) {
+    this->view.move(dir);
+}
 
 void WindowServer::clear() {
     this->window->clear();
@@ -52,4 +64,8 @@ void WindowServer::clear() {
 
 void WindowServer::render(const sf::Drawable& object) {
     this->window->draw(object);
+}
+
+float WindowServer::get_view_size() {
+    return this->view.getSize().y;
 }

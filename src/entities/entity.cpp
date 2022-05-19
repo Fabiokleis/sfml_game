@@ -19,6 +19,10 @@ void Entity::set_size(sf::Vector2f size) {
     this->sprite.setSize(size);
 }
 
+const sf::Vector2f Entity::get_position() const {
+    return this->sprite.getPosition();
+}
+
 Entity::Entity() = default;
 Entity::~Entity() = default;
 

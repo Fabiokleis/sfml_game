@@ -15,6 +15,7 @@ namespace Entities {
             Entity();
             ~Entity();
             sf::RectangleShape get_sprite() const;
+            const sf::Vector2f get_position() const;
             void set_position(sf::Vector2f position);
             void set_size(sf::Vector2f size);
     };

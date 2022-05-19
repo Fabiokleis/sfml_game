@@ -14,23 +14,25 @@ class Game {
         Controllers::WindowServer window_server;
         Entities::Text *fps_text{};
         Entities::Player *player{};
-        Entities::Image *background{};
 //        std::vector<sf::VideoMode> video_modes;
         sf::Clock clock;
 //        sf::Time total_time;
         float delta_time{};
 
-        std::vector<Maps::Tile> tiles;
-
         Maps::Map* map{};
+        std::vector<Maps::Tile> tiles;
+        std::vector<Maps::TileMap> tilemap;
+        std::vector<Entities::Image> map_backgrounds;
 
-
+        bool player_out_of_window();
         void init_entities();
         void init_map();
         void set_fps(float fps);
         void game_loop();
+        void update_view();
         void handle_events();
         void update();
+        void render_map();
         void render();
         void handle_collision();
 

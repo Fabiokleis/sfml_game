@@ -12,6 +12,7 @@
 #include "tileset.hpp"
 #include "config.h"
 #include "tile.hpp"
+#include "image.hpp"
 
 namespace Maps {
 
@@ -34,13 +35,14 @@ namespace Maps {
             int tile_width{};
             std::vector<TileMap> tilemap_render;
             std::vector<Tile> tiles;
+            std::vector<Entities::Image> backgrounds;
     
         public:
             Map();
             ~Map();
     
             void init_variables();
-            int get_height();
+            int get_height() const;
             int get_width();
             int get_next_layer_id();
             int get_next_object_id();
@@ -53,10 +55,12 @@ namespace Maps {
             std::string get_render_order();
             std::vector<TileSet> & get_tilesets();
             std::vector<TileSetMap> get_tile_set_map();
+            std::vector<TileMap> get_tilemap();
+            std::vector<Entities::Image> get_backgrounds();
             std::vector<Layer> get_layers();
             void find_tileset(Layer& layer, std::vector<TileSet>& tilesets);
-            void load_tileset_buffer(std::string filename);
-            std::string read_file(std::string filename);
+            void load_tileset_buffer(const std::string& filename);
+            std::string read_file(const std::string& filename);
             void load_map();
             void load_tilesets();
             void load_tilemap();

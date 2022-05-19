@@ -55,7 +55,7 @@ void Map::init_variables() {
 
 /* GET */
 
-int Map::get_height() {
+int Map::get_height() const {
     return this->height;
 }
 
@@ -99,11 +99,19 @@ std::vector<TileSet>& Map::get_tilesets() {
     return this->tilesets;
 }
 
+std::vector<TileMap> Map::get_tilemap() {
+    return this->tilemap_render;
+}
+
 std::vector<Layer> Map::get_layers() {
     return this->layers;
 }
 std::vector<Tile> Map::get_tiles() {
     return this->tiles;
+}
+
+std::vector<Entities::Image> Map::get_backgrounds() {
+    return this->backgrounds;
 }
 
 
@@ -116,14 +124,14 @@ void Map::load_map() {
     this->map_str = this->read_file(path);
 }
 
-void Map::load_tileset_buffer(std::string filename) {
+void Map::load_tileset_buffer(const std::string& filename) {
     std::string path = RESOURCE_PATH;
     path += "map/" + filename;
     this->tileset_buffer = this->read_file(path);
 }
 
 // read a buffer of json file and returns
-std::string Map::read_file(const std::string filename) {
+std::string Map::read_file(const std::string& filename) {
     std::cout << filename << "\n";
     std::ostringstream buf; 
     std::ifstream input(filename.c_str()); 
@@ -132,13 +140,13 @@ std::string Map::read_file(const std::string filename) {
     return buf.str();
 }
 
-// initialize each tile of map puttin into vector of tiles
+// initialize each tile of map putting into vector of tiles
 void Map::load_tilesets() {
-    for (size_t i = 0; i < this->tileset_maps.size(); i++) {
-        std::string file = this->tileset_maps[i].get_source();
+    for (auto & tileset_map : this->tileset_maps) {
+        std::string file = tileset_map.get_source();
         this->load_tileset_buffer(file);
 
-        TileSet tileset(this->tileset_maps[i].get_firstg_id(), this->tileset_buffer);
+        TileSet tileset(tileset_map.get_firstg_id(), this->tileset_buffer);
 
         this->tilesets.push_back(tileset);
     }
@@ -146,10 +154,13 @@ void Map::load_tilesets() {
 
 // pass all informations parsed to be a new tilemap
 void Map::load_tilemap() {
-    for (size_t i = 0; i < this->layers.size(); i++) {
-        if (this->layers[i].get_type() == "tilelayer") {
+    for (auto & layer : this->layers) {
+        if (layer.get_type() == "tilelayer") {
             this->tilemap_render.emplace_back();
-            this->find_tileset(this->layers[i], this->tilesets);
+            this->find_tileset(layer, this->tilesets);
+        }
+        if (layer.get_type() == "imagelayer") {
+            this->backgrounds.emplace_back("map/"+layer.get_image());
         }
     }
 }
