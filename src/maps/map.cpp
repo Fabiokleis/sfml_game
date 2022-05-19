@@ -166,9 +166,3 @@ void Map::init_tiles() {
 }
 
 void Map::update() {}
-
-void Map::render(sf::RenderTarget* target) {
-    for (int i = this->tilemap_render.size()-1; i >= 0; i--) {
-        target->draw(this->tilemap_render[i]);
-    }
-}

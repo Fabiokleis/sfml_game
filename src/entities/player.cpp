@@ -2,20 +2,20 @@
 #include "character.hpp"
 #include "player.hpp"
 #include <cmath>
+
 using namespace Entities;
 
-Player::Player(float x, float y) :
-    Character(sf::Vector2f(45, 80), sf::Vector2f(0.0f, 0.0f), sf::Vector2f(x, y), sf::Vector2f(0.0f, 0.0f), std::string("player/player_sprite.png"))
+Player::Player(sf::Vector2f size, sf::Vector2f velocity, sf::Vector2f position, sf::Vector2f cord, sf::Vector2u image_count, float switch_time, State state, const std::string& path_name) :
+        Character(size, velocity, position, cord, image_count, switch_time, state, path_name)
 {
     this->init_physics();
     this->sprite.setOutlineThickness(1.0f);
     this->sprite.setOutlineColor(sf::Color::Green);
-    this->player_animation = new Controllers::Animation(&this->texture, sf::Vector2u(3, 6), 0.1f);
 }
 
-Player::~Player() {
-    delete player_animation;
-}
+Player::Player() = default;
+
+Player::~Player() = default;
 
 void Player::init_physics() {
     this->jump_height = 132.0f;
@@ -24,7 +24,6 @@ void Player::init_physics() {
 //    this->drag = 0.8f;
     this->delta_time = 0.01f;
     this->can_jump = false;
-    this->state = falling;
 }
 
 void Player::reset_clock(float dt) {
@@ -85,47 +84,39 @@ void Player::update_input() {
 
 void Player::update_animation() {
 
-    if (this->player_animation) {
-
-        if (this->velocity.x == 0.0f) {
-            this->player_animation->update(0, this->delta_time, true);
+    if (this->velocity.x == 0.0f) {
+        this->get_animation().update(0, this->delta_time, true);
+    } else {
+        if (state != jumping && state != falling) {
+            if (this->velocity.x > 0.0f) {
+                this->get_animation().update(1, this->delta_time, true);
+            }
+            if (this->velocity.x < 0.0f) {
+                this->get_animation().update(1, this->delta_time, false);
+            }
         } else {
-            if (state != jumping && state != falling) {
+            if (this->state == jumping) {
                 if (this->velocity.x > 0.0f) {
-                    this->player_animation->update(1, this->delta_time, true);
+                    this->get_animation().update(2, this->delta_time, true);
                 }
                 if (this->velocity.x < 0.0f) {
-                    this->player_animation->update(1, this->delta_time, false);
+                    this->get_animation().update(2, this->delta_time, false);
                 }
-                
-            } else {
-                if (this->state == jumping) {
-                    if (this->velocity.x > 0.0f) {
-                        this->player_animation->update(2, this->delta_time, true);
-                    }
-                    if (this->velocity.x < 0.0f) {
-                        this->player_animation->update(2, this->delta_time, false);
-                    }
-                } else if(this->state == falling) {
-                    if (this->velocity.x > 0.0f) {
-                        this->player_animation->update(3, this->delta_time, true);
-                    }
-                    if (this->velocity.x < 0.0f) {
-                        this->player_animation->update(3, this->delta_time, false);
-                    }
+            } else if(this->state == falling) {
+                if (this->velocity.x > 0.0f) {
+                    this->get_animation().update(3, this->delta_time, true);
+                }
+                if (this->velocity.x < 0.0f) {
+                    this->get_animation().update(3, this->delta_time, false);
                 }
             }
         }
-        this->sprite.setTextureRect(this->player_animation->rect);
     }
+    this->set_rect(this->get_animation().rect);
 }
 
 void Player::update() {
     this->update_input();
     this->update_physics();
     this->update_animation();
-}
-
-void Player::render(sf::RenderTarget* target) {
-    target->draw(this->sprite);
 }

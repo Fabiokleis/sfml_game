@@ -62,7 +62,6 @@ namespace Maps {
             void load_tilemap();
             void init_tiles();
             void update();
-            void render(sf::RenderTarget* target);
     };
 }
 #endif /* end of include guard: MAP_HPP_RTB6ZINA */

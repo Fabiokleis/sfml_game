@@ -12,9 +12,11 @@ namespace Entities {
 
         public:
             Entity(sf::Vector2f position, sf::Vector2f size);
+            Entity();
             ~Entity();
-            sf::Vector2f get_position() const;
-            sf::Vector2f get_size() const;
+            sf::RectangleShape get_sprite() const;
+            void set_position(sf::Vector2f position);
+            void set_size(sf::Vector2f size);
     };
 }
 #endif /* end of include guard: ENTITY_HPP_NUO0WDEY */

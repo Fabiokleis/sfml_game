@@ -13,8 +13,6 @@ namespace Entities {
    
     class Player : public Character {
         private:
-            Controllers::Animation* player_animation{};
-    
             bool can_jump{};
             float jump_height{};
             float acceleration{};
@@ -24,7 +22,9 @@ namespace Entities {
     
     
         public:
-            Player(float x, float y);
+            Player(sf::Vector2f size, sf::Vector2f velocity, sf::Vector2f position, sf::Vector2f cord, sf::Vector2u image_count, float switch_time, State state, const std::string& path_name);
+            Player();
+
             ~Player();
     
             void init_physics();
@@ -35,7 +35,6 @@ namespace Entities {
             void reset_clock(float dt);
             void on_collision();
             void move(float dir_x, float dir_y) override;
-            void render(sf::RenderTarget* target);
     };
 }
 #endif /* end of include guard: PLAYER_HPP_WHBHED8U */

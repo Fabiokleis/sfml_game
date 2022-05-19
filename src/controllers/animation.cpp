@@ -1,18 +1,16 @@
 #include "animation.hpp"
 using namespace Controllers;
 
-Animation::Animation(sf::Texture* texture, sf::Vector2u image_count, float switch_time) {
-    this->rect.width = texture->getSize().x / (float) image_count.x;
-    this->rect.height = texture->getSize().y / (float) image_count.y;
-    this->image_count = image_count;
-    this->switch_time = switch_time;
+Animation::Animation(sf::Vector2u size, sf::Vector2u image_count, float switch_time) :
+    image_count(image_count), switch_time(switch_time)
+{
+    this->rect.width =  static_cast<int>(size.x / image_count.x);
+    this->rect.height = static_cast<int>(size.y / image_count.y);
     this->total_time = 0.0f;
     this->current_image.x = 0.0f;
 }
 
-Animation::~Animation() {
-
-}
+Animation::~Animation() = default;
 
 void Animation::update(int row, float delta_time, bool face_right) {
     this->current_image.y = row;
@@ -27,13 +25,13 @@ void Animation::update(int row, float delta_time, bool face_right) {
         }
     }
 
-    this->rect.top = this->current_image.y * this->rect.height;
+    this->rect.top = static_cast<int>(this->current_image.y * this->rect.height);
 
     if (face_right) {
-        this->rect.left = this->current_image.x * this->rect.width;
+        this->rect.left = static_cast<int>(this->current_image.x * this->rect.width);
         this->rect.width = abs(this->rect.width);
     } else {
-        this->rect.left = (this->current_image.x + 1) * abs(this->rect.width);
+        this->rect.left = static_cast<int>((this->current_image.x + 1) * abs(this->rect.width));
         this->rect.width = -abs(this->rect.width);
     }
 }
