@@ -23,6 +23,10 @@ void Text::set_text(const std::string& str) {
     this->text.setString(str);
 }
 
+void Text::set_position(sf::Vector2f position) {
+    this->text.setPosition(position);
+}
+
 sf::Text& Text::get_text() {
     return this->text;
 }

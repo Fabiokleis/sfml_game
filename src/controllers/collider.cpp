@@ -28,8 +28,8 @@ bool Collider::check_collision(Collider other, sf::Vector2f& dir) {
     sf::Vector2f other_pos = other.get_position();
     sf::Vector2f other_siz = other.get_size() / 2.0f;
 
-    float delta_x = other_pos.x - this_pos.x + this_siz.x;
-    float delta_y = other_pos.y - this_pos.y + this_siz.y;
+    float delta_x = other_pos.x - this_pos.x;
+    float delta_y = other_pos.y - this_pos.y;
 
     float intersect_x = std::abs(delta_x) - (this_siz.x + other_siz.x);
     float intersect_y = std::abs(delta_y) - (this_siz.y + other_siz.y);

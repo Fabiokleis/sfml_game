@@ -61,7 +61,10 @@ bool TileMap::load(TileSet tileset, Layer layer) {
 
             // populate the vector of tilesets with enabled tiles
 
-            this->set_tilehitbox(static_cast<float>(tileset.get_tile_width()), xPos2, static_cast<float>(tileset.get_tile_height()), yPos2);
+            this->set_tilehitbox(static_cast<float>(tileset.get_tile_width()),
+                                 xPos1 + static_cast<float>(tileset.get_tile_width()) / 2.0f,
+                                 static_cast<float>(tileset.get_tile_height()),
+                                 yPos1 + static_cast<float>(tileset.get_tile_height()) / 2.0f);
 
             // set into quad the position of tex vertices
             quad[0].texCoords = sf::Vector2f(x1, y1);

@@ -8,15 +8,16 @@
 #include "map.hpp"
 #include "tile.hpp"
 #include "image.hpp"
+#include "menu.hpp"
 
 class Game {
     private:
         Controllers::WindowServer window_server;
         Entities::Text *fps_text{};
         Entities::Player *player{};
-//        std::vector<sf::VideoMode> video_modes;
-        sf::Clock clock;
-//        sf::Time total_time;
+        Controllers::Menu *menu{};
+
+        sf::Clock clock{};
         float delta_time{};
 
         Maps::Map* map{};
@@ -29,7 +30,7 @@ class Game {
         void init_map();
         void set_fps(float fps);
         void game_loop();
-        void update_view();
+        void update_player_view();
         void handle_events();
         void update();
         void render_map();

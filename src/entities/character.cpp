@@ -21,7 +21,7 @@ Character::Character() = default;
 
 Character::~Character() {
     delete animation;
-};
+}
 
 void Character::init_texture() {
     std::string assets_path = RESOURCE_PATH;

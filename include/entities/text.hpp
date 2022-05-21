@@ -15,6 +15,7 @@ namespace Entities {
             Text();
             ~Text();
             void set_text(const std::string& str);
+            void set_position(sf::Vector2f position);
             sf::Text& get_text();
 
     };

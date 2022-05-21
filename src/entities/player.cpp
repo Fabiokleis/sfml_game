@@ -33,11 +33,11 @@ void Player::reset_clock(float dt) {
 void Player::on_collision() {
     if (this->velocity.x < 0.0f) {
         // collision on the left
-        this->velocity.x = 0.0f;
+//        this->velocity.x = 0.0f;
         state = left;
     } else if (this->velocity.x > 0.0f) {
         // collision on the right
-        this->velocity.x = 0.0f;
+//        this->velocity.x = 0.0f;
         state = right;
     }
     if (this->velocity.y < 0.0f) {
@@ -75,7 +75,7 @@ void Player::update_input() {
     } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
         this->move(1.0f, 0.0f);
     } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
-        this->sprite.move(0.0f, 10.0f);
+        this->sprite.move(0.0f, 1.0f);
     } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && this->can_jump) {
         this->can_jump = false;
         this->move(0.f, -1.f);

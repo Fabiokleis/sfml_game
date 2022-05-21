@@ -13,6 +13,7 @@ namespace Maps {
             Tile(float width, float left, float height, float top);
             ~Tile();
             Controllers::Collider get_collider();
+            sf::RectangleShape get_body();
     };
 }
 #endif /* end of include guard: TILE_HPP_30AHWVXM */
