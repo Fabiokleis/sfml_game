@@ -240,8 +240,8 @@ void Game::init_map() {
     this->map = new Maps::Map();
     this->tiles = this->map->get_tiles();
     this->locations = this->map->get_locations();
-    this->start_location = this->locations[0];
-    this->end_location = this->locations[1];
+    this->start_location = this->locations[0]; // start position of player
+    this->end_location = this->locations[1]; // end of the map, defined to load other map
     this->tilemap = this->map->get_tilemap();
     this->map_backgrounds = this->map->get_backgrounds();
 }
