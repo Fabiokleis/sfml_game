@@ -4,7 +4,7 @@ project(game VERSION 0.1)
 
 file(GLOB SOURCE ./src/main.cpp src/**/*.cpp)
 
-set(RESOURCE_PATH "${PROJECT_SOURCE_DIR}/contents/")
+set(RESOURCE_PATH "${PROJECT_SOURCE_DIR}/assets/")
 
 #set(SFML_STATIC_LIBRARIES TRUE)
 
@@ -28,7 +28,8 @@ target_include_directories(game
   PRIVATE
     "${PROJECT_BINARY_DIR}"
     "${CMAKE_CURRENT_SOURCE_DIR}/include/game"
-    "${CMAKE_CURRENT_SOURCE_DIR}/include/map"
-    "${CMAKE_CURRENT_SOURCE_DIR}/include/player"
-    "${CMAKE_CURRENT_SOURCE_DIR}/include/rapidjson"
-  )
+    "${CMAKE_CURRENT_SOURCE_DIR}/include/maps"
+    "${CMAKE_CURRENT_SOURCE_DIR}/include/entities"
+    "${CMAKE_CURRENT_SOURCE_DIR}/include/controllers"
+)
+

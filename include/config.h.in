@@ -1,2 +1,4 @@
-#pragma once
+#ifndef CONFIG_H_IN_U5CSSGBG
+#define CONFIG_H_IN_U5CSSGBG
 #define RESOURCE_PATH "@RESOURCE_PATH@"
+#endif /* end of include guard: CONFIG_H_IN_U5CSSGBG */

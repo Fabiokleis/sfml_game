@@ -1,37 +1,61 @@
+#ifndef GAME_HPP_WSHRPK2N
+#define GAME_HPP_WSHRPK2N
 #include <SFML/Graphics.hpp>
 #include <vector>
+#include "window_server.hpp"
 #include "player.hpp"
 #include "config.h"
 #include "map.hpp"
+#include "tile.hpp"
+#include "image.hpp"
+#include "main_menu.hpp"
+#include "sub_menu.hpp"
 
-#pragma once
 class Game {
     private:
-        sf::RenderWindow* window;
-        sf::Event event;
-        std::vector<sf::VideoMode> video_modes;
-        sf::Sprite background;
-        sf::Texture background_tex;
+        Controllers::WindowServer* window_server;
+        Entities::Player *player{};
 
-        Map* map;
+        std::vector<Entities::Text> menu_options{};
+        Entities::Image *menu_bg{};
+        Controllers::MainMenu *menu{};
 
-        Player *player;
+        std::vector<Entities::Text> settings_options{};
+        Entities::Image *settings_bg{};
+        Controllers::SubMenu *settings{};
 
-        void init_window();
-        void init_textures();
+        Maps::Map* map{};
+        std::vector<Maps::Tile> tiles;
+        std::vector<Maps::TileMap> tilemap;
+        std::vector<Entities::Image> map_backgrounds;
+
+        Entities::Text *fps_text{};
+        sf::Clock clock{};
+        float delta_time{};
+        bool on_menu;
+
+        bool player_out_of_window();
+        void init_menu();
+        void init_entities();
         void init_map();
-        void init_player();
-        void init_objs();
+        void menu_entries();
+        void set_fps(float fps);
         void game_loop();
+        void menu_loop(bool from_game = false);
+        void update_player_view();
         void handle_events();
-        void render_bg();
+        void menu_events();
+        void settings_events();
         void update();
+        void render_menu();
+        void render_settings();
+        void render_map();
         void render();
-
-
+        void handle_collision();
 
     public:
         Game();
         ~Game();
         void exec();
 };
+#endif /* end of include guard: GAME_HPP_WSHRPK2N */
