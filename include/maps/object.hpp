@@ -10,12 +10,12 @@ namespace Maps {
         private:
             std::string name;
             std::string type;
-            bool visible;
-            int id;
-            int height;
-            int width;
-            int x;
-            int y;
+            bool visible{};
+            int id{};
+            int height{};
+            int width{};
+            double x{};
+            double y{};
 
 
         public:
@@ -23,14 +23,14 @@ namespace Maps {
             Object(rapidjson::Value& value);
             ~Object();
 
-            int get_id();
+            int get_id() const;
             std::string get_name();
             std::string get_type();
-            int get_height();
-            int get_width();
-            int get_x();
-            int get_y();
-            bool get_visible();
+            int get_height() const;
+            int get_width() const;
+            double get_x() const;
+            double get_y() const;
+            bool get_visible() const;
     };
 }
 

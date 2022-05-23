@@ -7,14 +7,15 @@ Object::Object(rapidjson::Value& value) {
     this->type = value["type"].GetString();
     this->height = value["height"].GetInt();
     this->width = value["width"].GetInt();
-    this->x = value["x"].GetInt();
-    this->y = value["y"].GetInt();
+    this->x = value["x"].GetDouble();
+    this->y = value["y"].GetDouble();
     this->visible = value["visible"].GetBool();
 }
+Object::Object() {}
 
-Object::~Object() {};
+Object::~Object() = default;;
 
-int Object::get_id() {
+int Object::get_id() const {
     return this->id;
 }
 
@@ -26,22 +27,22 @@ std::string Object::get_type() {
     return this->type;
 }
 
-int Object::get_height() {
+int Object::get_height() const {
     return this->height;
 }
 
-int Object::get_width() {
+int Object::get_width() const {
     return this->width;
 }
 
-int Object::get_x() {
+double Object::get_x() const {
     return this->x;
 }
 
-int Object::get_y() {
+double Object::get_y() const {
     return this->y;
 }
 
-bool Object::get_visible() {
+bool Object::get_visible() const {
     return this->visible;
 }

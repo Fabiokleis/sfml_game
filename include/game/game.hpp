@@ -6,6 +6,7 @@
 #include "player.hpp"
 #include "config.h"
 #include "map.hpp"
+#include "object.hpp"
 #include "tile.hpp"
 #include "image.hpp"
 #include "main_menu.hpp"
@@ -27,6 +28,9 @@ class Game {
         Maps::Map* map{};
         std::vector<Maps::Tile> tiles;
         std::vector<Maps::TileMap> tilemap;
+        std::vector<Maps::Object> locations;
+        Maps::Object start_location;
+        Maps::Object end_location;
         std::vector<Entities::Image> map_backgrounds;
 
         Entities::Text *fps_text{};

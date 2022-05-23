@@ -45,13 +45,13 @@ namespace Maps {
     
             void init_variables();
             int get_height() const;
-            int get_width();
-            int get_next_layer_id();
-            int get_next_object_id();
-            int get_tile_width();
-            int get_tile_height();
+            int get_width() const;
+            int get_next_layer_id() const;
+            int get_next_object_id() const;
+            int get_tile_width() const;
+            int get_tile_height() const;
             std::vector<Tile> get_tiles();
-            bool is_infinite();
+            bool is_infinite() const;
     
             std::string get_orientation();
             std::string get_render_order();

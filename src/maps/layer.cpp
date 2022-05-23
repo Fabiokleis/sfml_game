@@ -10,8 +10,7 @@ Layer::Layer(rapidjson::Value& value) {
 
     if (value.HasMember("objects")) {
         for (auto& obj : value["objects"].GetArray()) {
-            std::cout << "obj: " << obj.IsObject() << std::endl;
-            this->objects.emplace_back(obj.GetObject());
+            this->objects.emplace_back(obj);
         }
     }
 

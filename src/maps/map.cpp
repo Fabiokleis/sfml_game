@@ -27,9 +27,8 @@ void Map::init_variables() {
 
     rapidjson::Value::Array layer_a = map_doc["layers"].GetArray();
 
-    for (size_t i = 0; i < layer_a.Capacity(); i++) {
-        Layer layer(layer_a[i]);
-        layers.push_back(layer);
+    for (auto& layer : layer_a) {
+        layers.emplace_back(layer);
     }
 
     std::reverse(layers.begin(), layers.end());
@@ -42,9 +41,8 @@ void Map::init_variables() {
 
     rapidjson::Value::Array tile_set_array = map_doc["tilesets"].GetArray();
 
-    for (size_t i = 0; i < tile_set_array.Capacity(); i++) {
-        TileSetMap tileset(tile_set_array[i]);
-        this->tileset_maps.push_back(tileset);
+    for (auto& tileset : tile_set_array) {
+        this->tileset_maps.emplace_back(tileset);
     }
 
     std::reverse(this->tileset_maps.begin(), tileset_maps.end());
@@ -60,27 +58,27 @@ int Map::get_height() const {
     return this->height;
 }
 
-int Map::get_width() {
+int Map::get_width() const {
     return this->width;
 }
 
-int Map::get_next_layer_id() {
+int Map::get_next_layer_id() const {
     return this->next_layer_id;
 }
 
-int Map::get_next_object_id() {
+int Map::get_next_object_id() const {
     return this->next_object_id;
 }
 
-int Map::get_tile_width() {
+int Map::get_tile_width() const {
     return this->tile_width;
 }
 
-int Map::get_tile_height() {
+int Map::get_tile_height() const {
     return this->tile_height;
 }
 
-bool Map::is_infinite() {
+bool Map::is_infinite() const {
     return this->infinite;
 }
 

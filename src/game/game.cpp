@@ -13,8 +13,8 @@ void Game::exec() {
     this->menu_loop();
 
     if (this->window_server->is_open() && !this->on_menu) {
-        this->init_entities();
         this->init_map();
+        this->init_entities();
         this->game_loop();
     }
 }
@@ -222,11 +222,12 @@ void Game::init_entities() {
             0.0f,
             sf::Color::Yellow);
 
+    sf::Vector2f p_pos(this->start_location.get_x(), this->start_location.get_y());
     // player
     this->player = new Entities::Player(
                     sf::Vector2f(45.0f, 80.0f),
                     sf::Vector2f(0.0f, 0.0f),
-                    sf::Vector2f(512.0f, 320.0f),
+                    p_pos,
                     sf::Vector2f(0.0f, 0.0f),
                     sf::Vector2u(3, 6),
                     0.1f,
@@ -238,6 +239,9 @@ void Game::init_entities() {
 void Game::init_map() {
     this->map = new Maps::Map();
     this->tiles = this->map->get_tiles();
+    this->locations = this->map->get_locations();
+    this->start_location = this->locations[0];
+    this->end_location = this->locations[1];
     this->tilemap = this->map->get_tilemap();
     this->map_backgrounds = this->map->get_backgrounds();
 }
