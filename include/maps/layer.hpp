@@ -1,6 +1,7 @@
 #ifndef LAYER_HPP_HWVVW7IM
 #define LAYER_HPP_HWVVW7IM
 #include <vector>
+#include "object.hpp"
 #include "../rapidjson/document.h" // rapidjson document
 
 namespace Maps {
@@ -8,6 +9,7 @@ namespace Maps {
     class Layer {
         private:
             std::vector<int> data;
+            std::vector<Object> objects;
             int height;
             int id;
             std::string image;
@@ -24,6 +26,7 @@ namespace Maps {
             Layer (rapidjson::Value& value);
             ~Layer();
             std::vector<int> get_data();
+            std::vector<Object> get_objects();
             int get_height();
             int get_id();
             std::string get_image();

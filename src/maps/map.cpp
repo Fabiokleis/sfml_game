@@ -51,6 +51,7 @@ void Map::init_variables() {
 
     this->tile_width = map_doc["tilewidth"].GetInt();
     this->width = map_doc["width"].GetInt();
+
 }
 
 /* GET */
@@ -114,6 +115,9 @@ std::vector<Entities::Image> Map::get_backgrounds() {
     return this->backgrounds;
 }
 
+std::vector<Object> Map::get_locations() {
+    return this->locations;
+}
 
 /* TEG */
 
@@ -155,11 +159,14 @@ void Map::load_tilesets() {
 // pass all informations parsed to be a new tilemap
 void Map::load_tilemap() {
     for (auto & layer : this->layers) {
-        if (layer.get_type() == "tilelayer") {
+        if (layer.get_name() == "tiles") {
             this->tilemap_render.emplace_back();
             this->find_tileset(layer, this->tilesets);
         }
-        if (layer.get_type() == "imagelayer") {
+        if (layer.get_name() == "locations") {
+            this->locations = layer.get_objects(); 
+        }
+        if (layer.get_name() == "background") {
             this->backgrounds.emplace_back("map/"+layer.get_image());
         }
     }

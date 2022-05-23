@@ -3,10 +3,17 @@ using namespace Maps;
 
 Layer::Layer(rapidjson::Value& value) {
 	if (value.HasMember("data")) {
-		for (auto& a : value["data"].GetArray()) {
-			this->data.push_back(a.GetInt());
+		for (auto& data : value["data"].GetArray()) {
+			this->data.push_back(data.GetInt());
 		}
 	}
+
+    if (value.HasMember("objects")) {
+        for (auto& obj : value["objects"].GetArray()) {
+            std::cout << "obj: " << obj.IsObject() << std::endl;
+            this->objects.emplace_back(obj.GetObject());
+        }
+    }
 
 	if (value.HasMember("height")) {
 		this->height = value["height"].GetInt();
@@ -35,6 +42,10 @@ Layer::~Layer() {}
 
 std::vector<int> Layer::get_data() {
 	return this->data;
+}
+
+std::vector<Maps::Object> Layer::get_objects() {
+    return this->objects;
 }
 
 bool Layer::is_visible() {

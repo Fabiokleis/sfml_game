@@ -7,6 +7,7 @@
 #include "../rapidjson/istreamwrapper.h"
 #include "../rapidjson/document.h"
 #include "layer.hpp"
+#include "object.hpp"
 #include "tilemap.hpp"
 #include "tilesetmap.hpp"
 #include "tileset.hpp"
@@ -36,6 +37,7 @@ namespace Maps {
             std::vector<TileMap> tilemap_render;
             std::vector<Tile> tiles;
             std::vector<Entities::Image> backgrounds;
+            std::vector<Object> locations;
     
         public:
             Map();
@@ -57,6 +59,7 @@ namespace Maps {
             std::vector<TileSetMap> get_tile_set_map();
             std::vector<TileMap> get_tilemap();
             std::vector<Entities::Image> get_backgrounds();
+            std::vector<Object> get_locations();
             std::vector<Layer> get_layers();
             void find_tileset(Layer& layer, std::vector<TileSet>& tilesets);
             void load_tileset_buffer(const std::string& filename);
