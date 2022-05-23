@@ -10,6 +10,7 @@ Character::Character(sf::Vector2f size, sf::Vector2f velocity, sf::Vector2f posi
         velocity(velocity), path_name(std::move(path_name)), image_count(image_count), switch_time(switch_time), state(state),
         Entity(position, size)
 {
+    this->life = true;
     this->shape = sf::IntRect(static_cast<int>(cord.x), static_cast<int>(cord.y), static_cast<int>(size.x), static_cast<int>(size.y));
     init_texture();
     this->sprite.setTextureRect(shape);
@@ -21,6 +22,14 @@ Character::Character() = default;
 
 Character::~Character() {
     delete animation;
+}
+
+void Character::set_life(bool flag) {
+    this->life = flag;
+}
+
+bool Character::get_life() {
+    return this->life;
 }
 
 void Character::init_texture() {

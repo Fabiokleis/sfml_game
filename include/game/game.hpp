@@ -8,31 +8,47 @@
 #include "map.hpp"
 #include "tile.hpp"
 #include "image.hpp"
-#include "menu.hpp"
+#include "main_menu.hpp"
+#include "sub_menu.hpp"
 
 class Game {
     private:
-        Controllers::WindowServer window_server;
-        Entities::Text *fps_text{};
+        Controllers::WindowServer* window_server;
         Entities::Player *player{};
-        Controllers::Menu *menu{};
 
-        sf::Clock clock{};
-        float delta_time{};
+        std::vector<Entities::Text> menu_options{};
+        Entities::Image *menu_bg{};
+        Controllers::MainMenu *menu{};
+
+        std::vector<Entities::Text> settings_options{};
+        Entities::Image *settings_bg{};
+        Controllers::SubMenu *settings{};
 
         Maps::Map* map{};
         std::vector<Maps::Tile> tiles;
         std::vector<Maps::TileMap> tilemap;
         std::vector<Entities::Image> map_backgrounds;
 
+        Entities::Text *fps_text{};
+        sf::Clock clock{};
+        float delta_time{};
+        bool on_menu;
+
         bool player_out_of_window();
+        void init_menu();
         void init_entities();
         void init_map();
+        void menu_entries();
         void set_fps(float fps);
         void game_loop();
+        void menu_loop(bool from_game = false);
         void update_player_view();
         void handle_events();
+        void menu_events();
+        void settings_events();
         void update();
+        void render_menu();
+        void render_settings();
         void render_map();
         void render();
         void handle_collision();

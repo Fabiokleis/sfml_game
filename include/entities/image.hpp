@@ -13,6 +13,8 @@ namespace Entities {
 
         public:
             Image(const std::string& path_name);
+            Image(sf::Vector2f position, sf::Vector2f size, sf::Color color);
+            Image();
             ~Image();
     };
 }

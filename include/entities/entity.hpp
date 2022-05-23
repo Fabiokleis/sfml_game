@@ -9,17 +9,15 @@ namespace Entities {
 
         protected:
             sf::RectangleShape sprite;
-            bool life;
+
 
         public:
             Entity(sf::Vector2f position, sf::Vector2f size);
             Entity();
             ~Entity();
             sf::RectangleShape get_sprite() const;
-            const sf::Vector2f get_position() const;
-            bool get_life();
+            sf::Vector2f get_position() const;
             void set_position(sf::Vector2f position);
-            void set_life(bool flag);
             void set_size(sf::Vector2f size);
     };
 }
