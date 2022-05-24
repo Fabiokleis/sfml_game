@@ -166,9 +166,8 @@ void Map::load_tilemap() {
     }
 }
 
-// get by firstg_id if a tile is set or not
-void Map::find_tileset(Layer& layer, std::vector<TileSet>& tilesets) {
-    for (auto& tile: tilesets) {
+void Map::find_tileset(Layer& layer, std::vector<TileSet>& tilesets_) {
+    for (auto& tile: tilesets_) {
         this->tilemap_render.back().load(tile, layer);
     }
 }

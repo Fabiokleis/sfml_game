@@ -2,7 +2,7 @@
 #include "tileset.hpp"
 using namespace Maps;
 
-TileSet::TileSet (int firstg_id, std::string tileset) {
+TileSet::TileSet (int firstg_id, const std::string& tileset) {
     this->firstg_id = firstg_id;
     rapidjson::Document tileset_doc;
     tileset_doc.Parse(tileset.c_str());
@@ -20,41 +20,41 @@ TileSet::TileSet (int firstg_id, std::string tileset) {
     this->type = tileset_doc["type"].GetString();
 }
 
-TileSet::~TileSet() {}
+TileSet::~TileSet() = default;
 
-int TileSet::get_firstg_id() {
+int TileSet::get_firstg_id() const {
     return this->firstg_id;
 }
 
-int TileSet::get_columns() {
+int TileSet::get_columns() const {
     return this->columns;
 }
 
-int TileSet::get_image_height() {
+int TileSet::get_image_height() const {
     return this->image_height;
 }
 
-int TileSet::get_image_width() {
+int TileSet::get_image_width() const {
     return this->image_width;
 }
 
-int TileSet::get_margin() {
+int TileSet::get_margin() const {
     return this->margin;
 }
 
-int TileSet::get_spacing() {
+int TileSet::get_spacing() const {
     return this->spacing;
 }
 
-int TileSet::get_tile_count() {
+int TileSet::get_tile_count() const {
     return this->tile_count;
 }
 
-int TileSet::get_tile_height() {
+int TileSet::get_tile_height() const {
     return this->tile_height;
 }
 
-int TileSet::get_tile_width() {
+int TileSet::get_tile_width() const {
     return this->tile_width;
 }
 

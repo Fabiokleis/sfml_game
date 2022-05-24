@@ -3,8 +3,8 @@ using namespace Maps;
 
 Layer::Layer(rapidjson::Value& value) {
 	if (value.HasMember("data")) {
-		for (auto& data : value["data"].GetArray()) {
-			this->data.push_back(data.GetInt());
+		for (auto& i : value["data"].GetArray()) {
+			this->data.push_back(i.GetInt());
 		}
 	}
 
@@ -37,7 +37,7 @@ Layer::Layer(rapidjson::Value& value) {
 	this->y = value["y"].GetInt();
 }
 
-Layer::~Layer() {}
+Layer::~Layer() = default;
 
 std::vector<int> Layer::get_data() {
 	return this->data;
@@ -47,31 +47,31 @@ std::vector<Maps::Object> Layer::get_objects() {
     return this->objects;
 }
 
-bool Layer::is_visible() {
+bool Layer::is_visible() const {
 	return this->visible;
 }
 
-int Layer::get_height() {
+int Layer::get_height() const {
 	return this->height;
 }
 
-int Layer::get_id() {
+int Layer::get_id() const {
 	return this->id;
 }
 
-int Layer::get_opacity() {
+int Layer::get_opacity() const {
 	return this->opacity;
 }
 
-int Layer::get_width() {
+int Layer::get_width() const {
 	return this->width;
 }
 
-int Layer::get_x() {
+int Layer::get_x() const {
 	return this->x;
 }
 
-int Layer::get_y() {
+int Layer::get_y() const {
 	return this->y;
 }
 
