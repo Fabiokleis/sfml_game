@@ -52,8 +52,6 @@ void Map::init_variables() {
 
 }
 
-/* GET */
-
 int Map::get_height() const {
     return this->height;
 }
@@ -117,8 +115,6 @@ std::vector<Object> Map::get_locations() {
     return this->locations;
 }
 
-/* TEG */
-
 // set buffer to each space
 void Map::load_map() {
     std::string path = RESOURCE_PATH;
@@ -157,22 +153,21 @@ void Map::load_tilesets() {
 // pass all informations parsed to be a new tilemap
 void Map::load_tilemap() {
     for (auto & layer : this->layers) {
-        if (layer.get_name() == "tiles") {
+        if (layer.get_type() == "tilelayer") {
             this->tilemap_render.emplace_back();
             this->find_tileset(layer, this->tilesets);
         }
         if (layer.get_name() == "locations") {
             this->locations = layer.get_objects(); 
         }
-        if (layer.get_name() == "background") {
+        if (layer.get_type() == "background") {
             this->backgrounds.emplace_back("map/"+layer.get_image());
         }
     }
 }
 
-// get by firstg_id if a tile is set or not
-void Map::find_tileset(Layer& layer, std::vector<TileSet>& tilesets) {
-    for (auto& tile: tilesets) {
+void Map::find_tileset(Layer& layer, std::vector<TileSet>& tilesets_) {
+    for (auto& tile: tilesets_) {
         this->tilemap_render.back().load(tile, layer);
     }
 }

@@ -11,7 +11,7 @@ Tile::Tile(float width, float left, float height, float top) {
 
 }
 
-Tile::~Tile() {}
+Tile::~Tile() = default;
 
 Controllers::Collider Tile::get_collider() {
     return Controllers::Collider{this->body};

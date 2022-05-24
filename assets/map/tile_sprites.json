@@ -6,164 +6,32 @@
  "name":"tile_sprites",
  "spacing":0,
  "tilecount":36,
- "tiledversion":"1.8.5",
+ "tiledversion":"1.8.4",
  "tileheight":32,
  "tiles":[
         {
          "id":0,
-         "objectgroup":
-            {
-             "draworder":"index",
-             "id":2,
-             "name":"",
-             "objects":[
-                    {
-                     "height":31.6363818181818,
-                     "id":1,
-                     "name":"brick",
-                     "rotation":0,
-                     "type":"collider",
-                     "visible":true,
-                     "width":31.8182,
-                     "x":0.0909,
-                     "y":-0.181827272727272
-                    }],
-             "opacity":1,
-             "type":"objectgroup",
-             "visible":true,
-             "x":0,
-             "y":0
-            }
+         "type":"collider"
         }, 
         {
          "id":1,
-         "objectgroup":
-            {
-             "draworder":"index",
-             "id":2,
-             "name":"",
-             "objects":[
-                    {
-                     "height":31.0909272727273,
-                     "id":1,
-                     "name":"empty",
-                     "rotation":0,
-                     "type":"collider",
-                     "visible":true,
-                     "width":31.8182,
-                     "x":0.0909000000000013,
-                     "y":0.363627272727273
-                    }],
-             "opacity":1,
-             "type":"objectgroup",
-             "visible":true,
-             "x":0,
-             "y":0
-            }
+         "type":"collider"
         }, 
         {
          "id":2,
-         "objectgroup":
-            {
-             "draworder":"index",
-             "id":2,
-             "name":"",
-             "objects":[
-                    {
-                     "height":32,
-                     "id":1,
-                     "name":"wood",
-                     "rotation":0,
-                     "type":"collider",
-                     "visible":true,
-                     "width":32,
-                     "x":2.22044604925031e-16,
-                     "y":0.363636363636364
-                    }],
-             "opacity":1,
-             "type":"objectgroup",
-             "visible":true,
-             "x":0,
-             "y":0
-            }
+         "type":"collider"
         }, 
         {
          "id":3,
-         "objectgroup":
-            {
-             "draworder":"index",
-             "id":2,
-             "name":"",
-             "objects":[
-                    {
-                     "height":32,
-                     "id":1,
-                     "name":"note",
-                     "rotation":0,
-                     "type":"songcollider",
-                     "visible":true,
-                     "width":32,
-                     "x":0.454536363636363,
-                     "y":-9.09090908862709e-06
-                    }],
-             "opacity":1,
-             "type":"objectgroup",
-             "visible":true,
-             "x":0,
-             "y":0
-            }
+         "type":"songcollider"
         }, 
         {
          "id":4,
-         "objectgroup":
-            {
-             "draworder":"index",
-             "id":2,
-             "name":"",
-             "objects":[
-                    {
-                     "height":32,
-                     "id":1,
-                     "name":"greennote",
-                     "rotation":0,
-                     "type":"songcollider",
-                     "visible":true,
-                     "width":32,
-                     "x":0.454536363636361,
-                     "y":-9.0909090921798e-06
-                    }],
-             "opacity":1,
-             "type":"objectgroup",
-             "visible":true,
-             "x":0,
-             "y":0
-            }
+         "type":"songcollider"
         }, 
         {
          "id":5,
-         "objectgroup":
-            {
-             "draworder":"index",
-             "id":2,
-             "name":"",
-             "objects":[
-                    {
-                     "height":31.4545636363636,
-                     "id":1,
-                     "name":"steel",
-                     "rotation":0,
-                     "type":"collider",
-                     "visible":true,
-                     "width":31.8182,
-                     "x":0.272718181818181,
-                     "y":-9.09090909040344e-06
-                    }],
-             "opacity":1,
-             "type":"objectgroup",
-             "visible":true,
-             "x":0,
-             "y":0
-            }
+         "type":"collider"
         }],
  "tilewidth":32,
  "type":"tileset",

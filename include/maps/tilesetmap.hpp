@@ -7,7 +7,7 @@ namespace Maps {
 
     class TileSetMap {
         private:
-            int firstid;
+            int firstid{};
             std::string source;
     
     
@@ -17,7 +17,7 @@ namespace Maps {
             TileSetMap();
             ~TileSetMap();
     
-            int get_firstg_id();
+            int get_firstg_id() const;
     	    std::string get_source();
     };
 }

@@ -9,6 +9,7 @@ namespace Maps {
     class Tile {
         private:
             sf::RectangleShape body;
+
         public:
             Tile(float width, float left, float height, float top);
             ~Tile();

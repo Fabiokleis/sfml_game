@@ -38,8 +38,7 @@ void MainMenu::update(bool from_game) {
             break;
     }
 }
-
-void MainMenu::handle_events(WindowServer &window_server) {
+void MainMenu::events(WindowServer &window_server) {
     // Menu input updates
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
@@ -69,4 +68,27 @@ void MainMenu::handle_events(WindowServer &window_server) {
         window_server.close();
     }
 
+}
+
+void MainMenu::handle_events(WindowServer &window_server) {
+    while (window_server.poll_event()) {
+        switch (window_server.get_event().type) {
+            case sf::Event::Closed:
+                window_server.close();
+                break;
+            case sf::Event::Resized:
+                window_server.resize_view(
+                        sf::Vector2f(window_server.get_event().size.width, window_server.get_event().size.height));
+                break;
+            case sf::Event::KeyPressed: // any key pressed call events
+                this->events(window_server);
+                // default esc exit from main menu and the game!
+                if (window_server.get_event().key.code == sf::Keyboard::Escape) {
+                    window_server.close();
+                }
+                break;
+            default:
+                break;
+        }
+    }
 }

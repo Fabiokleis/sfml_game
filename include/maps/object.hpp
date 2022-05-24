@@ -17,7 +17,6 @@ namespace Maps {
             double x{};
             double y{};
 
-
         public:
             Object();
             Object(rapidjson::Value& value);

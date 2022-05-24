@@ -13,7 +13,7 @@ bool TileMap::load(TileSet tileset, Layer layer) {
     std::string path = RESOURCE_PATH;
     path += "map/";
     if (!this->tex.loadFromFile(path + tileset.get_image())) {
-        std::cerr << "ERROR on load the texture file!\n";
+        std::cerr << "ERROR on loading the texture file of tileset!\n";
         return false;
     }
 
@@ -59,12 +59,12 @@ bool TileMap::load(TileSet tileset, Layer layer) {
             quad[2].position = sf::Vector2f(xPos2, yPos2);
             quad[3].position = sf::Vector2f(xPos1, yPos2);
 
-            // populate the vector of tilesets with enabled tiles
-
-            this->set_tilehitbox(static_cast<float>(tileset.get_tile_width()),
-                                 xPos1 + static_cast<float>(tileset.get_tile_width()) / 2.0f,
-                                 static_cast<float>(tileset.get_tile_height()),
-                                 yPos1 + static_cast<float>(tileset.get_tile_height()) / 2.0f);
+            // populate the vector with tiles
+            this->set_tilehitbox(
+                    tileset.get_tile_width(),
+                    xPos1 + tileset.get_tile_width() / 2.0f,
+                    tileset.get_tile_height(),
+                    yPos1 + tileset.get_tile_height() / 2.0f);
 
             // set into quad the position of tex vertices
             quad[0].texCoords = sf::Vector2f(x1, y1);

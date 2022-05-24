@@ -25,20 +25,20 @@ namespace Maps {
     
         public:
             TileSet();
-            TileSet(int firstg_id, std::string tileset);
+            TileSet(int firstg_id, const std::string& tileset);
             ~TileSet();
     
-            int get_firstg_id();
-        	int get_columns();
+            int get_firstg_id() const;
+        	int get_columns() const;
         	std::string get_image();
-        	int get_image_height(); 
-        	int get_image_width();
-        	int get_margin();
+        	int get_image_height() const;
+        	int get_image_width() const;
+        	int get_margin() const;
         	std::string get_name();
-        	int get_spacing();
-        	int get_tile_count();
-        	int get_tile_height();
-        	int get_tile_width();
+        	int get_spacing() const;
+        	int get_tile_count() const;
+        	int get_tile_height() const;
+        	int get_tile_width() const;
         	std::string get_type();
     
     };

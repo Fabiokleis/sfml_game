@@ -11,7 +11,7 @@ Object::Object(rapidjson::Value& value) {
     this->y = value["y"].GetDouble();
     this->visible = value["visible"].GetBool();
 }
-Object::Object() {}
+Object::Object() = default;
 
 Object::~Object() = default;;
 

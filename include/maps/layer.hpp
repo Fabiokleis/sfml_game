@@ -27,16 +27,16 @@ namespace Maps {
             ~Layer();
             std::vector<int> get_data();
             std::vector<Object> get_objects();
-            int get_height();
-            int get_id();
+            int get_height() const;
+            int get_id() const;
             std::string get_image();
             std::string get_name();
-            int get_opacity();
+            int get_opacity() const;
             std::string get_type();
-            bool is_visible();
-            int get_width();
-            int get_x();
-            int get_y();
+            bool is_visible() const;
+            int get_width() const;
+            int get_x() const;
+            int get_y() const;
     };
 }
 #endif /* end of include guard: LAYER_HPP_HWVVW7IM */
