@@ -212,6 +212,7 @@ void Game::handle_events() {
                         this->window_server->get_event().size.height));
                 break;
             case sf::Event::KeyPressed:
+                this->player->set_key_release(true);
                 // return to menu, automatically pause game loop
                 if (this->window_server->get_event().key.code == sf::Keyboard::Escape) {
                     this->menu->set_on_menu(true);
@@ -221,10 +222,13 @@ void Game::handle_events() {
                 if (this->window_server->get_event().key.code == sf::Keyboard::Space) {
                     this->player->set_state(Entities::jumping);
                 }
+                if (this->window_server->get_event().key.code == sf::Keyboard::S) {
+                    this->player->set_state(Entities::down);
+                }
                 this->player->reset_clock(this->delta_time);
                 break;
             case sf::Event::KeyReleased:
-
+                this->player->set_key_release(true);
                 if (this->window_server->get_event().key.code == sf::Keyboard::Space) {
                     this->player->set_state(Entities::falling);
                 }

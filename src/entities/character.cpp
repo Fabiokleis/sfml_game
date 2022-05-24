@@ -6,7 +6,7 @@
 #include "config.h"
 using namespace Entities;
 
-Character::Character(sf::Vector2f size, sf::Vector2f velocity, sf::Vector2f position, sf::Vector2f cord, sf::Vector2u image_count, float switch_time, State state, std::string path_name) :
+Character::Character(sf::Vector2f size, sf::Vector2f velocity, sf::Vector2f position, sf::Vector2f cord, sf::Vector2u image_count, float switch_time, States state, std::string path_name) :
         velocity(velocity), path_name(std::move(path_name)), image_count(image_count), switch_time(switch_time), state(state),
         Entity(position, size)
 {
@@ -40,8 +40,12 @@ void Character::init_texture() {
     }
 }
 
-void Character::set_state(const State s) {
+void Character::set_state(const States s) {
     this->state = s;
+}
+
+void Character::set_collide_state(CollideStates s) {
+    this->collide_state = s;
 }
 
 void Character::set_rect(sf::IntRect rect) {

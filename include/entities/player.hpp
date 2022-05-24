@@ -17,16 +17,16 @@ namespace Entities {
             float jump_height{};
             float acceleration{};
             float gravity{};
-//            float drag{};
             float delta_time{};
+            bool release_key;
     
     
         public:
-            Player(sf::Vector2f size, sf::Vector2f velocity, sf::Vector2f position, sf::Vector2f cord, sf::Vector2u image_count, float switch_time, State state, const std::string& path_name);
+            Player(sf::Vector2f size, sf::Vector2f velocity, sf::Vector2f position, sf::Vector2f cord, sf::Vector2u image_count, float switch_time, States state, const std::string& path_name);
             Player();
 
             ~Player();
-    
+            void set_key_release(bool flag);
             void init_physics();
             void update();
             void update_input();

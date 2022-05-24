@@ -21,23 +21,23 @@ void Player::init_physics() {
     this->jump_height = 132.0f;
     this->acceleration = 200.0f;
     this->gravity = 981.0f;
-//    this->drag = 0.8f;
     this->delta_time = 0.01f;
     this->can_jump = false;
+    this->release_key = true;
 }
 
 void Player::reset_clock(float dt) {
     this->delta_time = dt;
 }
-
+void Player::set_key_release(bool flag) {
+    this->release_key = flag;
+}
 void Player::on_collision() {
     if (this->velocity.x < 0.0f) {
         // collision on the left
-//        this->velocity.x = 0.0f;
         state = left;
     } else if (this->velocity.x > 0.0f) {
         // collision on the right
-//        this->velocity.x = 0.0f;
         state = right;
     }
     if (this->velocity.y < 0.0f) {
@@ -75,7 +75,7 @@ void Player::update_input() {
     } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
         this->move(1.0f, 0.0f);
     } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
-        this->sprite.move(0.0f, 1.0f);
+        this->move(0.0f, 1.0f);
     } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && this->can_jump) {
         this->can_jump = false;
         this->move(0.f, -1.f);
@@ -84,10 +84,10 @@ void Player::update_input() {
 
 void Player::update_animation() {
 
-    if (this->velocity.x == 0.0f) {
+    if (this->velocity.x == 0.0f && state != down) {
         this->get_animation().update(0, this->delta_time, true);
     } else {
-        if (state != jumping && state != falling) {
+        if (state != jumping && state != falling && state != down) {
             if (this->velocity.x > 0.0f) {
                 this->get_animation().update(1, this->delta_time, true);
             }
@@ -95,18 +95,24 @@ void Player::update_animation() {
                 this->get_animation().update(1, this->delta_time, false);
             }
         } else {
-            if (this->state == jumping) {
+            if (state == down) {
+                if (this->velocity.x > 0.0f) {
+                    this->get_animation().update(4, this->delta_time, true);
+                } else if (this->velocity.x < 0.0f) {
+                    this->get_animation().update(4, this->delta_time, false);
+                }
+            } else if (this->state == jumping) {
                 if (this->velocity.x > 0.0f) {
                     this->get_animation().update(2, this->delta_time, true);
-                }
-                if (this->velocity.x < 0.0f) {
+
+                } else if (this->velocity.x < 0.0f) {
                     this->get_animation().update(2, this->delta_time, false);
                 }
             } else if(this->state == falling) {
                 if (this->velocity.x > 0.0f) {
                     this->get_animation().update(3, this->delta_time, true);
-                }
-                if (this->velocity.x < 0.0f) {
+
+                } else if (this->velocity.x < 0.0f) {
                     this->get_animation().update(3, this->delta_time, false);
                 }
             }

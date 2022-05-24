@@ -9,13 +9,20 @@
 
 namespace Entities {
 
-    enum State {
-        idle = 0,
-        jumping,
+    enum CollideStates {
+        top = 0,
         right,
         left,
-        falling,
         ground,
+    };
+
+    enum States {
+        idle = 0,
+        walking_right,
+        walking_left,
+        down,
+        jumping,
+        falling,
     };
 
     class Character : public Entity {
@@ -30,11 +37,12 @@ namespace Entities {
             std::string path_name;
             sf::Vector2u image_count;
             float switch_time{};
-            State state;
+            CollideStates collide_state;
+            States state;
 
         public:
             Character(sf::Vector2f size, sf::Vector2f velocity, sf::Vector2f position, sf::Vector2f cord,
-                      sf::Vector2u image_count, float switch_time, State state, std::string path_name);
+                      sf::Vector2u image_count, float switch_time, States state, std::string path_name);
 
             Character();
             virtual ~Character();
@@ -44,7 +52,8 @@ namespace Entities {
             Controllers::Animation& get_animation();
             void set_life(bool flag);
             bool get_life();
-            void set_state(State s);
+            void set_state(States s);
+            void set_collide_state(CollideStates s);
             void set_rect(sf::IntRect rect);
             virtual void move(float dir_x, float dir_y) = 0;
      };
