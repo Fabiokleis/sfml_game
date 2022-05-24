@@ -37,7 +37,7 @@ namespace Entities {
                       sf::Vector2u image_count, float switch_time, State state, std::string path_name);
 
             Character();
-            ~Character();
+            virtual ~Character();
             void init_texture();
             sf::Vector2f& get_velocity();
             Controllers::Collider get_collider();

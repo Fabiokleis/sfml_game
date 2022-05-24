@@ -1,8 +1,8 @@
 #include "tilemap.hpp"
 using namespace Maps;
 
-void TileMap::set_tilehitbox(float width, float left, float height, float top) {
-    this->tilesets_enabled.emplace_back(width, left, height, top);
+void TileMap::set_tilehitbox(const std::string& type, float width, float left, float height, float top) {
+    this->tilesets_enabled.emplace_back(type, width, left, height, top);
 }
 
 std::vector<Tile> TileMap::get_tiles() {
@@ -60,11 +60,17 @@ bool TileMap::load(TileSet tileset, Layer layer) {
             quad[3].position = sf::Vector2f(xPos1, yPos2);
 
             // populate the vector of tilesets with enabled tiles
+            // list all collider types
+            std::cout << tileset.get_type() << std::endl;
+            if (tileset.get_type() == "collider" ||
+                tileset.get_type() == "songcollider")
+            {
 
-            this->set_tilehitbox(static_cast<float>(tileset.get_tile_width()),
-                                 xPos1 + static_cast<float>(tileset.get_tile_width()) / 2.0f,
-                                 static_cast<float>(tileset.get_tile_height()),
-                                 yPos1 + static_cast<float>(tileset.get_tile_height()) / 2.0f);
+                this->set_tilehitbox(tileset.get_type(),tileset.get_tile_width(),
+                                     xPos1 + tileset.get_tile_width() / 2.0f,
+                                     tileset.get_tile_height(),
+                                     yPos1 + tileset.get_tile_height() / 2.0f);
+            }
 
             // set into quad the position of tex vertices
             quad[0].texCoords = sf::Vector2f(x1, y1);

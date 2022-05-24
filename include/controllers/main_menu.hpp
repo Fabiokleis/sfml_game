@@ -11,6 +11,7 @@ namespace Controllers {
             MainMenu(Entities::Image &menu_image, sf::Vector2f position, std::vector<Entities::Text> &text_options);
             ~MainMenu();
             void update(bool from_game) override;
+            void events(WindowServer &window_server) override;
             void handle_events(WindowServer &window_server) override;
     };
 }

@@ -48,8 +48,6 @@ class Game {
         void menu_loop(bool from_game = false);
         void update_player_view();
         void handle_events();
-        void menu_events();
-        void settings_events();
         void update();
         void render_menu();
         void render_settings();
