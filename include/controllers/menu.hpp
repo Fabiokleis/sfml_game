@@ -22,6 +22,7 @@ namespace Controllers {
             
         public:
             Menu(Entities::Image &menu_image, sf::Vector2f position, std::vector<Entities::Text> &text_options);
+            Menu();
             ~Menu();
             sf::RectangleShape get_sprite();
             void populate_option(Entities::Text& options);
@@ -33,6 +34,7 @@ namespace Controllers {
             void set_on_submenu(bool flag);
             bool get_on_submenu() const;
             virtual void update(bool from_game) = 0;
+            virtual void events(WindowServer &window_server) = 0;
             virtual void handle_events(WindowServer &window_server) = 0;
     };
 }

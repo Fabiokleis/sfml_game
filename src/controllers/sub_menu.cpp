@@ -29,18 +29,13 @@ void SubMenu::update(bool from_game) {
         case 3:
             this->text_options[2].set_attr(sf::Color::Cyan, sf::Color::White, 3.0f, 0);
             break;
-        case 4:
-            this->text_options[3].set_attr(sf::Color::Cyan, sf::Color::White, 3.0f, 0);
-            break;
 
         default:
             break;
     }
 }
-
-void SubMenu::handle_events(WindowServer &window_server) {
-// Menu input updates
-
+void SubMenu::events(WindowServer &window_server) {
+    // Menu input updates
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
         this->inc_option();
     }
@@ -61,10 +56,22 @@ void SubMenu::handle_events(WindowServer &window_server) {
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter) && this->get_current_option() == 3) {
         std::cout << "mute opt" << std::endl;
     }
-    // keyboard settings
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter) && this->get_current_option() == 4) {
-//          this->on_menu = false;
-        std::cout << "keyboard settings opt" << std::endl;
+}
+void SubMenu::handle_events(WindowServer &window_server) {
+    while (window_server.poll_event()) {
+        switch (window_server.get_event().type) {
+            case sf::Event::Closed:
+                window_server.close();
+                break;
+            case sf::Event::Resized:
+                window_server.resize_view(
+                        sf::Vector2f(window_server.get_event().size.width, window_server.get_event().size.height));
+                break;
+            case sf::Event::KeyPressed: // any key pressed call events
+                this->events(window_server);
+                break;
+            default:
+                break;
+        }
     }
-
 }

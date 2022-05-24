@@ -33,62 +33,16 @@ Game::~Game() {
 void Game::menu_loop(bool from_game) {
     while (this->window_server->is_open() && this->on_menu) {
         if (this->settings->get_on_menu()) {
-            this->settings_events();
+            this->settings->handle_events(*this->window_server);
             this->menu->set_on_submenu(this->settings->get_on_menu());
             this->settings->update(from_game);
             this->render_settings();
         } else {
             this->on_menu = this->menu->get_on_menu();
-            this->menu_events();
+            this->menu->handle_events(*this->window_server);
             this->settings->set_on_menu(this->menu->get_on_submenu());
             this->menu->update(from_game);
             this->render_menu();
-        }
-    }
-}
-
-
-void Game::settings_events() {
-    while (this->window_server->poll_event()) {
-        switch (this->window_server->get_event().type) {
-            case sf::Event::Closed:
-                this->window_server->close();
-                break;
-            case sf::Event::Resized:
-                this->window_server->resize_view(
-                        sf::Vector2f(this->window_server->get_event().size.width,
-                                     this->window_server->get_event().size.height));
-                break;
-            case sf::Event::KeyPressed:
-                this->settings->handle_events(*this->window_server);
-                break;
-            default:
-                break;
-        }
-    }
-}
-
-void Game::menu_events() {
-
-    while (this->window_server->poll_event()) {
-        switch (this->window_server->get_event().type) {
-            case sf::Event::Closed:
-                this->window_server->close();
-                break;
-            case sf::Event::Resized:
-                this->window_server->resize_view(
-                        sf::Vector2f(this->window_server->get_event().size.width,
-                                     this->window_server->get_event().size.height));
-                break;
-            case sf::Event::KeyPressed:
-                this->menu->handle_events(*this->window_server);
-
-                if (this->window_server->get_event().key.code == sf::Keyboard::Escape) {
-                    this->window_server->close();
-                }
-                break;
-            default:
-                break;
         }
     }
 }
@@ -127,7 +81,6 @@ void Game::menu_entries() {
             [1] Resume
             [2] Set fullscreen
             [3] Mute
-            [4] Keyboard Settings
         [3] Credits
         [4] Exit
     */
@@ -201,15 +154,6 @@ void Game::menu_entries() {
             0,
             sf::Color::Transparent,
             0.0f, "Mute"));
-    this->settings->populate_option(*new Entities::Text(
-            FONT_PATH,
-            64,
-            WINDOW_X / 2.0f - 64.0f,
-            WINDOW_Y / 2.0f + 64.0f,
-            sf::Color::White,
-            0,
-            sf::Color::Transparent,
-            0.0f, "Keyboard settings"));
 }
 
 void Game::init_entities() {
