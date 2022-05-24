@@ -52,8 +52,6 @@ void Map::init_variables() {
 
 }
 
-/* GET */
-
 int Map::get_height() const {
     return this->height;
 }
@@ -116,8 +114,6 @@ std::vector<Entities::Image> Map::get_backgrounds() {
 std::vector<Object> Map::get_locations() {
     return this->locations;
 }
-
-/* TEG */
 
 // set buffer to each space
 void Map::load_map() {

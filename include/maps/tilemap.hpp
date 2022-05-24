@@ -25,7 +25,7 @@ namespace Maps {
     	public:
     		std::vector<Tile> get_tiles();
     		bool load(TileSet tileset, Layer layer);
-    		void set_tilehitbox(float width, float left, float height, float top);
+    		void set_tilehitbox(const std::string& type, float width, float left, float height, float top);
     };
 }
 #endif /* end of include guard: TILEMAP_HPP_MNF5HXD8 */

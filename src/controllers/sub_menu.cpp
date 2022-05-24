@@ -47,11 +47,6 @@ void SubMenu::events(WindowServer &window_server) {
         this->set_on_menu(false);
         std::cout << "resume opt" << std::endl;
     }
-    // set fullscreen
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter) && this->get_current_option() == 2) {
-        std::cout << "set fullscreen opt" << std::endl;
-        window_server.set_fullscreen();
-    }
     // mute
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter) && this->get_current_option() == 3) {
         std::cout << "mute opt" << std::endl;

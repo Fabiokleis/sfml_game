@@ -22,8 +22,6 @@ TileSet::TileSet (int firstg_id, std::string tileset) {
 
 TileSet::~TileSet() {}
 
-/* GET */
-
 int TileSet::get_firstg_id() {
     return this->firstg_id;
 }
@@ -70,4 +68,3 @@ std::string TileSet::get_image() {
 std::string TileSet::get_type() {
     return this->type;
 }
-/* TEG */

@@ -88,7 +88,7 @@ void Game::menu_entries() {
     // populate menu
     this->menu->populate_option(*new Entities::Text(
             FONT_PATH,
-            64,
+            48,
             WINDOW_X / 2.0f - 64.0f,
             WINDOW_Y / 2.0f - 128.0f,
             sf::Color::White,
@@ -97,7 +97,7 @@ void Game::menu_entries() {
             0.0f, "Start"));
     this->menu->populate_option(*new Entities::Text(
             FONT_PATH,
-            64,
+            48,
             WINDOW_X / 2.0f - 64.0f,
             WINDOW_Y / 2.0f - 64.0f,
             sf::Color::White,
@@ -107,7 +107,7 @@ void Game::menu_entries() {
             "Settings"));
     this->menu->populate_option(*new Entities::Text(
             FONT_PATH,
-            64,
+            48,
             WINDOW_X / 2.0f - 64.0f,
             WINDOW_Y / 2.0f,
             sf::Color::White,
@@ -117,7 +117,7 @@ void Game::menu_entries() {
             "Credits"));
     this->menu->populate_option(*new Entities::Text(
             FONT_PATH,
-            64,
+            48,
             WINDOW_X / 2.0f - 64.0f,
             WINDOW_Y / 2.0f + 64.0f,
             sf::Color::White,
@@ -129,25 +129,16 @@ void Game::menu_entries() {
     // populate settings
     this->settings->populate_option(*new Entities::Text(
             FONT_PATH,
-            64,
+            48,
             WINDOW_X / 2.0f - 64.0f,
-            WINDOW_Y / 2.0f - 128.0f,
+            WINDOW_Y / 2.0f - 64.0f,
             sf::Color::White,
             0,
             sf::Color::Transparent,
             0.0f, "Resume"));
     this->settings->populate_option(*new Entities::Text(
             FONT_PATH,
-            64,
-            WINDOW_X / 2.0f - 64.0f,
-            WINDOW_Y / 2.0f - 64.0f,
-            sf::Color::White,
-            0,
-            sf::Color::Transparent,
-            0.0f, "Set fullscreen"));
-    this->settings->populate_option(*new Entities::Text(
-            FONT_PATH,
-            64,
+            48,
             WINDOW_X / 2.0f - 64.0f,
             WINDOW_Y / 2.0f,
             sf::Color::White,
@@ -166,7 +157,7 @@ void Game::init_entities() {
             0.0f,
             sf::Color::Yellow);
 
-    sf::Vector2f p_pos(this->start_location.get_x(), this->start_location.get_y());
+    sf::Vector2f p_pos(static_cast<float>(this->start_location.get_x()), static_cast<float>(this->start_location.get_y()));
     // player
     this->player = new Entities::Player(
                     sf::Vector2f(45.0f, 80.0f),
@@ -280,7 +271,6 @@ void Game::update_player_view() {
 
 void Game::update() {
     this->handle_events();
-    this->map->update();
     this->player->update();
     this->handle_collision();
 }
