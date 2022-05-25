@@ -10,20 +10,20 @@ Object::Object(rapidjson::Value& value) {
     this->x = value["x"].GetDouble();
     this->y = value["y"].GetDouble();
     this->visible = value["visible"].GetBool();
-
-    sf::Vector2f size(width, height);
-    this->shape.setPosition(x, y);
-    this->shape.setSize(size);
-    this->shape.setOrigin(size / 2.0f);
 }
 
 Object::Object() : id(), name(), type(), height(), width(), x(), y(), visible(), shape() {}
 
 Object::~Object() = default;
 
+sf::RectangleShape Object::get_sprite() {
+    return this->shape;
+}
+
 Controllers::Collider Object::get_collider() {
     return Controllers::Collider{this->shape};
 }
+
 int Object::get_id() const {
     return this->id;
 }
@@ -54,4 +54,25 @@ double Object::get_y() const {
 
 bool Object::get_visible() const {
     return this->visible;
+}
+
+void Object::set_position(double x, double y) {
+    this->shape.setPosition(x, y);
+}
+void Object::set_size(double width, double height) {
+    this->shape.setSize(sf::Vector2f(width, height));
+}
+
+void Object::set_origin(double x, double y) {
+    this->shape.setOrigin(x, y);
+}
+void Object::set_color(sf::Color color) {
+    this->shape.setFillColor(color);
+}
+
+void Object::set_thickness(float thick) {
+    this->shape.setOutlineThickness(thick);
+}
+void Object::set_outline_color(sf::Color color) {
+    this->shape.setOutlineColor(color);
 }

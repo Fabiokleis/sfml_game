@@ -194,24 +194,40 @@ void Game::set_fps(float fps) {
 void Game::handle_collision() {
     // platform and player collision
     for (auto& platform : this->platforms.get_platforms()) {
-//        std::cout << "x: " << platform.get_x() << " y: " << platform.get_y() << " ";
-//        std::cout << "width: " << platform.get_width() << " height: " << platform.get_width() << "\n";
-        if (platform.get_collider().check_collision(this->player->get_collider(), this->player->get_velocity())) {
+        if (platform.get_collider().check_collision(this->player->get_collider(), this->player->get_velocity(), true)) {
             this->player->on_collision();
         }
     }
     // walls and player collision
     for (auto& wall : this->walls.get_walls()) {
-        if (wall.get_collider().check_collision(this->player->get_collider(), this->player->get_velocity())) {
+        if (wall.get_collider().check_collision(this->player->get_collider(), this->player->get_velocity(), true)) {
             this->player->on_collision();
         }
     }
-//    // tiles and player collision
-//    for (auto& tile : this->tiles.get_tiles()) {
-//        if (tile.get_collider().check_collision(this->player->get_collider(), this->player->get_velocity())) {
-//            this->player->on_collision();
-//        }
-//    }
+    // tiles and player collision
+    for (auto& tile : this->tiles.get_tiles()) {
+        if (tile.get_type() == "coin") {
+            if (tile.get_collider().check_collision(this->player->get_collider(), this->player->get_velocity(), false)) {
+                this->player->on_collision();
+            }
+        }
+        if (tile.get_type() == "note") {
+            if (tile.get_collider().check_collision(this->player->get_collider(), this->player->get_velocity(), true)) {
+                this->player->on_collision();
+            }
+        }
+        if (tile.get_type() == "greennote") {
+            if (tile.get_collider().check_collision(this->player->get_collider(), this->player->get_velocity(), true)) {
+                this->player->on_collision();
+            }
+        }
+        if (tile.get_type() == "spike") {
+            if (tile.get_collider().check_collision(this->player->get_collider(), this->player->get_velocity(), true)) {
+                this->player->on_collision();
+                this->player->set_state(Entities::dead);
+            }
+        }
+    }
 }
 
 void Game::handle_events() {
@@ -329,6 +345,15 @@ void Game::render_map() {
     }
     for (int i = static_cast<int>(this->tilemap.size()-1); i >= 0; i--) {
         this->window_server->render(this->tilemap[i]);
+    }
+    for (auto &plat : this->platforms.get_platforms()) {
+        this->window_server->render(plat.get_sprite());
+    }
+    for (auto &wall : this->walls.get_walls()) {
+        this->window_server->render(wall.get_sprite());
+    }
+    for (auto &tile : this->tiles.get_tiles()) {
+        this->window_server->render(tile.get_sprite());
     }
 }
 

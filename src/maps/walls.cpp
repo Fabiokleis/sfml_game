@@ -1,7 +1,16 @@
 #include "walls.hpp"
 using namespace Maps;
 
-Walls::Walls(std::vector<Object> walls_array) : walls_array(walls_array) {}
+Walls::Walls(std::vector<Object> walls_array) : walls_array(walls_array) {
+    for (auto &wall : this->walls_array) {
+        wall.set_position(wall.get_x() + wall.get_width() / 2.0f, wall.get_y() + wall.get_height() / 2.0f);
+        wall.set_size(wall.get_width(), wall.get_height());
+        wall.set_origin(wall.get_width() / 2.0f, wall.get_height() / 2.0f);
+        wall.set_color(sf::Color::Transparent);
+        wall.set_thickness(1.0f);
+        wall.set_outline_color(sf::Color::Cyan);
+    }
+}
 
 Walls::Walls() : walls_array() {}
 

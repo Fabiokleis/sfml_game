@@ -27,6 +27,7 @@ namespace Maps {
             ~Object();
 
             Controllers::Collider get_collider();
+            sf::RectangleShape get_sprite();
             int get_id() const;
             std::string get_name();
             std::string get_type();
@@ -35,6 +36,12 @@ namespace Maps {
             double get_x() const;
             double get_y() const;
             bool get_visible() const;
+            void set_position(double x, double y);
+            void set_size(double width, double height);
+            void set_origin(double x, double y);
+            void set_color(sf::Color color);
+            void set_thickness(float thick);
+            void set_outline_color(sf::Color color);
     };
 }
 
