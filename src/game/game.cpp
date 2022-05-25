@@ -1,7 +1,7 @@
 #include <iostream>
 #include "game.hpp"
 
-Game::Game() {
+Game::Game() : menu_options() {
     this->window_server = new Controllers::WindowServer("c++ game");
     this->on_menu = true;
 }
@@ -157,7 +157,7 @@ void Game::init_entities() {
             0.0f,
             sf::Color::Yellow);
 
-    sf::Vector2f p_pos(static_cast<float>(this->start_location.get_x()), static_cast<float>(this->start_location.get_y()));
+    sf::Vector2f p_pos(this->start_location.get_x(), this->start_location.get_y());
     // player
     this->player = new Entities::Player(
                     sf::Vector2f(45.0f, 80.0f),
@@ -166,7 +166,7 @@ void Game::init_entities() {
                     sf::Vector2f(0.0f, 0.0f),
                     sf::Vector2u(3, 6),
                     0.1f,
-                    Entities::falling,
+                    Entities::idle,
                     std::string(PLAYER_SPRITE_PATH));
 
 }
@@ -175,8 +175,11 @@ void Game::init_map() {
     this->map = new Maps::Map();
     this->tiles = this->map->get_tiles();
     this->locations = this->map->get_locations();
-    this->start_location = this->locations[0]; // start position of player
-    this->end_location = this->locations[1]; // end of the map, defined to load other map
+    this->walls = this->map->get_walls();
+    this->platforms = this->map->get_platforms();
+    this->start_location = locations.get_start(); // start position of player
+    this->check_point_location = locations.get_check_point(); // check point to save game
+    this->end_location = locations.get_end(); // end of the map, defined to load other map
     this->tilemap = this->map->get_tilemap();
     this->map_backgrounds = this->map->get_backgrounds();
 }
@@ -189,13 +192,26 @@ void Game::set_fps(float fps) {
 }
 
 void Game::handle_collision() {
-
-    // map and player collision
-    for (auto& tile : this->tiles) {
-        if (tile.get_collider().check_collision(this->player->get_collider(), this->player->get_velocity())) {
+    // platform and player collision
+    for (auto& platform : this->platforms.get_platforms()) {
+//        std::cout << "x: " << platform.get_x() << " y: " << platform.get_y() << " ";
+//        std::cout << "width: " << platform.get_width() << " height: " << platform.get_width() << "\n";
+        if (platform.get_collider().check_collision(this->player->get_collider(), this->player->get_velocity())) {
             this->player->on_collision();
         }
     }
+    // walls and player collision
+    for (auto& wall : this->walls.get_walls()) {
+        if (wall.get_collider().check_collision(this->player->get_collider(), this->player->get_velocity())) {
+            this->player->on_collision();
+        }
+    }
+//    // tiles and player collision
+//    for (auto& tile : this->tiles.get_tiles()) {
+//        if (tile.get_collider().check_collision(this->player->get_collider(), this->player->get_velocity())) {
+//            this->player->on_collision();
+//        }
+//    }
 }
 
 void Game::handle_events() {
@@ -212,15 +228,23 @@ void Game::handle_events() {
                         this->window_server->get_event().size.height));
                 break;
             case sf::Event::KeyPressed:
-                this->player->set_key_release(true);
+                this->player->set_key_release(false);
                 // return to menu, automatically pause game loop
                 if (this->window_server->get_event().key.code == sf::Keyboard::Escape) {
                     this->menu->set_on_menu(true);
                     this->on_menu = this->menu->get_on_menu();
                     this->menu_loop(true);
                 }
-                if (this->window_server->get_event().key.code == sf::Keyboard::Space) {
-                    this->player->set_state(Entities::jumping);
+                if (this->player->get_collide_state() == Entities::ground) {
+                    if (this->window_server->get_event().key.code == sf::Keyboard::Space) {
+                        this->player->set_state(Entities::jumping);
+                    }
+                    if (this->window_server->get_event().key.code == sf::Keyboard::A) {
+                        this->player->set_state(Entities::walking_left);
+                    }
+                    if (this->window_server->get_event().key.code == sf::Keyboard::D) {
+                        this->player->set_state(Entities::walking_right);
+                    }
                 }
                 if (this->window_server->get_event().key.code == sf::Keyboard::S) {
                     this->player->set_state(Entities::down);
@@ -229,10 +253,10 @@ void Game::handle_events() {
                 break;
             case sf::Event::KeyReleased:
                 this->player->set_key_release(true);
-                if (this->window_server->get_event().key.code == sf::Keyboard::Space) {
+                if (this->window_server->get_event().key.code == sf::Keyboard::Escape) {
                     this->player->set_state(Entities::falling);
                 }
-
+                this->player->set_last_state(this->player->get_state());
                 break;
 
             default:
@@ -247,7 +271,7 @@ bool Game::player_out_of_window() {
 
     // force player to stay in bottom/left/right position on map
     if (this->player->get_position().y > map_height || this->player->get_position().x > map_width || this->player->get_position().x < 0.0f) {
-        this->player->set_life(false);
+        this->player->set_state(Entities::dead);
         return true;
     }
     return false;
@@ -305,9 +329,6 @@ void Game::render_map() {
     }
     for (int i = static_cast<int>(this->tilemap.size()-1); i >= 0; i--) {
         this->window_server->render(this->tilemap[i]);
-    }
-    for (auto &tile : tiles) {
-        this->window_server->render(tile.get_body());
     }
 }
 

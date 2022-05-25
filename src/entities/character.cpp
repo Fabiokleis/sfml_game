@@ -10,26 +10,18 @@ Character::Character(sf::Vector2f size, sf::Vector2f velocity, sf::Vector2f posi
         velocity(velocity), path_name(std::move(path_name)), image_count(image_count), switch_time(switch_time), state(state),
         Entity(position, size)
 {
-    this->life = true;
     this->shape = sf::IntRect(static_cast<int>(cord.x), static_cast<int>(cord.y), static_cast<int>(size.x), static_cast<int>(size.y));
     init_texture();
     this->sprite.setTextureRect(shape);
     this->sprite.setTexture(&this->texture);
     this->animation = new Controllers::Animation(this->texture.getSize(), this->image_count, this->switch_time);
+    this->colliding = false;
 }
 
 Character::Character() = default;
 
 Character::~Character() {
     delete animation;
-}
-
-void Character::set_life(bool flag) {
-    this->life = flag;
-}
-
-bool Character::get_life() {
-    return this->life;
 }
 
 void Character::init_texture() {
@@ -47,7 +39,9 @@ void Character::set_state(const States s) {
 void Character::set_collide_state(CollideStates s) {
     this->collide_state = s;
 }
-
+void Character::set_colliding(bool flag) {
+    this->colliding = flag;
+}
 void Character::set_rect(sf::IntRect rect) {
     this->sprite.setTextureRect(rect);
 }
@@ -62,4 +56,16 @@ Controllers::Collider Character::get_collider() {
 
 Controllers::Animation& Character::get_animation() {
     return *this->animation;
+}
+
+CollideStates Character::get_collide_state() {
+    return this->collide_state;
+}
+
+void Character::set_last_state(States s) {
+    this->last_state = s;
+}
+
+States Character::get_state() {
+    return this->state;
 }

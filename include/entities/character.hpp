@@ -23,6 +23,7 @@ namespace Entities {
         down,
         jumping,
         falling,
+        dead,
     };
 
     class Character : public Entity {
@@ -30,7 +31,6 @@ namespace Entities {
             Controllers::Animation *animation{};
 
         protected:
-            bool life;
             sf::IntRect shape;
             sf::Vector2f velocity;
             sf::Texture texture;
@@ -39,6 +39,8 @@ namespace Entities {
             float switch_time{};
             CollideStates collide_state;
             States state;
+            States last_state;
+            bool colliding;
 
         public:
             Character(sf::Vector2f size, sf::Vector2f velocity, sf::Vector2f position, sf::Vector2f cord,
@@ -50,10 +52,12 @@ namespace Entities {
             sf::Vector2f& get_velocity();
             Controllers::Collider get_collider();
             Controllers::Animation& get_animation();
-            void set_life(bool flag);
-            bool get_life();
+            States get_state();
+            void set_last_state(States s);
             void set_state(States s);
             void set_collide_state(CollideStates s);
+            void set_colliding(bool flag);
+            CollideStates get_collide_state();
             void set_rect(sf::IntRect rect);
             virtual void move(float dir_x, float dir_y) = 0;
      };

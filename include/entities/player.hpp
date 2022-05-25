@@ -18,7 +18,7 @@ namespace Entities {
             float acceleration{};
             float gravity{};
             float delta_time{};
-            bool release_key;
+            bool release_key{};
     
     
         public:

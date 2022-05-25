@@ -6,12 +6,13 @@
 #include "config.h"
 using namespace Maps;
 
-Map::Map() {
+Map::Map() :
+    height(), width(), tile_height(), tile_width(), locations(), platforms(), walls(), tiles()
+{
     this->load_map();
     this->init_variables();
     this->load_tilesets();
     this->load_tilemap();
-    this->init_tiles();
 }
 
 Map::~Map() = default;
@@ -23,7 +24,6 @@ void Map::init_variables() {
     map_doc.Parse(this->map_str.c_str());
 
     this->height = map_doc["height"].GetInt();
-    this->infinite = map_doc["infinite"].GetBool();
 
     rapidjson::Value::Array layer_a = map_doc["layers"].GetArray();
 
@@ -33,10 +33,6 @@ void Map::init_variables() {
 
     std::reverse(layers.begin(), layers.end());
 
-    this->next_layer_id = map_doc["nextlayerid"].GetInt();
-    this->next_object_id = map_doc["nextobjectid"].GetInt();
-    this->orientation = map_doc["orientation"].GetString();
-    this->render_order = map_doc["renderorder"].GetString();
     this->tile_height = map_doc["tileheight"].GetInt();
 
     rapidjson::Value::Array tile_set_array = map_doc["tilesets"].GetArray();
@@ -60,14 +56,6 @@ int Map::get_width() const {
     return this->width;
 }
 
-int Map::get_next_layer_id() const {
-    return this->next_layer_id;
-}
-
-int Map::get_next_object_id() const {
-    return this->next_object_id;
-}
-
 int Map::get_tile_width() const {
     return this->tile_width;
 }
@@ -76,43 +64,28 @@ int Map::get_tile_height() const {
     return this->tile_height;
 }
 
-bool Map::is_infinite() const {
-    return this->infinite;
-}
-
-std::string Map::get_orientation() {
-    return this->orientation;
-}
-
-std::string Map::get_render_order() {
-    return this->render_order;
-}
-
-std::vector<TileSetMap> Map::get_tile_set_map() {
-    return this->tileset_maps;
-}
-
-std::vector<TileSet>& Map::get_tilesets() {
-    return this->tilesets;
-}
-
 std::vector<TileMap> Map::get_tilemap() {
     return this->tilemap_render;
-}
-
-std::vector<Layer> Map::get_layers() {
-    return this->layers;
-}
-std::vector<Tile> Map::get_tiles() {
-    return this->tiles;
 }
 
 std::vector<Entities::Image> Map::get_backgrounds() {
     return this->backgrounds;
 }
 
-std::vector<Object> Map::get_locations() {
+Locations Map::get_locations() {
     return this->locations;
+}
+
+Platforms Map::get_platforms() {
+    return this->platforms;
+}
+
+Walls Map::get_walls() {
+    return this->walls;
+}
+
+Tiles Map::get_tiles() {
+    return this->tiles;
 }
 
 // set buffer to each space
@@ -150,17 +123,32 @@ void Map::load_tilesets() {
     }
 }
 
-// pass all informations parsed to be a new tilemap
+
 void Map::load_tilemap() {
     for (auto & layer : this->layers) {
+        // pass all informations parsed to be a new tilemap
         if (layer.get_type() == "tilelayer") {
             this->tilemap_render.emplace_back();
             this->find_tileset(layer, this->tilesets);
         }
+        // pass all informations parsed to be a new location obj
         if (layer.get_name() == "locations") {
-            this->locations = layer.get_objects(); 
+            this->locations = Locations(layer.get_objects());
         }
-        if (layer.get_type() == "background") {
+        // pass all informations parsed to be a new platform obj
+        if (layer.get_name() == "platforms") {
+            this->platforms = Platforms(layer.get_objects());
+        }
+        // pass all informations parsed to be a new tile obj
+        if (layer.get_name() == "tiles") {
+            this->tiles = Tiles(layer.get_objects());
+        }
+        // pass all informations parsed to be a new wall obj
+        if (layer.get_name() == "walls") {
+            this->walls = Walls(layer.get_objects());
+        }
+        // pass all informations parsed to be a new image
+        if (layer.get_type() == "imagelayer") {
             this->backgrounds.emplace_back("map/"+layer.get_image());
         }
     }
@@ -170,10 +158,6 @@ void Map::find_tileset(Layer& layer, std::vector<TileSet>& tilesets_) {
     for (auto& tile: tilesets_) {
         this->tilemap_render.back().load(tile, layer);
     }
-}
-
-void Map::init_tiles() {
-    this->tiles = this->tilemap_render.back().get_tiles();
 }
 
 void Map::update() {}

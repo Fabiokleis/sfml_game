@@ -7,7 +7,6 @@
 #include "config.h"
 #include "map.hpp"
 #include "object.hpp"
-#include "tile.hpp"
 #include "image.hpp"
 #include "main_menu.hpp"
 #include "sub_menu.hpp"
@@ -17,7 +16,7 @@ class Game {
         Controllers::WindowServer* window_server;
         Entities::Player *player{};
 
-        std::vector<Entities::Text> menu_options{};
+        std::vector<Entities::Text> menu_options;
         Entities::Image *menu_bg{};
         Controllers::MainMenu *menu{};
 
@@ -26,12 +25,16 @@ class Game {
         Controllers::SubMenu *settings{};
 
         Maps::Map* map{};
-        std::vector<Maps::Tile> tiles;
         std::vector<Maps::TileMap> tilemap;
-        std::vector<Maps::Object> locations;
-        Maps::Object start_location;
-        Maps::Object end_location;
         std::vector<Entities::Image> map_backgrounds;
+        Maps::Object start_location;
+        Maps::Object check_point_location;
+        Maps::Object end_location;
+        Maps::Locations locations;
+        Maps::Platforms platforms;
+        Maps::Tiles tiles;
+        Maps::Walls walls;
+
 
         Entities::Text *fps_text{};
         sf::Clock clock{};

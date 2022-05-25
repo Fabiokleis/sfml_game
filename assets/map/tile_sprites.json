@@ -8,31 +8,6 @@
  "tilecount":36,
  "tiledversion":"1.8.4",
  "tileheight":32,
- "tiles":[
-        {
-         "id":0,
-         "type":"collider"
-        }, 
-        {
-         "id":1,
-         "type":"collider"
-        }, 
-        {
-         "id":2,
-         "type":"collider"
-        }, 
-        {
-         "id":3,
-         "type":"songcollider"
-        }, 
-        {
-         "id":4,
-         "type":"songcollider"
-        }, 
-        {
-         "id":5,
-         "type":"collider"
-        }],
  "tilewidth":32,
  "type":"tileset",
  "version":"1.8"
