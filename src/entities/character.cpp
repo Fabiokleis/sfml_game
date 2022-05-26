@@ -7,7 +7,7 @@
 using namespace Entities;
 
 Character::Character(sf::Vector2f size, sf::Vector2f velocity, sf::Vector2f position, sf::Vector2f cord, sf::Vector2u image_count, float switch_time, States state, std::string path_name) :
-        velocity(velocity), path_name(std::move(path_name)), image_count(image_count), switch_time(switch_time), state(state),
+        velocity(velocity), path_name(path_name), image_count(image_count), switch_time(switch_time), state(state), collide_state(), last_state(state),
         Entity(position, size)
 {
     this->shape = sf::IntRect(static_cast<int>(cord.x), static_cast<int>(cord.y), static_cast<int>(size.x), static_cast<int>(size.y));
@@ -15,10 +15,10 @@ Character::Character(sf::Vector2f size, sf::Vector2f velocity, sf::Vector2f posi
     this->sprite.setTextureRect(shape);
     this->sprite.setTexture(&this->texture);
     this->animation = new Controllers::Animation(this->texture.getSize(), this->image_count, this->switch_time);
-    this->colliding = false;
+
 }
 
-Character::Character() = default;
+Character::Character() : velocity(), path_name(), image_count(), switch_time(), state(idle), collide_state(), last_state(idle) {};
 
 Character::~Character() {
     delete animation;
@@ -39,9 +39,7 @@ void Character::set_state(const States s) {
 void Character::set_collide_state(CollideStates s) {
     this->collide_state = s;
 }
-void Character::set_colliding(bool flag) {
-    this->colliding = flag;
-}
+
 void Character::set_rect(sf::IntRect rect) {
     this->sprite.setTextureRect(rect);
 }

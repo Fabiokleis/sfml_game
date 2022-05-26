@@ -33,6 +33,25 @@ void Map::init_variables() {
 
     std::reverse(layers.begin(), layers.end());
 
+    for (auto &layer : layers) {
+        // pass all informations parsed to be a new location obj
+        if (layer.get_name() == "locations") {
+            this->locations = layer.get_locations();
+        }
+        // pass all informations parsed to be a new platform obj
+        if (layer.get_name() == "platforms") {
+            this->platforms = layer.get_platforms();
+        }
+        // pass all informations parsed to be a new tile obj
+        if (layer.get_name() == "tiles") {
+            this->tiles = layer.get_tiles();
+        }
+        // pass all informations parsed to be a new wall obj
+        if (layer.get_name() == "walls") {
+            this->walls = layer.get_walls();
+        }
+    }
+
     this->tile_height = map_doc["tileheight"].GetInt();
 
     rapidjson::Value::Array tile_set_array = map_doc["tilesets"].GetArray();
@@ -130,22 +149,6 @@ void Map::load_tilemap() {
         if (layer.get_type() == "tilelayer") {
             this->tilemap_render.emplace_back();
             this->find_tileset(layer, this->tilesets);
-        }
-        // pass all informations parsed to be a new location obj
-        if (layer.get_name() == "locations") {
-            this->locations = Locations(layer.get_objects());
-        }
-        // pass all informations parsed to be a new platform obj
-        if (layer.get_name() == "platforms") {
-            this->platforms = Platforms(layer.get_objects());
-        }
-        // pass all informations parsed to be a new tile obj
-        if (layer.get_name() == "tiles") {
-            this->tiles = Tiles(layer.get_objects());
-        }
-        // pass all informations parsed to be a new wall obj
-        if (layer.get_name() == "walls") {
-            this->walls = Walls(layer.get_objects());
         }
         // pass all informations parsed to be a new image
         if (layer.get_type() == "imagelayer") {

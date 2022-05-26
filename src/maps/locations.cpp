@@ -1,7 +1,12 @@
 #include "locations.hpp"
 using namespace Maps;
 
-Locations::Locations(std::vector<Object> locations_array) : locations_array(locations_array) {
+Locations::Locations(rapidjson::Value &value) {
+    if (value.HasMember("objects")) {
+        for (auto& obj : value["objects"].GetArray()) {
+            this->locations_array.emplace_back(obj);
+        }
+    }
     this->start = this->locations_array[0];
     this->end = this->locations_array[1];
     this->check_point = this->locations_array[2];

@@ -9,10 +9,12 @@ namespace Maps {
     class Tiles : public Object {
         private:
             std::vector<Object> tiles_array;
+            std::vector<Object> tiles_rect_array;
+            std::vector<Object> tiles_triangle_array;
 
         public:
             Tiles();
-            Tiles(std::vector<Object> locations_array);
+            Tiles(rapidjson::Value& value);
             std::vector<Object> get_tiles();
             ~Tiles();
     };

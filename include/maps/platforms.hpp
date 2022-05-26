@@ -13,7 +13,7 @@ namespace Maps {
 
         public:
             Platforms();
-            Platforms(std::vector<Object> platforms_array);
+            Platforms(rapidjson::Value &value);
             std::vector<Object> get_platforms();
             ~Platforms();
     };

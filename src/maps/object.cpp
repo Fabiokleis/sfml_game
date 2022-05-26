@@ -10,13 +10,25 @@ Object::Object(rapidjson::Value& value) {
     this->x = value["x"].GetDouble();
     this->y = value["y"].GetDouble();
     this->visible = value["visible"].GetBool();
+
+    if (value.HasMember("polygon")) {
+        for (auto &obj : value["polygon"].GetArray()) {
+            this->polys.push_back(obj["x"].GetDouble());
+            this->polys.push_back(obj["y"].GetDouble());
+        }
+        this->triangle.setPointCount(3);
+    }
 }
 
-Object::Object() : id(), name(), type(), height(), width(), x(), y(), visible(), shape() {}
+Object::Object() : id(), name(), type(), height(), width(), x(), y(), visible(), shape(), triangle() {}
 
 Object::~Object() = default;
 
-sf::RectangleShape Object::get_sprite() {
+std::vector<double> Object::get_polys() {
+    return this->polys;
+}
+
+sf::RectangleShape Object::get_rect_sprite() {
     return this->shape;
 }
 
@@ -75,4 +87,12 @@ void Object::set_thickness(float thick) {
 }
 void Object::set_outline_color(sf::Color color) {
     this->shape.setOutlineColor(color);
+}
+
+sf::ConvexShape Object::get_triangle_sprite() {
+    return this->triangle;
+}
+
+void Object::set_point(int point, double x_, double y_) {
+    this->triangle.setPoint(point, sf::Vector2f(x_, y_));
 }

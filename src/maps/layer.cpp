@@ -1,19 +1,13 @@
 #include "layer.hpp"
 using namespace Maps;
 
-Layer::Layer(rapidjson::Value& value) {
+Layer::Layer(rapidjson::Value& value) : tiles(), walls(), platforms() {
     // in case the layer type is tilelayer
 	if (value.HasMember("data")) {
 		for (auto& i : value["data"].GetArray()) {
 			this->data.push_back(i.GetInt64());
 		}
 	}
-    // case a layer of objects
-    if (value.HasMember("objects")) {
-        for (auto &obj : value["objects"].GetArray()) {
-            this->objs.emplace_back(obj);
-        }
-    }
 
     // in case the layer type is image
 	if (value.HasMember("image")) {
@@ -30,15 +24,47 @@ Layer::Layer(rapidjson::Value& value) {
 	if (value.HasMember("width")) {
 		this->width = value["width"].GetInt();
 	}
+
+    init_object_layers(value);
+
+}
+void Layer::init_object_layers(rapidjson::Value& value) {
+    // case a layer of objects
+    if (value.HasMember("objects")) {
+        // pass all informations parsed to be a new location obj
+        if (this->name == "locations") {
+            this->locations = Locations(value);
+
+        } else if (this->name == "platforms") { // pass all informations parsed to be a new platform obj
+            this->platforms = Platforms(value);
+
+        } else if (this->name == "tiles") { // pass all informations parsed to be a new tile obj
+            this->tiles = Tiles(value);
+
+        } else if (this->name == "walls") {  // pass all informations parsed to be a new wall obj
+            this->walls = Walls(value);
+        }
+    }
+}
+Locations Layer::get_locations() {
+    return this->locations;
 }
 
-Layer::Layer() : name(), type(), width(), height(), objs() {}
+Tiles Layer::get_tiles() {
+    return this->tiles;
+}
+
+Platforms Layer::get_platforms() {
+    return this->platforms;
+}
+
+Walls Layer::get_walls() {
+    return this->walls;
+}
+
+Layer::Layer() : name(), type(), width(), height(), tiles(), walls(), platforms() {}
 
 Layer::~Layer() = default;
-
-std::vector<Object> Layer::get_objects() {
-    return this->objs;
-}
 
 std::vector<long> Layer::get_data() {
 	return this->data;

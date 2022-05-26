@@ -59,6 +59,7 @@ void Game::game_loop() {
         previousTime = currentTime;
 
         this->delta_time = this->clock.restart().asSeconds();
+        this->player->reset_clock(delta_time);
         this->set_fps(fps);
         this->update();
         this->render();
@@ -166,7 +167,7 @@ void Game::init_entities() {
                     sf::Vector2f(0.0f, 0.0f),
                     sf::Vector2u(3, 6),
                     0.1f,
-                    Entities::idle,
+                    Entities::States::idle,
                     std::string(PLAYER_SPRITE_PATH));
 
 }
@@ -195,36 +196,30 @@ void Game::handle_collision() {
     // platform and player collision
     for (auto& platform : this->platforms.get_platforms()) {
         if (platform.get_collider().check_collision(this->player->get_collider(), this->player->get_velocity(), true)) {
-            this->player->on_collision();
+            this->player->on_collision(platform.get_type());
         }
     }
     // walls and player collision
     for (auto& wall : this->walls.get_walls()) {
         if (wall.get_collider().check_collision(this->player->get_collider(), this->player->get_velocity(), true)) {
-            this->player->on_collision();
+            this->player->on_collision(wall.get_type());
         }
     }
-    // tiles and player collision
+    // tiles and player collision, set a different collision by type
     for (auto& tile : this->tiles.get_tiles()) {
-        if (tile.get_type() == "coin") {
+        if (tile.get_name() == "coin") {
             if (tile.get_collider().check_collision(this->player->get_collider(), this->player->get_velocity(), false)) {
-                this->player->on_collision();
+                this->player->on_collision(tile.get_name());
             }
         }
-        if (tile.get_type() == "note") {
+        if (tile.get_name() == "note") {
             if (tile.get_collider().check_collision(this->player->get_collider(), this->player->get_velocity(), true)) {
-                this->player->on_collision();
+                this->player->on_collision(tile.get_name());
             }
         }
-        if (tile.get_type() == "greennote") {
+        if (tile.get_name() == "spike") {
             if (tile.get_collider().check_collision(this->player->get_collider(), this->player->get_velocity(), true)) {
-                this->player->on_collision();
-            }
-        }
-        if (tile.get_type() == "spike") {
-            if (tile.get_collider().check_collision(this->player->get_collider(), this->player->get_velocity(), true)) {
-                this->player->on_collision();
-                this->player->set_state(Entities::dead);
+                this->player->on_collision(tile.get_name());
             }
         }
     }
@@ -232,6 +227,7 @@ void Game::handle_collision() {
 
 void Game::handle_events() {
     while (this->window_server->poll_event()) {
+        this->player->handle_events(*this->window_server);
         switch (this->window_server->get_event().type) {
 
             case sf::Event::Closed:
@@ -244,35 +240,17 @@ void Game::handle_events() {
                         this->window_server->get_event().size.height));
                 break;
             case sf::Event::KeyPressed:
-                this->player->set_key_release(false);
                 // return to menu, automatically pause game loop
                 if (this->window_server->get_event().key.code == sf::Keyboard::Escape) {
                     this->menu->set_on_menu(true);
                     this->on_menu = this->menu->get_on_menu();
                     this->menu_loop(true);
                 }
-                if (this->player->get_collide_state() == Entities::ground) {
-                    if (this->window_server->get_event().key.code == sf::Keyboard::Space) {
-                        this->player->set_state(Entities::jumping);
-                    }
-                    if (this->window_server->get_event().key.code == sf::Keyboard::A) {
-                        this->player->set_state(Entities::walking_left);
-                    }
-                    if (this->window_server->get_event().key.code == sf::Keyboard::D) {
-                        this->player->set_state(Entities::walking_right);
-                    }
-                }
-                if (this->window_server->get_event().key.code == sf::Keyboard::S) {
-                    this->player->set_state(Entities::down);
-                }
-                this->player->reset_clock(this->delta_time);
                 break;
             case sf::Event::KeyReleased:
-                this->player->set_key_release(true);
                 if (this->window_server->get_event().key.code == sf::Keyboard::Escape) {
                     this->player->set_state(Entities::falling);
                 }
-                this->player->set_last_state(this->player->get_state());
                 break;
 
             default:
@@ -287,7 +265,7 @@ bool Game::player_out_of_window() {
 
     // force player to stay in bottom/left/right position on map
     if (this->player->get_position().y > map_height || this->player->get_position().x > map_width || this->player->get_position().x < 0.0f) {
-        this->player->set_state(Entities::dead);
+//        this->player->set_state(Entities::dead);
         return true;
     }
     return false;
@@ -347,13 +325,18 @@ void Game::render_map() {
         this->window_server->render(this->tilemap[i]);
     }
     for (auto &plat : this->platforms.get_platforms()) {
-        this->window_server->render(plat.get_sprite());
+        this->window_server->render(plat.get_rect_sprite());
     }
     for (auto &wall : this->walls.get_walls()) {
-        this->window_server->render(wall.get_sprite());
+        this->window_server->render(wall.get_rect_sprite());
     }
     for (auto &tile : this->tiles.get_tiles()) {
-        this->window_server->render(tile.get_sprite());
+        if (tile.get_type() == "rect") {
+            this->window_server->render(tile.get_rect_sprite());
+        }
+        if (tile.get_type() == "triangle") {
+            this->window_server->render(tile.get_triangle_sprite());
+        }
     }
 }
 

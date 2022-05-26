@@ -15,7 +15,7 @@ namespace Maps {
 
         public:
             Locations();
-            Locations(std::vector<Object> locations_array);
+            Locations(rapidjson::Value &value);
             ~Locations();
             Object get_start();
             Object get_check_point();

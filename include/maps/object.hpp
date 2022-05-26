@@ -19,7 +19,9 @@ namespace Maps {
             double width;
             double x;
             double y;
+            std::vector<double> polys;
             sf::RectangleShape shape;
+            sf::ConvexShape triangle;
 
         public:
             Object();
@@ -27,10 +29,12 @@ namespace Maps {
             ~Object();
 
             Controllers::Collider get_collider();
-            sf::RectangleShape get_sprite();
+            sf::RectangleShape get_rect_sprite();
+            sf::ConvexShape get_triangle_sprite();
             int get_id() const;
             std::string get_name();
             std::string get_type();
+            std::vector<double> get_polys();
             double get_height() const;
             double get_width() const;
             double get_x() const;
@@ -39,6 +43,7 @@ namespace Maps {
             void set_position(double x, double y);
             void set_size(double width, double height);
             void set_origin(double x, double y);
+            void set_point(int point, double x, double y);
             void set_color(sf::Color color);
             void set_thickness(float thick);
             void set_outline_color(sf::Color color);

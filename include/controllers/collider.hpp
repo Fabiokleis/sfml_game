@@ -14,7 +14,6 @@ namespace Controllers {
             sf::Vector2f get_position();
             void set_body(sf::RectangleShape &nboby);
             bool check_collision(Collider other, sf::Vector2f& dir, bool needs_move);
-            bool move_on_collision();
             void move(float dx, float dy);
             sf::Vector2f get_half_size();
     };

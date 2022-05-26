@@ -12,7 +12,7 @@ namespace Maps {
 
         public:
             Walls();
-            Walls(std::vector<Object> walls_array);
+            Walls(rapidjson::Value &value);
             std::vector<Object> get_walls();
             ~Walls();
 

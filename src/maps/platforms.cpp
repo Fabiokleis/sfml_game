@@ -1,7 +1,12 @@
 #include "platforms.hpp"
 using namespace Maps;
 
-Platforms::Platforms(std::vector<Object> platforms_array) : platforms_array(platforms_array) {
+Platforms::Platforms(rapidjson::Value &value)  {
+    if (value.HasMember("objects")) {
+        for (auto& obj : value["objects"].GetArray()) {
+            this->platforms_array.emplace_back(obj);
+        }
+    }
     for (auto &plat : this->platforms_array) {
         plat.set_position(plat.get_x() + plat.get_width() / 2.0f, plat.get_y() + plat.get_height() / 2.0f);
         plat.set_size(plat.get_width(), plat.get_height());

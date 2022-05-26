@@ -14,6 +14,8 @@ namespace Entities {
         right,
         left,
         ground,
+        colliding,
+        not_colliding,
     };
 
     enum States {
@@ -23,6 +25,8 @@ namespace Entities {
         down,
         jumping,
         falling,
+        falling_right,
+        falling_left,
         dead,
     };
 
@@ -36,11 +40,10 @@ namespace Entities {
             sf::Texture texture;
             std::string path_name;
             sf::Vector2u image_count;
-            float switch_time{};
+            float switch_time;
             CollideStates collide_state;
             States state;
             States last_state;
-            bool colliding;
 
         public:
             Character(sf::Vector2f size, sf::Vector2f velocity, sf::Vector2f position, sf::Vector2f cord,
@@ -56,7 +59,6 @@ namespace Entities {
             void set_last_state(States s);
             void set_state(States s);
             void set_collide_state(CollideStates s);
-            void set_colliding(bool flag);
             CollideStates get_collide_state();
             void set_rect(sf::IntRect rect);
             virtual void move(float dir_x, float dir_y) = 0;
