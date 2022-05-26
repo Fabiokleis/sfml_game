@@ -29,6 +29,14 @@ void Player::reset_clock(float dt) {
     this->delta_time = dt;
 }
 
+int Player::get_coins() const {
+    return this->coin;
+}
+
+void Player::inc_score() {
+    this->coin++;
+}
+
 void Player::handle_events(Controllers::WindowServer &window_server) {
     if (state != dead) {
         switch (window_server.get_event().type) {
@@ -67,8 +75,6 @@ void Player::on_collision(const std::string& object_type) {
             // collision on top
             collide_state = top;
         }
-    } else {
-        coin++;
     }
 }
 

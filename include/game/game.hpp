@@ -14,17 +14,17 @@
 class Game {
     private:
         Controllers::WindowServer* window_server;
-        Entities::Player *player{};
+        Entities::Player *player;
 
         std::vector<Entities::Text> menu_options;
-        Entities::Image *menu_bg{};
-        Controllers::MainMenu *menu{};
+        Entities::Image *menu_bg;
+        Controllers::MainMenu *menu;
 
-        std::vector<Entities::Text> settings_options{};
-        Entities::Image *settings_bg{};
-        Controllers::SubMenu *settings{};
+        std::vector<Entities::Text> settings_options;
+        Entities::Image *settings_bg;
+        Controllers::SubMenu *settings;
 
-        Maps::Map* map{};
+        Maps::Map* map;
         std::vector<Maps::TileMap> tilemap;
         std::vector<Entities::Image> map_backgrounds;
         Maps::Object start_location;
@@ -35,10 +35,15 @@ class Game {
         Maps::Tiles tiles;
         Maps::Walls walls;
 
+        std::vector<Entities::Coin> coins;
+        Entities::Text *fps_text;
+        Entities::Text *coin_number;
+        Entities::Image *coin_image;
+        Entities::Text *time_text;
 
-        Entities::Text *fps_text{};
-        sf::Clock clock{};
-        float delta_time{};
+        sf::Clock clock;
+        float delta_time;
+        int total_time;
         bool on_menu;
 
         bool player_out_of_window();
@@ -46,8 +51,11 @@ class Game {
         void init_entities();
         void init_map();
         void menu_entries();
+        void set_time();
         void set_fps(float fps);
-        void game_loop();
+        void set_score(int coin);
+        void count_down();
+        void game_loop(sf::Clock timer);
         void menu_loop(bool from_game = false);
         void update_player_view();
         void handle_events();

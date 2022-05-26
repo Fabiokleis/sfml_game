@@ -25,6 +25,8 @@ namespace Entities {
             Player();
 
             ~Player();
+            int get_coins() const;
+            void inc_score();
             void init_physics();
             void update();
             void handle_events(Controllers::WindowServer &window_server);

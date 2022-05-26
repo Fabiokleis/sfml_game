@@ -3,19 +3,22 @@
 #include "object.hpp"
 #include <iostream>
 #include <vector>
+#include "config.h"
+#include "coin.hpp"
 
 namespace Maps {
 
     class Tiles : public Object {
         private:
             std::vector<Object> tiles_array;
-            std::vector<Object> tiles_rect_array;
-            std::vector<Object> tiles_triangle_array;
+            std::vector<Entities::Coin> coins;
 
         public:
             Tiles();
             Tiles(rapidjson::Value& value);
             std::vector<Object> get_tiles();
+            std::vector<Entities::Coin> get_coins();
+            void init_coin_image();
             ~Tiles();
     };
 }

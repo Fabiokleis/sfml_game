@@ -14,8 +14,8 @@ namespace Controllers {
     class WindowServer {
         private:
             sf::RenderWindow* window;
-            sf::View view{};
-            sf::Event event{};
+            sf::View view;
+            sf::Event event;
 
         public:
             WindowServer(const std::string& window_title);

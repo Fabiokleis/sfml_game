@@ -1,7 +1,9 @@
 #include <iostream>
 #include "game.hpp"
 
-Game::Game() : menu_options() {
+Game::Game() :
+    player(), map(), menu_bg(), menu(), settings(), settings_bg(), fps_text(), delta_time(), menu_options(), coin_image(), coin_number(), time_text(), total_time(100)
+{
     this->window_server = new Controllers::WindowServer("c++ game");
     this->on_menu = true;
 }
@@ -13,9 +15,10 @@ void Game::exec() {
     this->menu_loop();
 
     if (this->window_server->is_open() && !this->on_menu) {
+        sf::Clock timer;
         this->init_map();
         this->init_entities();
-        this->game_loop();
+        this->game_loop(timer);
     }
 }
 
@@ -47,12 +50,18 @@ void Game::menu_loop(bool from_game) {
     }
 }
 
-void Game::game_loop() {
+void Game::game_loop(sf::Clock timer) {
     float fps;
     sf::Clock local_clock;
     sf::Time previousTime = local_clock.getElapsedTime();
     sf::Time currentTime;
+
     while (this->window_server->is_open() && !this->on_menu) {
+        float aux_time = timer.getElapsedTime().asSeconds();
+        if (aux_time > 1 && this->total_time >= 0) {
+            this->set_time();
+            timer.restart();
+        }
 
         currentTime = local_clock.getElapsedTime();
         fps = 1.0f / (currentTime.asSeconds() - previousTime.asSeconds()); // the asSeconds returns a float
@@ -60,9 +69,17 @@ void Game::game_loop() {
 
         this->delta_time = this->clock.restart().asSeconds();
         this->player->reset_clock(delta_time);
+        this->set_score(this->player->get_coins());
         this->set_fps(fps);
+
         this->update();
         this->render();
+    }
+}
+
+void Game::count_down() {
+    if (this->total_time == -1) {
+        this->player->set_state(Entities::dead);
     }
 }
 
@@ -170,6 +187,27 @@ void Game::init_entities() {
                     Entities::States::idle,
                     std::string(PLAYER_SPRITE_PATH));
 
+    // coins
+    this->coins = this->tiles.get_coins();
+    this->coin_number = new Entities::Text(
+            FONT_PATH,
+            32,
+            0.0f,
+            0.0f,
+            sf::Color(192, 192, 192)
+            );
+    this->coin_image = new Entities::Image("map/coin.png");
+    this->coin_image->set_position(sf::Vector2f(WINDOW_X - 64, this->coin_image->get_sprite().getSize().y));
+
+
+    // time text
+    this->time_text = new Entities::Text(
+            FONT_PATH,
+                 48,
+                 0.0f,
+                 0.0f,
+             sf::Color(192, 192, 192)
+            );
 }
 
 void Game::init_map() {
@@ -192,6 +230,21 @@ void Game::set_fps(float fps) {
     this->fps_text->set_text(std::to_string((int)fps));
 }
 
+void Game::set_score(int coin) {
+    sf::Vector2f pos(WINDOW_X, this->coin_image->get_sprite().getSize().y + 10.0f);
+    pos.x -= 16;
+    this->coin_number->set_position(pos);
+    this->coin_number->set_text(std::to_string(coin));
+}
+
+void Game::set_time() {
+
+    this->time_text->set_position(sf::Vector2f(WINDOW_X / 2 - 32.0f, 32.0f));
+    std::string aux = std::to_string(this->total_time);
+    this->time_text->set_text("Time " + aux);
+    this->total_time--;
+}
+
 void Game::handle_collision() {
     // platform and player collision
     for (auto& platform : this->platforms.get_platforms()) {
@@ -207,9 +260,13 @@ void Game::handle_collision() {
     }
     // tiles and player collision, set a different collision by type
     for (auto& tile : this->tiles.get_tiles()) {
-        if (tile.get_type() == "coin") {
+        if (tile.get_type() == "coin" && !this->coins.empty()) {
             if (tile.get_collider().check_collision(this->player->get_collider(), this->player->get_velocity(), false)) {
                 this->player->on_collision(tile.get_type());
+                this->coins.erase(std::remove_if(coins.begin(), coins.end(), [&](const Entities::Coin& i) {
+                    if (i.get_id() == tile.get_id()) this->player->inc_score();
+                    return i.get_id() == tile.get_id();
+                }), coins.end());
             }
         }
         if (tile.get_type() == "note") {
@@ -265,7 +322,7 @@ bool Game::player_out_of_window() {
 
     // force player to stay in bottom/left/right position on map
     if (this->player->get_position().y > map_height || this->player->get_position().x > map_width || this->player->get_position().x < 0.0f) {
-//        this->player->set_state(Entities::dead);
+        this->player->set_state(Entities::dead);
         return true;
     }
     return false;
@@ -293,6 +350,7 @@ void Game::update_player_view() {
 
 void Game::update() {
     this->handle_events();
+    this->count_down();
     this->player->update();
     this->handle_collision();
 }
@@ -333,13 +391,22 @@ void Game::render_map() {
     for (auto &tile : this->tiles.get_tiles()) {
         this->window_server->render(tile.get_rect_sprite());
     }
+    for (auto &coin : this->coins) {
+        this->window_server->render(coin.get_sprite());
+    }
 }
 
 void Game::render() {
     this->window_server->clear();
     this->render_map();
     this->window_server->reset_view();
+    this->window_server->render(this->coin_number->get_text());
+    this->window_server->reset_view();
+    this->window_server->render(this->coin_image->get_sprite());
+    this->window_server->reset_view();
     this->window_server->render(this->fps_text->get_text());
+    this->window_server->reset_view();
+    this->window_server->render(this->time_text->get_text());
     this->update_player_view();
     this->window_server->render(this->player->get_sprite());
     this->window_server->display();

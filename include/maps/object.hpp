@@ -30,7 +30,6 @@ namespace Maps {
             int get_id() const;
             std::string get_name();
             std::string get_type();
-            std::vector<double> get_polys();
             double get_height() const;
             double get_width() const;
             double get_x() const;

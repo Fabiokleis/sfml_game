@@ -1,7 +1,7 @@
 #include "window_server.hpp"
 using namespace Controllers;
 
-WindowServer::WindowServer(const std::string& window_title) {
+WindowServer::WindowServer(const std::string& window_title) : event(), view() {
     this->window = new sf::RenderWindow(sf::VideoMode(WINDOW_X,  WINDOW_Y), window_title);
     this->window->setFramerateLimit(FPS);
 }

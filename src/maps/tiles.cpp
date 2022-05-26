@@ -14,6 +14,9 @@ Tiles::Tiles(rapidjson::Value &value) {
         tile.set_color(sf::Color::Transparent);
         tile.set_thickness(1.0f);
         tile.set_outline_color(sf::Color::Green);
+        if (tile.get_type() == "coin") {
+            this->coins.emplace_back(tile.get_id(), tile.get_x() + tile.get_width() / 2.0f, tile.get_y() + tile.get_height() / 2.0f, tile.get_width(), tile.get_height());
+        }
     }
 }
 
@@ -22,5 +25,10 @@ std::vector<Object> Tiles::get_tiles() {
 }
 
 Tiles::Tiles() : tiles_array() {}
+
+std::vector<Entities::Coin> Tiles::get_coins() {
+    return this->coins;
+}
+
 
 Tiles::~Tiles() = default;
