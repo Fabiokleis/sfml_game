@@ -19,7 +19,7 @@ Player::Player() : acceleration(0.0f), jump_height(0.0f), gravity(0.0f), delta_t
 Player::~Player() = default;
 
 void Player::init_physics() {
-    this->jump_height = 25.0f;
+    this->jump_height = 22.0f;
     this->acceleration = 200.0f;
     this->gravity = 9.810f;
     this->delta_time = 0.01f;
@@ -78,8 +78,8 @@ void Player::move(const float dir_x, const float dir_y) {
 
     // jump
     if (state == jumping) {
-        float jump = -(2 * this->gravity * this->jump_height);
-        this->velocity.y = static_cast<float>(jump);
+        float jump = (2 * this->gravity * this->jump_height);
+        this->velocity.y = -(static_cast<float>(jump));
         this->collide_state = not_colliding;
     }
 }

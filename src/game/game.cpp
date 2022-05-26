@@ -207,19 +207,19 @@ void Game::handle_collision() {
     }
     // tiles and player collision, set a different collision by type
     for (auto& tile : this->tiles.get_tiles()) {
-        if (tile.get_name() == "coin") {
+        if (tile.get_type() == "coin") {
             if (tile.get_collider().check_collision(this->player->get_collider(), this->player->get_velocity(), false)) {
-                this->player->on_collision(tile.get_name());
+                this->player->on_collision(tile.get_type());
             }
         }
-        if (tile.get_name() == "note") {
+        if (tile.get_type() == "note") {
             if (tile.get_collider().check_collision(this->player->get_collider(), this->player->get_velocity(), true)) {
-                this->player->on_collision(tile.get_name());
+                this->player->on_collision(tile.get_type());
             }
         }
-        if (tile.get_name() == "spike") {
+        if (tile.get_type() == "spike") {
             if (tile.get_collider().check_collision(this->player->get_collider(), this->player->get_velocity(), true)) {
-                this->player->on_collision(tile.get_name());
+                this->player->on_collision(tile.get_type());
             }
         }
     }
@@ -331,12 +331,7 @@ void Game::render_map() {
         this->window_server->render(wall.get_rect_sprite());
     }
     for (auto &tile : this->tiles.get_tiles()) {
-        if (tile.get_type() == "rect") {
-            this->window_server->render(tile.get_rect_sprite());
-        }
-        if (tile.get_type() == "triangle") {
-            this->window_server->render(tile.get_triangle_sprite());
-        }
+        this->window_server->render(tile.get_rect_sprite());
     }
 }
 
