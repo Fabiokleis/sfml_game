@@ -110,7 +110,7 @@ Tiles Map::get_tiles() {
 // set buffer to each space
 void Map::load_map() {
     std::string path = RESOURCE_PATH;
-    path += "map/platform.json";
+    path += "map/platform2.json";
     this->map_str = this->read_file(path);
 }
 

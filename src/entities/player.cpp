@@ -19,7 +19,7 @@ Player::Player() : acceleration(0.0f), jump_height(0.0f), gravity(0.0f), delta_t
 Player::~Player() = default;
 
 void Player::init_physics() {
-    this->jump_height = 22.0f;
+    this->jump_height = 20.0f;
     this->acceleration = 200.0f;
     this->gravity = 9.810f;
     this->delta_time = 0.01f;

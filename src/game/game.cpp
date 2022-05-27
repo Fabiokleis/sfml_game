@@ -2,7 +2,7 @@
 #include "game.hpp"
 
 Game::Game() :
-    player(), map(), menu_bg(), menu(), settings(), settings_bg(), fps_text(), delta_time(), menu_options(), coin_image(), coin_number(), time_text(), total_time(100)
+    player(), map(), menu_bg(), menu(), settings(), settings_bg(), fps_text(), delta_time(), menu_options(), coin_image(), coin_number(), time_text(), total_time(256)
 {
     this->window_server = new Controllers::WindowServer("c++ game");
     this->on_menu = true;
