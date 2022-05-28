@@ -47,19 +47,19 @@ class Game {
         float delta_time;
         int total_time;
         bool on_menu;
-        bool player_dead;
 
+        std::string load_save();
         bool player_out_of_window();
         void init_menu();
         void init_entities();
-        void init_map();
+        void init_map(std::string map_name);
         void menu_entries();
         void set_time();
         void set_fps(float fps);
         void set_score(int coin, int life_number);
         void count_down();
         void save_game();
-        void load_save();
+        void restart_player();
         void game_loop(sf::Clock timer);
         void menu_loop(bool from_game = false, bool from_player_dead = false);
         void update_player_view();
@@ -76,5 +76,6 @@ class Game {
         Game();
         ~Game();
         void exec();
+
 };
 #endif /* end of include guard: GAME_HPP_WSHRPK2N */

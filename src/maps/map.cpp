@@ -23,6 +23,16 @@ void Map::init_variables() {
 
     map_doc.Parse(this->map_str.c_str());
 
+
+    if (map_doc.HasMember("properties")) {
+        rapidjson::Value::Array  prop_arr = map_doc["properties"].GetArray();
+        for (auto &prop : prop_arr) {
+            if (prop.HasMember("value")) {
+                this->map_name = prop["value"].GetString();
+            }
+        }
+    }
+
     this->height = map_doc["height"].GetInt();
 
     rapidjson::Value::Array layer_a = map_doc["layers"].GetArray();
@@ -85,6 +95,10 @@ int Map::get_tile_height() const {
 
 std::vector<TileMap> Map::get_tilemap() {
     return this->tilemap_render;
+}
+
+std::string Map::get_name() {
+    return this->map_name;
 }
 
 std::vector<Entities::Image> Map::get_backgrounds() {

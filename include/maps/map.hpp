@@ -28,6 +28,7 @@ namespace Maps {
             std::string tileset_buffer;
             int height;
             int width;
+            std::string map_name;
             std::vector<Layer> layers;
             std::vector<TileSet> tilesets;
             std::vector<TileSetMap> tileset_maps;
@@ -58,6 +59,7 @@ namespace Maps {
 
             std::vector<TileMap> get_tilemap();
             std::vector<Entities::Image> get_backgrounds();
+            std::string get_name();
             void find_tileset(Layer& layer, std::vector<TileSet>& tilesets);
             void load_tileset_buffer(const std::string& filename);
             static std::string read_file(const std::string& filename);

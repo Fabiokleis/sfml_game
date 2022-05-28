@@ -91,7 +91,6 @@ void Player::on_collision(const std::string& object_type) {
     } else {
         this->coin++;
     }
-
     this->update_life_number();
 }
 
@@ -224,11 +223,15 @@ void Player::update() {
     this->update_input();
     this->update_physics();
     this->update_animation();
+
     std::cout << "state: " << state << std::endl;
 }
-
 // reset player
-void Player::restart(sf::Vector2f position, States state) {
+void Player::restart(sf::Vector2f position, int coin, int life, States state) {
     this->set_position(position);
     this->set_state(state);
+    this->coin = coin;
+    this->life_number = life;
+    this->velocity.x = 0.0f;
+    this->velocity.y = 0.0f;
 }

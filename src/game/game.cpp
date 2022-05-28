@@ -2,10 +2,11 @@
 #include "game.hpp"
 #include <fstream>
 #include "../rapidjson/document.h"
+#define TIME 256
 
 Game::Game() :
-        player(), player_dead(), map(), menu_bg(), menu(), load(), load_bg(), fps_text(), delta_time(), menu_options(),
-        coin_image(), coin_number(), time_text(), total_time(256), life_image(), life_text()
+        player(), map(), menu_bg(), menu(), load(), load_bg(), fps_text(), delta_time(), menu_options(),
+        coin_image(), coin_number(), time_text(), total_time(TIME), life_image(), life_text()
 {
     this->window_server = new Controllers::WindowServer("c++ game");
     this->on_menu = true;
@@ -19,7 +20,7 @@ void Game::exec() {
 
     if (this->window_server->is_open() && !this->on_menu) {
 
-        this->init_map();
+        this->init_map("platform.json");
         this->init_entities();
         // to init timer after load map and any other entity
         sf::Clock timer;
@@ -217,7 +218,7 @@ void Game::init_entities() {
             );
 
     // coins
-    this->coins = this->tiles.get_coins();
+
     this->coin_image = new Entities::Image("map/coin.png");
     this->coin_image->set_position(sf::Vector2f(WINDOW_X - 64, this->coin_image->get_sprite().getSize().y));
     this->coin_number = new Entities::Text(
@@ -238,9 +239,10 @@ void Game::init_entities() {
             );
 }
 
-void Game::init_map() {
-    this->map = new Maps::Map("platform.json");
+void Game::init_map(std::string map_name) {
+    this->map = new Maps::Map(map_name);
     this->tiles = this->map->get_tiles();
+    this->coins = this->tiles.get_coins();
     this->locations = this->map->get_locations();
     this->walls = this->map->get_walls();
     this->platforms = this->map->get_platforms();
@@ -280,64 +282,75 @@ void Game::set_time() {
 }
 
 void Game::handle_collision() {
-    if (this->player->get_state() != Entities::dead) {
-        this->handle_player_collision();
-    } else {
-        this->player_dead = true;
+    if (this->player_out_of_window()) {
+        this->player->set_state(Entities::dead);
+        this->player->update_life_number();
+    }
+
+    // verify if player dead and restart
+    if (this->player->get_state() == Entities::dead) {
         this->menu->set_on_menu(true);
         this->on_menu = this->menu->get_on_menu();
-        this->menu_loop(false, player_dead); // create a specific flag to restart game
+        this->menu_loop(false, true); // create a specific flag to restart game
+        // out of the menu, after select a restart option
+        this->restart_player();
+        this->on_menu = this->menu->get_on_menu();
+
     }
+
+    this->handle_player_collision();
 }
 
 void Game::handle_player_collision() {
-    if (this->player_out_of_window()) {
-        this->player->set_state(Entities::dead);
+
+    if (this->end_location.get_collider().check_collision(this->player->get_collider(), this->player->get_velocity(), false)) {
+        // verify if player collide with the end of map, to load next map
+
     }
-    if (this->player->get_state() != Entities::dead) {
-        if (this->end_location.get_collider().check_collision(this->player->get_collider(), this->player->get_velocity(), false)) {
-            // verify if player collide with the end of map, to load next map
 
-        }
+    if (this->check_point_location.get_collider().check_collision(this->player->get_collider(), this->player->get_velocity(), true)) {
+        // verify if player collide with check point to save the game
+        this->save_game();
+    }
 
-        if (this->check_point_location.get_collider().check_collision(this->player->get_collider(), this->player->get_velocity(), true)) {
-            // verify if player collide with check point to save the game
-            this->save_game();
+    // platform and player collision
+    for (auto &platform: this->platforms.get_platforms()) {
+        if (platform.get_collider().check_collision(this->player->get_collider(), this->player->get_velocity(),
+                                                    true)) {
+            this->player->on_collision(platform.get_type());
         }
+    }
+    // walls and player collision
+    for (auto &wall: this->walls.get_walls()) {
+        if (wall.get_collider().check_collision(this->player->get_collider(), this->player->get_velocity(), true)) {
+            this->player->on_collision(wall.get_type());
+        }
+    }
+    // tiles and player collision, set a different collision by type
+    for (auto &tile: this->tiles.get_tiles()) {
 
-        // platform and player collision
-        for (auto &platform: this->platforms.get_platforms()) {
-            if (platform.get_collider().check_collision(this->player->get_collider(), this->player->get_velocity(),
-                                                        true)) {
-                this->player->on_collision(platform.get_type());
-            }
-        }
-        // walls and player collision
-        for (auto &wall: this->walls.get_walls()) {
-            if (wall.get_collider().check_collision(this->player->get_collider(), this->player->get_velocity(), true)) {
-                this->player->on_collision(wall.get_type());
-            }
-        }
-        // tiles and player collision, set a different collision by type
-        for (auto &tile: this->tiles.get_tiles()) {
-
-            if (tile.get_type() == "coin" && !this->coins.empty()) {
+        if (tile.get_type() == "coin" && !this->coins.empty()) {
+            if (tile.get_collider().check_collision(this->player->get_collider(), this->player->get_velocity(),false)) {
                 for (auto coin = this->coins.cbegin(); coin < this->coins.cend(); *coin++) {
                     // if coin id is equal tile id, then increment player score and erase from coins after testing collision
                     if (coin->get_id() == tile.get_id()) {
-                        // verify collision
-                        if (tile.get_collider().check_collision(this->player->get_collider(), this->player->get_velocity(),false)) {
-                            this->player->on_collision(tile.get_type());
-                            coin = this->coins.erase(coin);
-                        }
+                        coin = this->coins.erase(coin);
+                        this->player->on_collision(tile.get_type());
                     }
                 }
             }
-            if (tile.get_type() == "spike" || tile.get_type() == "block") {
-                if (tile.get_collider().check_collision(this->player->get_collider(), this->player->get_velocity(),
-                                                        true)) {
-                    this->player->on_collision(tile.get_type());
-                }
+        }
+
+        if (tile.get_type() == "spike" ) {
+            if (tile.get_collider().check_collision(this->player->get_collider(), this->player->get_velocity(),
+                                                    true)) {
+                this->player->on_collision(tile.get_type());
+            }
+        }
+        if (tile.get_type() == "block") {
+            if (tile.get_collider().check_collision(this->player->get_collider(), this->player->get_velocity(),
+                                                    true)) {
+                this->player->on_collision(tile.get_type());
             }
         }
     }
@@ -345,7 +358,12 @@ void Game::handle_player_collision() {
 
 void Game::handle_events() {
     while (this->window_server->poll_event()) {
-        this->player->handle_events(*this->window_server);
+
+        if (this->player->get_state() != Entities::dead) {
+            this->player->handle_events(*this->window_server);
+        }
+
+
         switch (this->window_server->get_event().type) {
 
             case sf::Event::Closed:
@@ -363,14 +381,9 @@ void Game::handle_events() {
                     this->menu->set_on_menu(true);
                     this->on_menu = this->menu->get_on_menu();
                     this->menu_loop(true);
+                    this->on_menu = this->menu->get_on_menu();
                 }
                 break;
-            case sf::Event::KeyReleased:
-                if (this->window_server->get_event().key.code == sf::Keyboard::Escape) {
-                    this->player->set_state(Entities::falling);
-                }
-                break;
-
             default:
                 break;
         }
@@ -380,7 +393,7 @@ void Game::handle_events() {
 bool Game::player_out_of_window() {
     auto map_height = this->map->get_height() * this->map->get_tile_height();
     auto map_width = this->map->get_width() * this->map->get_tile_width();
-
+    std::cout << "map_height: " << map_height << " player_height: " << this->player->get_position().y << "\n";
     // force player to stay in bottom/left/right position on map
     if (this->player->get_position().y > map_height || this->player->get_position().x > map_width || this->player->get_position().x < 0.0f) {
         return true;
@@ -405,6 +418,8 @@ void Game::update_player_view() {
             view_pos.y = map_height - vhalfsize.y;
         }
         this->window_server->set_view(sf::View(view_pos, this->window_server->get_window_size()));
+    } else {
+        this->window_server->reset_view();
     }
 }
 
@@ -414,14 +429,17 @@ void Game::save_game() {
     std::string path = RESOURCE_PATH;
     path += "player/save_state.json";
     int coin = this->player->get_coins();
-    int life= this->player->get_life_number();
+    int life = this->player->get_life_number();
     double x = this->check_point_location.get_x();
     double y = this->check_point_location.get_y();
+    std::string map_name = this->map->get_name();
     std::fstream save_file(path, std::ostream::out);
 
     if (save_file.is_open()) {
         // write a save file in json format
         save_file << "{\n"
+                << "    \"time\": " << this->total_time << ",\n"
+                << "    \"map_name\": " << map_name << ",\n"
                 << "    \"coin\": " << coin << ",\n"
                 << "    \"life\": " << life << ",\n"
                 << "    \"x\": " << x << ",\n"
@@ -433,19 +451,50 @@ void Game::save_game() {
     }
 }
 
-void Game::load_save() {
-    // load save by a json file
+std::string Game::load_save() {
+    // load save from json file
     std::string path = RESOURCE_PATH;
     path += "player/save_state.json";
-    rapidjson::Document save_file;
     std::cout << path << "\n";
     std::ostringstream buf;
     std::ifstream input(path.c_str());
     buf << input.rdbuf();
     std::cout << buf.str();
-    save_file.Parse(buf.str().c_str());
+    return buf.str();
 }
 
+void Game::restart_player() {
+    // load save
+    std::string buf = this->load_save();
+
+    if (!buf.empty()) {
+        // parse save
+        rapidjson::Document saved_file;
+        saved_file.Parse(buf.c_str());
+        std::string map_name = saved_file["map_name"].GetString();
+        int coin = saved_file["coin"].GetInt();
+        int life = saved_file["life"].GetInt();
+        double x = saved_file["x"].GetInt();
+        double y = saved_file["y"].GetInt();
+        int time = saved_file["time"].GetInt();
+        this->player->restart(sf::Vector2f(x, y), coin, life, Entities::idle);
+        this->map = new Maps::Map(map_name);
+        this->total_time = time;
+    } else {
+        // restart to start of the map
+        this->player->restart(
+                sf::Vector2f(
+                this->start_location.get_x(),
+                this->start_location.get_y()),
+                this->player->get_coins(),
+                this->player->get_life_number(),
+                Entities::idle);
+        std::string map_name = this->map->get_name();
+        init_map(map_name);
+        this->total_time = TIME;
+        this->window_server->reset_view();
+    }
+}
 
 void Game::update() {
     this->handle_events();
@@ -522,3 +571,4 @@ void Game::render() {
     // finally, display everything
     this->window_server->display();
 }
+

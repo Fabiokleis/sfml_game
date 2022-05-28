@@ -30,8 +30,6 @@ void WindowServer::reset_view() {
     this->window->setView(sf::View(sf::FloatRect(0.0f, 0.0f, WINDOW_X, WINDOW_Y)));
 }
 
-void WindowServer::set_fullscreen() {}
-
 void WindowServer::clear() {
     this->window->clear();
 }

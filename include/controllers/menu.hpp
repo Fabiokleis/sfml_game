@@ -6,6 +6,7 @@
 #include "window_server.hpp"
 #include "image.hpp"
 #include "text.hpp"
+#include "player.hpp"
 
 namespace Controllers {
 

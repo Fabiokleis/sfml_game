@@ -28,7 +28,6 @@ namespace Controllers {
             void set_view(sf::View view);
             void reset_view();
             void resize_view(sf::Vector2f size);
-            void set_fullscreen();
             void clear();
             void close();
             void display();

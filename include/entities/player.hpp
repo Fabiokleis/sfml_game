@@ -30,7 +30,7 @@ namespace Entities {
             int get_life_number() const;
             void init_physics();
             void update();
-            void restart(sf::Vector2f position, States state);
+            void restart(sf::Vector2f position, int coin, int life, States state);
             void handle_events(Controllers::WindowServer &window_server);
             void handle_player_input(sf::Keyboard::Key key, bool is_pressed);
             void update_input();

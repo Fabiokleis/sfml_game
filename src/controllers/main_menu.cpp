@@ -1,4 +1,6 @@
 #include "main_menu.hpp"
+#include "player.hpp"
+
 using namespace Controllers;
 
 MainMenu::MainMenu(Entities::Image &menu_image, sf::Vector2f position, std::vector<Entities::Text> &text_options) :
@@ -12,7 +14,8 @@ MainMenu::~MainMenu() {}
 void MainMenu::update(bool from_game, bool from_player_dead) {
     // limit menu_counter to be in range of [0-max_options-1]
     this->menu_counter = this->menu_counter >= this->max_options-1 ? this->max_options-1 : this->menu_counter <= 0 ? 0 : this->menu_counter;
-
+    this->from_player_dead = from_player_dead;
+    this->from_game = from_game;
     // clear all texts attr and set by flag
     for (auto &option : this->text_options) {
         option.reset();
@@ -57,9 +60,11 @@ void MainMenu::events(WindowServer &window_server) {
         this->set_on_menu(false);
         if (this->from_player_dead) {
             // restart game
+            std::cout << "restart opt" << std::endl;
+        } else {
+            // new game
+            std::cout << "new game opt" << std::endl;
         }
-
-        std::cout << "new game opt" << std::endl;
     }
     // load opt
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter) && this->get_current_option() == 1) {
