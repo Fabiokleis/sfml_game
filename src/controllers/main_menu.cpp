@@ -1,12 +1,18 @@
 #include "main_menu.hpp"
+#include "map.hpp"
 #include "player.hpp"
 
 using namespace Controllers;
 
 MainMenu::MainMenu(Entities::Image &menu_image, sf::Vector2f position, std::vector<Entities::Text> &text_options) :
-    Menu(menu_image, position, text_options)
+    Menu(menu_image, position, text_options), load_save(false)
 {
-
+    std::string buf = Maps::Map::read_file("player/save_state.json");
+    if (!buf.empty()) {
+        this->saved_file = true;
+    } else {
+        this->saved_file = false;
+    }
 }
 
 MainMenu::~MainMenu() {}
@@ -20,7 +26,7 @@ void MainMenu::update(bool from_game, bool from_player_dead) {
     for (auto &option : this->text_options) {
         option.reset();
         if (from_game) {
-            if (option.get_string() == "New Game") {
+            if (option.get_string() == "New Game" || option.get_string() == "Restart") {
                 option.set_text("Resume");
             }
         } else if(from_player_dead) {
@@ -43,10 +49,14 @@ void MainMenu::update(bool from_game, bool from_player_dead) {
         case 3:
             this->text_options[3].set_attr(sf::Color::Cyan, sf::Color::White, 3.0f, 0);
             break;
+        case 4:
+            this->text_options[4].set_attr(sf::Color::Cyan, sf::Color::White, 3.0f, 0);
+            break;
         default:
             break;
     }
 }
+
 void MainMenu::events(WindowServer &window_server) {
     // Menu input updates
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
@@ -66,17 +76,25 @@ void MainMenu::events(WindowServer &window_server) {
             std::cout << "new game opt" << std::endl;
         }
     }
-    // load opt
+    // load save opt
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter) && this->get_current_option() == 1) {
         std::cout << "load opt" << std::endl;
+        if (saved_file) {
+            this->set_on_menu(false);
+            this->load_save = true;
+        }
+    }
+    // load map opt
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter) && this->get_current_option() == 2) {
+        std::cout << "credits opt" << std::endl;
         this->set_on_submenu(true);
     }
-    // credits
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter) && this->get_current_option() == 2) {
-//          this->on_menu = false;
+    // credits opt
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter) && this->get_current_option() == 3) {
         std::cout << "credits opt" << std::endl;
     }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter) && this->get_current_option() == 3) {
+    // exit opt
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter) && this->get_current_option() == 4) {
         this->set_on_menu(false);
         std::cout << "Exit opt" << std::endl;
         window_server.close();
@@ -106,3 +124,8 @@ void MainMenu::handle_events(WindowServer &window_server) {
         }
     }
 }
+
+bool MainMenu::get_load() {
+    return this->load_save;
+}
+

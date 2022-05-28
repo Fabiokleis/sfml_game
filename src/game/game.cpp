@@ -3,6 +3,7 @@
 #include <fstream>
 #include "../rapidjson/document.h"
 #define TIME 256
+#define SAVE_PATH "player/save_state.json"
 
 Game::Game() :
         player(), map(), menu_bg(), menu(), load(), load_bg(), fps_text(), delta_time(), menu_options(),
@@ -19,7 +20,6 @@ void Game::exec() {
     this->menu_loop();
 
     if (this->window_server->is_open() && !this->on_menu) {
-
         this->init_map("platform.json");
         this->init_entities();
         // to init timer after load map and any other entity
@@ -123,6 +123,7 @@ void Game::menu_entries() {
             0,
             sf::Color::Transparent,
             0.0f, "New Game"));
+
     this->menu->populate_option(*new Entities::Text(
             FONT_PATH,
             48,
@@ -131,8 +132,9 @@ void Game::menu_entries() {
             sf::Color::White,
             0,
             sf::Color::Transparent,
-            0.0f,
-            "Load Map"));
+            0.0f, "Load save"));
+
+
     this->menu->populate_option(*new Entities::Text(
             FONT_PATH,
             48,
@@ -142,12 +144,22 @@ void Game::menu_entries() {
             0,
             sf::Color::Transparent,
             0.0f,
-            "Credits"));
+            "Load Map"));
     this->menu->populate_option(*new Entities::Text(
             FONT_PATH,
             48,
             WINDOW_X / 2.0f - 64.0f,
             WINDOW_Y / 2.0f + 64.0f,
+            sf::Color::White,
+            0,
+            sf::Color::Transparent,
+            0.0f,
+            "Credits"));
+    this->menu->populate_option(*new Entities::Text(
+            FONT_PATH,
+            48,
+            WINDOW_X / 2.0f - 64.0f,
+            WINDOW_Y / 2.0f + 128.0f,
             sf::Color::White,
             0,
             sf::Color::Transparent,
@@ -196,15 +208,32 @@ void Game::init_entities() {
 
     sf::Vector2f p_pos(this->start_location.get_x(), this->start_location.get_y());
     // player
-    this->player = new Entities::Player(
-                    sf::Vector2f(45.0f, 80.0f),
-                    sf::Vector2f(0.0f, 0.0f),
-                    p_pos,
-                    sf::Vector2f(0.0f, 0.0f),
-                    sf::Vector2u(3, 6),
-                    0.1f,
-                    Entities::States::idle,
-                    std::string(PLAYER_SPRITE_PATH));
+    if (this->menu->get_load()) {
+        this->player->restart(
+                sf::Vector2f(
+                this->start_location.get_x(),
+                this->start_location.get_y()),
+                this->player->get_coins(),
+                this->player->get_life_number(),
+                Entities::idle);
+        std::string map_name = this->map->get_name();
+        // restart map
+        this->init_map(map_name);
+        // restart time
+        this->total_time = TIME;
+
+    } else {
+        this->player = new Entities::Player(
+                sf::Vector2f(45.0f, 80.0f),
+                sf::Vector2f(0.0f, 0.0f),
+                p_pos,
+                sf::Vector2f(0.0f, 0.0f),
+                sf::Vector2u(3, 6),
+                0.1f,
+                Entities::States::idle,
+                std::string(PLAYER_SPRITE_PATH));
+    }
+
 
     // life
     this->life_image = new Entities::Image("map/head_sprite.png");
@@ -281,7 +310,8 @@ void Game::set_time() {
     this->total_time--;
 }
 
-void Game::handle_collision() {
+
+void Game::handle_resets() {
     if (this->player_out_of_window()) {
         this->player->set_state(Entities::dead);
         this->player->update_life_number();
@@ -297,6 +327,11 @@ void Game::handle_collision() {
         this->on_menu = this->menu->get_on_menu();
 
     }
+}
+
+
+void Game::handle_collision() {
+
 
     this->handle_player_collision();
 }
@@ -305,10 +340,9 @@ void Game::handle_player_collision() {
 
     if (this->end_location.get_collider().check_collision(this->player->get_collider(), this->player->get_velocity(), false)) {
         // verify if player collide with the end of map, to load next map
-
+        std::cout << "colidiu com o final da fase!\n";
     }
-
-    if (this->check_point_location.get_collider().check_collision(this->player->get_collider(), this->player->get_velocity(), true)) {
+    if (this->check_point_location.get_collider().check_collision(this->player->get_collider(), this->player->get_velocity(), false)) {
         // verify if player collide with check point to save the game
         this->save_game();
     }
@@ -382,6 +416,7 @@ void Game::handle_events() {
                     this->on_menu = this->menu->get_on_menu();
                     this->menu_loop(true);
                     this->on_menu = this->menu->get_on_menu();
+
                 }
                 break;
             default:
@@ -393,7 +428,7 @@ void Game::handle_events() {
 bool Game::player_out_of_window() {
     auto map_height = this->map->get_height() * this->map->get_tile_height();
     auto map_width = this->map->get_width() * this->map->get_tile_width();
-    std::cout << "map_height: " << map_height << " player_height: " << this->player->get_position().y << "\n";
+
     // force player to stay in bottom/left/right position on map
     if (this->player->get_position().y > map_height || this->player->get_position().x > map_width || this->player->get_position().x < 0.0f) {
         return true;
@@ -439,49 +474,40 @@ void Game::save_game() {
         // write a save file in json format
         save_file << "{\n"
                 << "    \"time\": " << this->total_time << ",\n"
-                << "    \"map_name\": " << map_name << ",\n"
+                << "    \"map_name\": " <<  "\"" << map_name << "\",\n"
                 << "    \"coin\": " << coin << ",\n"
                 << "    \"life\": " << life << ",\n"
                 << "    \"x\": " << x << ",\n"
-                << "    \"y\": " << y << ",\n"
+                << "    \"y\": " << y << "\n"
                 << "}";
         save_file.close();
     } else {
         std::cout << "ERROR::SAVE_FILE:: COULD NOT OPEN FILE." << std::endl;
     }
 }
-
-std::string Game::load_save() {
-    // load save from json file
-    std::string path = RESOURCE_PATH;
-    path += "player/save_state.json";
-    std::cout << path << "\n";
-    std::ostringstream buf;
-    std::ifstream input(path.c_str());
-    buf << input.rdbuf();
-    std::cout << buf.str();
-    return buf.str();
+void Game::parse_save(const std::string& buf) {
+    // parses json save file to be a new instance of player and map
+    rapidjson::Document saved_file;
+    saved_file.Parse(buf.c_str());
+    std::string map_name = saved_file["map_name"].GetString();
+    int coin = saved_file["coin"].GetInt();
+    int life = saved_file["life"].GetInt();
+    double x = saved_file["x"].GetDouble();
+    double y = saved_file["y"].GetDouble();
+    int time = saved_file["time"].GetInt();
+    this->player->restart(sf::Vector2f(x, y), coin, life, Entities::idle);
+    this->map = new Maps::Map(map_name);
+    this->total_time = time;
 }
-
 void Game::restart_player() {
     // load save
-    std::string buf = this->load_save();
+    std::string buf = Maps::Map::read_file(SAVE_PATH);
 
-    if (!buf.empty()) {
+    if (!buf.empty() && this->menu->get_load()) {
         // parse save
-        rapidjson::Document saved_file;
-        saved_file.Parse(buf.c_str());
-        std::string map_name = saved_file["map_name"].GetString();
-        int coin = saved_file["coin"].GetInt();
-        int life = saved_file["life"].GetInt();
-        double x = saved_file["x"].GetInt();
-        double y = saved_file["y"].GetInt();
-        int time = saved_file["time"].GetInt();
-        this->player->restart(sf::Vector2f(x, y), coin, life, Entities::idle);
-        this->map = new Maps::Map(map_name);
-        this->total_time = time;
+        this->parse_save(buf);
     } else {
-        // restart to start of the map
+        // restart to beginning of map
         this->player->restart(
                 sf::Vector2f(
                 this->start_location.get_x(),
@@ -490,9 +516,10 @@ void Game::restart_player() {
                 this->player->get_life_number(),
                 Entities::idle);
         std::string map_name = this->map->get_name();
-        init_map(map_name);
+        // restart map
+        this->init_map(map_name);
+        // restart time
         this->total_time = TIME;
-        this->window_server->reset_view();
     }
 }
 
@@ -500,6 +527,7 @@ void Game::update() {
     this->handle_events();
     this->count_down();
     this->player->update();
+    this->handle_resets();
     this->handle_collision();
 }
 
@@ -571,4 +599,3 @@ void Game::render() {
     // finally, display everything
     this->window_server->display();
 }
-

@@ -17,9 +17,9 @@ namespace Maps {
             Locations();
             Locations(rapidjson::Value &value);
             ~Locations();
-            Object get_start();
-            Object get_check_point();
-            Object get_end();
+            Object& get_start();
+            Object& get_check_point();
+            Object& get_end();
     };
 }
 

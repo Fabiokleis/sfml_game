@@ -41,7 +41,7 @@ void Player::update_life_number() {
         this->life_number--;
     } else {
         if (this->life_number == 0) {
-            // call a menu to handle this situation
+            this->life_number = 5;
 
         } else if (this->life_number >= 1) {
             // increase life number by 10 coins collected and reset coin score
@@ -224,9 +224,22 @@ void Player::update() {
     this->update_physics();
     this->update_animation();
 
-    std::cout << "state: " << state << std::endl;
 }
 // reset player
+void Player::restart(sf::Vector2f position,  sf::Vector2f size, sf::Vector2f cord, sf::Vector2u image_count, float switch_time, const std::string& path_name, int coin, int life, States state) {
+    this->set_position(position);
+    this->set_state(state);
+    this->set_size(size);
+    this->set_origin(cord);
+    this->image_count = image_count;
+    this->switch_time = switch_time;
+    this->path_name = path_name;
+    this->coin = coin;
+    this->life_number = life;
+    this->velocity.x = 0.0f;
+    this->velocity.y = 0.0f;
+}
+
 void Player::restart(sf::Vector2f position, int coin, int life, States state) {
     this->set_position(position);
     this->set_state(state);

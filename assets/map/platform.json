@@ -48,7 +48,7 @@
                  "rotation":0,
                  "type":"location",
                  "visible":true,
-                 "width":8.9545454545455,
+                 "width":31.4545454545455,
                  "x":2976.05303030303,
                  "y":832.197443181818
                 }],
@@ -218,7 +218,6 @@
          "color":"#aaaaff",
          "draworder":"topdown",
          "id":8,
-         "locked":true,
          "name":"platforms",
          "objects":[
                 {

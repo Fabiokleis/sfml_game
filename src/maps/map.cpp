@@ -125,23 +125,13 @@ Tiles Map::get_tiles() {
 void Map::load_map(std::string map_name) {
     std::string path = RESOURCE_PATH;
     path += "map/" + map_name;
-    this->map_str = this->read_file(path);
+    this->map_str = Maps::Map::read_file(path);
 }
 
 void Map::load_tileset_buffer(const std::string& filename) {
     std::string path = RESOURCE_PATH;
     path += "map/" + filename;
-    this->tileset_buffer = this->read_file(path);
-}
-
-// read a file and returns
-std::string Map::read_file(const std::string& filename) {
-    std::cout << filename << "\n";
-    std::ostringstream buf;
-    std::ifstream input(filename.c_str());
-    buf << input.rdbuf();
-    std::cout << buf.str();
-    return buf.str();
+    this->tileset_buffer = Maps::Map::read_file(path);
 }
 
 // initialize each tile of map putting into vector of tiles
@@ -178,3 +168,13 @@ void Map::find_tileset(Layer& layer, std::vector<TileSet>& tilesets_) {
 }
 
 void Map::update() {}
+
+// read a file and returns
+std::string Map::read_file(const std::string& filename) {
+    std::cout << filename << "\n";
+    std::ostringstream buf;
+    std::ifstream input(filename.c_str());
+    buf << input.rdbuf();
+    std::cout << buf.str();
+    return buf.str();
+}

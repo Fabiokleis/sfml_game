@@ -48,10 +48,10 @@ class Game {
         int total_time;
         bool on_menu;
 
-        std::string load_save();
         bool player_out_of_window();
         void init_menu();
         void init_entities();
+        void parse_save(const std::string& buf);
         void init_map(std::string map_name);
         void menu_entries();
         void set_time();
@@ -62,6 +62,7 @@ class Game {
         void restart_player();
         void game_loop(sf::Clock timer);
         void menu_loop(bool from_game = false, bool from_player_dead = false);
+        void handle_resets();
         void update_player_view();
         void handle_events();
         void update();

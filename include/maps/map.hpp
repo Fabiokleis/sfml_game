@@ -51,6 +51,7 @@ namespace Maps {
             int get_tile_width() const;
             int get_tile_height() const;
 
+
             Locations get_locations();
             Platforms get_platforms();
             Walls get_walls();
@@ -60,13 +61,14 @@ namespace Maps {
             std::vector<TileMap> get_tilemap();
             std::vector<Entities::Image> get_backgrounds();
             std::string get_name();
+            static std::string read_file(const std::string& filename);
             void find_tileset(Layer& layer, std::vector<TileSet>& tilesets);
             void load_tileset_buffer(const std::string& filename);
-            static std::string read_file(const std::string& filename);
             void load_map(std::string map_name);
             void load_tilesets();
             void load_tilemap();
             void update();
     };
+
 }
 #endif /* end of include guard: MAP_HPP_RTB6ZINA */
