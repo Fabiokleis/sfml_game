@@ -6,10 +6,10 @@
 #include "config.h"
 using namespace Maps;
 
-Map::Map() :
+Map::Map(std::string map_name) :
     height(), width(), tile_height(), tile_width(), locations(), platforms(), walls(), tiles()
 {
-    this->load_map();
+    this->load_map(map_name);
     this->init_variables();
     this->load_tilesets();
     this->load_tilemap();
@@ -108,9 +108,9 @@ Tiles Map::get_tiles() {
 }
 
 // set buffer to each space
-void Map::load_map() {
+void Map::load_map(std::string map_name) {
     std::string path = RESOURCE_PATH;
-    path += "map/platform2.json";
+    path += "map/" + map_name;
     this->map_str = this->read_file(path);
 }
 
@@ -120,12 +120,12 @@ void Map::load_tileset_buffer(const std::string& filename) {
     this->tileset_buffer = this->read_file(path);
 }
 
-// read a buffer of json file and returns
+// read a file and returns
 std::string Map::read_file(const std::string& filename) {
     std::cout << filename << "\n";
-    std::ostringstream buf; 
-    std::ifstream input(filename.c_str()); 
-    buf << input.rdbuf(); 
+    std::ostringstream buf;
+    std::ifstream input(filename.c_str());
+    buf << input.rdbuf();
     std::cout << buf.str();
     return buf.str();
 }

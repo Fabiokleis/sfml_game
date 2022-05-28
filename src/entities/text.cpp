@@ -25,9 +25,9 @@ Text::Text(const std::string& path_name, unsigned int size, float x, float y, sf
     this->text.setOrigin(size / 2.0f, size / 2.0f);
 }
 
-Text::Text() = default;
+Text::Text() : default_style(), default_thick_size(), default_outline_color(), default_color() {};
 
-Text::~Text() = default;
+Text::~Text() {};
 
 void Text::set_text(const std::string& str) {
     this->text.setString(str);
@@ -37,7 +37,7 @@ void Text::set_position(sf::Vector2f position) {
     this->text.setPosition(position);
 }
 
-sf::Text& Text::get_text() {
+sf::Text & Text::get_text() {
     return this->text;
 }
 
@@ -53,4 +53,8 @@ void Text::reset() {
     this->text.setOutlineThickness(default_thick_size);
     this->text.setOutlineColor(default_outline_color);
     this->text.setStyle(default_style);
+}
+
+std::string Text::get_string() {
+    return this->text.getString();
 }

@@ -33,7 +33,7 @@ RAPIDJSON_DIAG_OFF(padded)
 /*! \ingroup RAPIDJSON_ERRORS
     The default character type is \c char.
     On Windows, user can define this macro as \c TCHAR for supporting both
-    unicode/non-unicode settings.
+    unicode/non-unicode load.
 */
 #ifndef RAPIDJSON_ERROR_CHARTYPE
 #define RAPIDJSON_ERROR_CHARTYPE char
@@ -46,7 +46,7 @@ RAPIDJSON_DIAG_OFF(padded)
 /*! \ingroup RAPIDJSON_ERRORS
     By default this conversion macro does nothing.
     On Windows, user can define this macro as \c _T(x) for supporting both
-    unicode/non-unicode settings.
+    unicode/non-unicode load.
 */
 #ifndef RAPIDJSON_ERROR_STRING
 #define RAPIDJSON_ERROR_STRING(x) x

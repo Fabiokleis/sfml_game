@@ -18,6 +18,7 @@ namespace Entities {
             float gravity;
             float delta_time;
             int coin;
+            int life_number;
     
     
         public:
@@ -26,14 +27,16 @@ namespace Entities {
 
             ~Player();
             int get_coins() const;
-            void inc_score();
+            int get_life_number() const;
             void init_physics();
             void update();
+            void restart(sf::Vector2f position, States state);
             void handle_events(Controllers::WindowServer &window_server);
             void handle_player_input(sf::Keyboard::Key key, bool is_pressed);
             void update_input();
             void update_physics();
             void update_animation();
+            void update_life_number();
             void reset_clock(float dt);
             void on_collision(const std::string& object_type);
             void move(float dir_x, float dir_y) override;

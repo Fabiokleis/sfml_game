@@ -18,7 +18,6 @@ namespace Maps {
             Tiles(rapidjson::Value& value);
             std::vector<Object> get_tiles();
             std::vector<Entities::Coin> get_coins();
-            void init_coin_image();
             ~Tiles();
     };
 }

@@ -41,7 +41,7 @@ namespace Maps {
             Walls walls;
     
         public:
-            Map();
+            Map(std::string map_name);
             ~Map();
     
             void init_variables();
@@ -60,8 +60,8 @@ namespace Maps {
             std::vector<Entities::Image> get_backgrounds();
             void find_tileset(Layer& layer, std::vector<TileSet>& tilesets);
             void load_tileset_buffer(const std::string& filename);
-            std::string read_file(const std::string& filename);
-            void load_map();
+            static std::string read_file(const std::string& filename);
+            void load_map(std::string map_name);
             void load_tilesets();
             void load_tilemap();
             void update();

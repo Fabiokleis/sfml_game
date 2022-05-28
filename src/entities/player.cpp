@@ -1,20 +1,19 @@
 #include <iostream>
 #include "character.hpp"
 #include "player.hpp"
-#include <cmath>
 
 using namespace Entities;
 
 Player::Player(sf::Vector2f size, sf::Vector2f velocity, sf::Vector2f position, sf::Vector2f cord, sf::Vector2u image_count, float switch_time, States state, const std::string& path_name) :
         Character(size, velocity, position, cord, image_count, switch_time, state, path_name),
-        acceleration(0.0f), jump_height(0.0f), gravity(0.0f), delta_time(0.0f), coin(0)
+        acceleration(0.0f), jump_height(0.0f), gravity(0.0f), delta_time(0.0f), coin(0), life_number(5)
 {
     this->init_physics();
     this->sprite.setOutlineThickness(1.0f);
     this->sprite.setOutlineColor(sf::Color::Green);
 }
 
-Player::Player() : acceleration(0.0f), jump_height(0.0f), gravity(0.0f), delta_time(0.0f), coin(0) {}
+Player::Player() : acceleration(), jump_height(), gravity(), delta_time(), coin(), life_number() {}
 
 Player::~Player() = default;
 
@@ -33,29 +32,43 @@ int Player::get_coins() const {
     return this->coin;
 }
 
-void Player::inc_score() {
-    this->coin++;
+int Player::get_life_number() const {
+    return this->life_number;
 }
 
-void Player::handle_events(Controllers::WindowServer &window_server) {
-    if (state != dead) {
-        switch (window_server.get_event().type) {
-            case sf::Event::KeyPressed:
-                this->handle_player_input(window_server.get_event().key.code, true);
-                break;
-            case sf::Event::KeyReleased:
-                this->handle_player_input(window_server.get_event().key.code, false);
-                break;
+void Player::update_life_number() {
+    if (state == dead) {
+        this->life_number--;
+    } else {
+        if (this->life_number == 0) {
+            // call a menu to handle this situation
 
-            default:
-
-                break;
+        } else if (this->life_number >= 1) {
+            // increase life number by 10 coins collected and reset coin score
+            if (this->coin == 10) {
+                this->life_number++;
+                this->coin = 0;
+            }
         }
     }
 }
+void Player::handle_events(Controllers::WindowServer &window_server) {
+    switch (window_server.get_event().type) {
+        case sf::Event::KeyPressed:
+            this->handle_player_input(window_server.get_event().key.code, true);
+            break;
+        case sf::Event::KeyReleased:
+            this->handle_player_input(window_server.get_event().key.code, false);
+            break;
+
+        default:
+
+            break;
+    }
+
+}
 
 void Player::on_collision(const std::string& object_type) {
-
     if (object_type != "coin") {
         this->collide_state = colliding;
         if (object_type == "spike") {
@@ -75,7 +88,11 @@ void Player::on_collision(const std::string& object_type) {
             // collision on top
             collide_state = top;
         }
+    } else {
+        this->coin++;
     }
+
+    this->update_life_number();
 }
 
 void Player::move(const float dir_x, const float dir_y) {
@@ -151,12 +168,10 @@ void Player::update_animation() {
 
     switch (this->state) {
         case 0: // idle
-            if (this->last_state == walking_right) {
+            if (this->last_state == walking_right || this->last_state == idle) {
                 this->get_animation().update(0, this->delta_time, true);
             } else if (this->last_state == walking_left) {
                 this->get_animation().update(0, this->delta_time, false);
-            } else {
-                this->get_animation().update(0, this->delta_time, true);
             }
             break;
         case 1: // walking_right
@@ -191,12 +206,10 @@ void Player::update_animation() {
             this->get_animation().update(3, this->delta_time, false);
             break;
         case 8: // dead
-            if (this->last_state == falling_right || this->last_state == walking_right) {
+            if (this->last_state == falling_right || this->last_state == walking_right || this->last_state == idle) {
                 this->get_animation().update(5, this->delta_time, true);
             } else if (this->last_state == falling_left || this->last_state == walking_left) {
                 this->get_animation().update(5, this->delta_time, false);
-            } else if (this->last_state == idle) {
-                this->get_animation().update(5, this->delta_time, true);
             }
             break;
         default:
@@ -209,7 +222,13 @@ void Player::update_animation() {
 
 void Player::update() {
     this->update_input();
-    std::cout << "states: " << this->state << std::endl;
     this->update_physics();
     this->update_animation();
+    std::cout << "state: " << state << std::endl;
+}
+
+// reset player
+void Player::restart(sf::Vector2f position, States state) {
+    this->set_position(position);
+    this->set_state(state);
 }

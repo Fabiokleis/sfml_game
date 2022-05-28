@@ -11,7 +11,7 @@ namespace Controllers {
         public:
             SubMenu(Entities::Image &menu_image, sf::Vector2f position, std::vector<Entities::Text> &text_options);
             ~SubMenu();
-            void update(bool from_game) override;
+            void update(bool from_game, bool from_player_dead) override;
             void events(WindowServer &window_server) override;
             void handle_events(WindowServer &window_server) override;
     };

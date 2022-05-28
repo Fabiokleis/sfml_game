@@ -23,7 +23,8 @@ namespace Entities {
             void set_position(sf::Vector2f position);
             void reset();
             void set_attr(sf::Color color, sf::Color outline_color, float thick, unsigned style);
-            sf::Text& get_text();
+            sf::Text & get_text();
+            std::string get_string();
 
     };
 }

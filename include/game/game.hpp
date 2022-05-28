@@ -20,9 +20,9 @@ class Game {
         Entities::Image *menu_bg;
         Controllers::MainMenu *menu;
 
-        std::vector<Entities::Text> settings_options;
-        Entities::Image *settings_bg;
-        Controllers::SubMenu *settings;
+        std::vector<Entities::Text> load_options;
+        Entities::Image *load_bg;
+        Controllers::SubMenu *load;
 
         Maps::Map* map;
         std::vector<Maps::TileMap> tilemap;
@@ -37,6 +37,8 @@ class Game {
 
         std::vector<Entities::Coin> coins;
         Entities::Text *fps_text;
+        Entities::Image *life_image;
+        Entities::Text *life_text;
         Entities::Text *coin_number;
         Entities::Image *coin_image;
         Entities::Text *time_text;
@@ -45,6 +47,7 @@ class Game {
         float delta_time;
         int total_time;
         bool on_menu;
+        bool player_dead;
 
         bool player_out_of_window();
         void init_menu();
@@ -53,10 +56,12 @@ class Game {
         void menu_entries();
         void set_time();
         void set_fps(float fps);
-        void set_score(int coin);
+        void set_score(int coin, int life_number);
         void count_down();
+        void save_game();
+        void load_save();
         void game_loop(sf::Clock timer);
-        void menu_loop(bool from_game = false);
+        void menu_loop(bool from_game = false, bool from_player_dead = false);
         void update_player_view();
         void handle_events();
         void update();
@@ -65,6 +70,7 @@ class Game {
         void render_map();
         void render();
         void handle_collision();
+        void handle_player_collision();
 
     public:
         Game();
