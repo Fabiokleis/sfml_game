@@ -22,7 +22,8 @@ namespace Entities {
     
     
         public:
-            Player(sf::Vector2f size, sf::Vector2f velocity, sf::Vector2f position, sf::Vector2f cord, sf::Vector2u image_count, float switch_time, States state, const std::string& path_name);
+            Player(sf::Vector2f size, sf::Vector2f velocity, sf::Vector2f position, int coin, int life_number, sf::Vector2f cord, sf::Vector2u image_count, float switch_time, States state, const std::string& path_name);
+
             Player();
 
             ~Player();
@@ -40,10 +41,6 @@ namespace Entities {
             void reset_clock(float dt);
             void on_collision(const std::string& object_type);
             void move(float dir_x, float dir_y) override;
-
-            void restart(sf::Vector2f position, sf::Vector2f size, sf::Vector2f cord, sf::Vector2u image_count,
-                     float switch_time,
-                     const std::string &path_name, int coin, int life, States state);
     };
 }
 #endif /* end of include guard: PLAYER_HPP_WHBHED8U */

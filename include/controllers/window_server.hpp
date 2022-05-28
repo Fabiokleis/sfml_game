@@ -8,6 +8,8 @@
 #define FPS 60
 #define FONT_PATH "fonts/free_pixel.ttf"
 #define PLAYER_SPRITE_PATH "player/player_sprite.png"
+#define TIME 256
+#define SAVE_PATH "player/save_state.json"
 
 namespace Controllers {
 

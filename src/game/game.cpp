@@ -2,8 +2,7 @@
 #include "game.hpp"
 #include <fstream>
 #include "../rapidjson/document.h"
-#define TIME 256
-#define SAVE_PATH "player/save_state.json"
+
 
 Game::Game() :
         player(), map(), menu_bg(), menu(), load(), load_bg(), fps_text(), delta_time(), menu_options(),
@@ -58,6 +57,7 @@ void Game::menu_loop(bool from_game, bool from_player_dead) {
             this->render_menu();
         }
     }
+
 }
 
 void Game::game_loop(sf::Clock timer) {
@@ -206,16 +206,13 @@ void Game::init_entities() {
             0.0f,
             sf::Color::Yellow);
 
+
     sf::Vector2f p_pos(this->start_location.get_x(), this->start_location.get_y());
-    // player
+    // create a new player with save
     if (this->menu->get_load()) {
-        this->player->restart(
-                sf::Vector2f(
-                this->start_location.get_x(),
-                this->start_location.get_y()),
-                this->player->get_coins(),
-                this->player->get_life_number(),
-                Entities::idle);
+        std::string path = RESOURCE_PATH;
+        std::string buf = Maps::Map::read_file(path+SAVE_PATH);
+        this->parse_save(buf);
         std::string map_name = this->map->get_name();
         // restart map
         this->init_map(map_name);
@@ -223,10 +220,13 @@ void Game::init_entities() {
         this->total_time = TIME;
 
     } else {
+        // create a new player without save
         this->player = new Entities::Player(
                 sf::Vector2f(45.0f, 80.0f),
                 sf::Vector2f(0.0f, 0.0f),
                 p_pos,
+                0,
+                5,
                 sf::Vector2f(0.0f, 0.0f),
                 sf::Vector2u(3, 6),
                 0.1f,
@@ -416,7 +416,7 @@ void Game::handle_events() {
                     this->on_menu = this->menu->get_on_menu();
                     this->menu_loop(true);
                     this->on_menu = this->menu->get_on_menu();
-
+                    this->restart_player();
                 }
                 break;
             default:
@@ -462,13 +462,12 @@ void Game::save_game() {
     std::cout << "Saving the game on check point!" << std::endl;
 
     std::string path = RESOURCE_PATH;
-    path += "player/save_state.json";
     int coin = this->player->get_coins();
     int life = this->player->get_life_number();
     double x = this->check_point_location.get_x();
     double y = this->check_point_location.get_y();
     std::string map_name = this->map->get_name();
-    std::fstream save_file(path, std::ostream::out);
+    std::fstream save_file(path+SAVE_PATH, std::ostream::out);
 
     if (save_file.is_open()) {
         // write a save file in json format
@@ -486,40 +485,67 @@ void Game::save_game() {
     }
 }
 void Game::parse_save(const std::string& buf) {
-    // parses json save file to be a new instance of player and map
+    // parse json saved file to be a new instance of player and map
     rapidjson::Document saved_file;
     saved_file.Parse(buf.c_str());
-    std::string map_name = saved_file["map_name"].GetString();
     int coin = saved_file["coin"].GetInt();
     int life = saved_file["life"].GetInt();
     double x = saved_file["x"].GetDouble();
     double y = saved_file["y"].GetDouble();
     int time = saved_file["time"].GetInt();
-    this->player->restart(sf::Vector2f(x, y), coin, life, Entities::idle);
-    this->map = new Maps::Map(map_name);
     this->total_time = time;
+    std::string map_name = saved_file["map_name"].GetString();
+
+    if (this->player) {
+        this->player->restart(sf::Vector2f(x, y), coin, life, Entities::idle);
+    } else {
+        this->player = new Entities::Player(
+                sf::Vector2f(45.0f, 80.0f),
+                sf::Vector2f(0.0f, 0.0f),
+                sf::Vector2f(x, y),
+                coin,
+                life,
+                sf::Vector2f(0.0f, 0.0f),
+                sf::Vector2u(3, 6),
+                0.1f,
+                Entities::States::idle,
+                std::string(PLAYER_SPRITE_PATH));
+    }
+
+    this->map = new Maps::Map(map_name);
+
 }
 void Game::restart_player() {
     // load save
-    std::string buf = Maps::Map::read_file(SAVE_PATH);
+    std::cout << "restart" << std::endl;
+    std::string path = RESOURCE_PATH;
+    std::string buf = Maps::Map::read_file(path+SAVE_PATH);
 
-    if (!buf.empty() && this->menu->get_load()) {
-        // parse save
-        this->parse_save(buf);
-    } else {
-        // restart to beginning of map
-        this->player->restart(
-                sf::Vector2f(
-                this->start_location.get_x(),
-                this->start_location.get_y()),
-                this->player->get_coins(),
-                this->player->get_life_number(),
-                Entities::idle);
-        std::string map_name = this->map->get_name();
-        // restart map
-        this->init_map(map_name);
-        // restart time
-        this->total_time = TIME;
+    if (!buf.empty()) {
+        // parse save if not restarting
+        if (this->menu->get_state() != Controllers::restart) {
+            if (this->menu->get_state() == Controllers::loading || this->player->get_state() == Entities::dead) {
+                this->parse_save(buf);
+            }
+        } else {
+
+            // restart at beginning of map
+            if (this->player->get_state() == Entities::dead) {
+                this->player->restart(
+                        sf::Vector2f(
+                                this->start_location.get_x(),
+                                this->start_location.get_y()),
+                        this->player->get_coins(),
+                        this->player->get_life_number(),
+                        Entities::idle);
+
+                std::string map_name = this->map->get_name();
+                // restart map
+                this->init_map(map_name);
+                // restart time
+                this->total_time = TIME;
+            }
+        }
     }
 }
 
