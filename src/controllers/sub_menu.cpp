@@ -10,6 +10,10 @@ SubMenu::SubMenu(Entities::Text &title, Entities::Image &menu_image, sf::Vector2
 
 SubMenu::~SubMenu() = default;
 
+SubMenuStates SubMenu::get_state() {
+    return state;
+}
+
 void SubMenu::update(bool from_game, bool from_player_dead) {
     // limit menu_counter to be in range of [0-max_options-1]
     this->menu_counter = this->menu_counter >= this->max_options-1 ? this->max_options-1 : this->menu_counter <= 0 ? 0 : this->menu_counter;
@@ -54,16 +58,16 @@ void SubMenu::events(WindowServer &window_server) {
     if ((sf::Keyboard::isKeyPressed(sf::Keyboard::Enter) || sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) && this->get_current_option() == 0) {
         this->set_on_menu(false);
         std::cout << "resume opt" << std::endl;
-    }
-    // about 1
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter) && this->get_current_option() == 1) {
-        this->set_on_menu(false);
+    } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter) && this->get_current_option() == 1) {
+        // about 1
+        this->state = about;
         std::cout << "about opt" << std::endl;
-    }
-    // keyboard
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter) && this->get_current_option() == 2) {
-        this->set_on_menu(false);
+    } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter) && this->get_current_option() == 2) {
+        // keyboard
+        this->state = showkb;
         std::cout << "kb 2 opt" << std::endl;
+    } else {
+        this->state = none;
     }
 }
 
@@ -79,10 +83,10 @@ void SubMenu::handle_events(WindowServer &window_server) {
                 break;
             case sf::Event::KeyPressed: // any key pressed call events
                 this->events(window_server);
+
                 break;
             default:
                 break;
         }
     }
 }
-

@@ -6,7 +6,8 @@
 
 Game::Game() :
         player(), map(), menu_bg(), menu(), settings(), settings_bg(), fps_text(), delta_time(), menu_options(),
-        coin_image(), coin_number(), time_text(), total_time(TIME), life_image(), life_text(), score_text(), menu_title()
+        coin_image(), coin_number(), time_text(), total_time(TIME), life_image(), life_text(), score_text(),
+        menu_title(), about(), showkb()
 {
     this->window_server = new Controllers::WindowServer("c++ game");
     this->on_menu = true;
@@ -20,9 +21,10 @@ void Game::exec() {
 
     if (this->window_server->is_open() && !this->on_menu) {
 
+        // only load saved map if menu load save is selected
         if (this->menu->get_saved()) {
             // verify if saved map is first or second
-            if (verify_map()) {
+            if (this->verify_map()) {
                 this->init_map(PLATFORM1);
             } else {
                 this->init_map(PLATFORM2);
@@ -139,16 +141,31 @@ void Game::init_menu() {
     this->menu = new Controllers::MainMenu(*menu_title, *menu_bg, sf::Vector2f(0.0f, 0.0f), this->menu_options);
     this->settings = new Controllers::SubMenu(*menu_title, *settings_bg, sf::Vector2f(0.0f, 0.0f), this->settings_options);
 
+    // submenu actions
+    // TODO: read a file about.txt and pass to about Object instance
+    this->about = new Entities::Text(
+            FONT_PATH,
+            48,
+            WINDOW_X / 2.0f - 128.0f,
+            WINDOW_Y / 2.0f - 128.0f,
+            sf::Color::White,
+            0,
+            sf::Color::Transparent,
+            0.0f, "Este é o texto do about!");
+
+    // load a keyboard mapping explain
+    this->showkb = new Entities::Image(KEYBOARD);
+
     this->menu_entries();
 }
 
 void Game::menu_entries() {
     /*
         [1] New Game
-        [2] Load Map
+        [2] Load save
             [1] Resume
-            [2] Map1
-            [3] Map2
+            [2] About
+            [3] Show Controls
         [3] Credits
         [4] Exit
     */
@@ -671,10 +688,19 @@ void Game::render_settings() {
     this->window_server->reset_view();
     this->window_server->render(this->settings->get_sprite());
     this->window_server->reset_view();
-    this->window_server->render(this->menu_title->get_text());
-    for (auto &option : this->settings_options) {
-        this->window_server->render(option.get_text());
+
+
+    if (this->settings->get_state() == Controllers::showkb) {
+        this->window_server->render(this->showkb->get_sprite());
+    } else if (this->settings->get_state() == Controllers::about) {
+        this->window_server->render(this->about->get_text());
+    } else {
+        for (auto &option: this->settings_options) {
+            this->window_server->render(option.get_text());
+        }
     }
+    this->window_server->render(this->menu_title->get_text());
+    this->window_server->reset_view();
     this->window_server->display();
 }
 
