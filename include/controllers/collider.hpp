@@ -13,9 +13,9 @@ namespace Controllers {
             ~Collider();
             sf::Vector2f get_position();
             void set_body(sf::RectangleShape &nboby);
-            bool check_collision(Collider other, sf::Vector2f& dir);
+            bool check_collision(Collider other, sf::Vector2f& dir, bool needs_move);
             void move(float dx, float dy);
-            sf::Vector2f get_size();
+            sf::Vector2f get_half_size();
     };
 }
 #endif /* end of include guard: COLLIDER_HPP_GUEOIKJ9 */

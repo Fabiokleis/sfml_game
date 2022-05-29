@@ -1,7 +1,7 @@
 #include "window_server.hpp"
 using namespace Controllers;
 
-WindowServer::WindowServer(const std::string& window_title) {
+WindowServer::WindowServer(const std::string& window_title) : event(), view() {
     this->window = new sf::RenderWindow(sf::VideoMode(WINDOW_X,  WINDOW_Y), window_title);
     this->window->setFramerateLimit(FPS);
 }
@@ -29,8 +29,6 @@ void WindowServer::set_view(sf::View view) {
 void WindowServer::reset_view() {
     this->window->setView(sf::View(sf::FloatRect(0.0f, 0.0f, WINDOW_X, WINDOW_Y)));
 }
-
-void WindowServer::set_fullscreen() {}
 
 void WindowServer::clear() {
     this->window->clear();

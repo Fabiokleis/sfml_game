@@ -1,8 +1,8 @@
 #include "sub_menu.hpp"
 using namespace Controllers;
 
-SubMenu::SubMenu(Entities::Image &menu_image, sf::Vector2f position, std::vector<Entities::Text> &text_options) :
-    Menu(menu_image, position, text_options)
+SubMenu::SubMenu(Entities::Text &title, Entities::Image &menu_image, sf::Vector2f position, std::vector<Entities::Text> &text_options) :
+    Menu(title, menu_image, position, text_options)
 {
     // default submenu
     this->set_on_menu(false);
@@ -10,30 +10,42 @@ SubMenu::SubMenu(Entities::Image &menu_image, sf::Vector2f position, std::vector
 
 SubMenu::~SubMenu() = default;
 
-void SubMenu::update(bool from_game) {
-    // limit menu_counter to be in range of [1-max_options]
-    this->menu_counter = this->menu_counter > this->max_options ? this->max_options : this->menu_counter < 1 ? 1 : this->menu_counter;
+SubMenuStates SubMenu::get_state() {
+    return state;
+}
 
-    // clear all texts attr
+void SubMenu::update(bool from_game, bool from_player_dead) {
+    // limit menu_counter to be in range of [0-max_options-1]
+    this->menu_counter = this->menu_counter >= this->max_options-1 ? this->max_options-1 : this->menu_counter <= 0 ? 0 : this->menu_counter;
+
+    // clear all texts attr and set by flag
     for (auto &option : this->text_options) {
         option.reset();
+        if (from_game && from_player_dead) {
+            if (option.get_string() == "Resume") {
+                option.set_text("Restart");
+            }
+        }
     }
-
     switch (this->menu_counter) {
+        case 0:
+            this->text_options[0].set_attr(sf::Color::Green, sf::Color::White, 3.0f, 0);
+
+            break;
         case 1:
-            this->text_options[0].set_attr(sf::Color::Cyan, sf::Color::White, 3.0f, 0);
+            this->text_options[1].set_attr(sf::Color::Green, sf::Color::White, 3.0f, 0);
+
             break;
         case 2:
-            this->text_options[1].set_attr(sf::Color::Cyan, sf::Color::White, 3.0f, 0);
-            break;
-        case 3:
-            this->text_options[2].set_attr(sf::Color::Cyan, sf::Color::White, 3.0f, 0);
+            this->text_options[2].set_attr(sf::Color::Green, sf::Color::White, 3.0f, 0);
+
             break;
 
         default:
             break;
     }
 }
+
 void SubMenu::events(WindowServer &window_server) {
     // Menu input updates
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
@@ -43,15 +55,22 @@ void SubMenu::events(WindowServer &window_server) {
         this->dec_option();
     }
     // resume
-    if ((sf::Keyboard::isKeyPressed(sf::Keyboard::Enter) || sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) && this->get_current_option() == 1) {
+    if ((sf::Keyboard::isKeyPressed(sf::Keyboard::Enter) || sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) && this->get_current_option() == 0) {
         this->set_on_menu(false);
         std::cout << "resume opt" << std::endl;
-    }
-    // mute
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter) && this->get_current_option() == 3) {
-        std::cout << "mute opt" << std::endl;
+    } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter) && this->get_current_option() == 1) {
+        // about 1
+        this->state = about;
+        std::cout << "about opt" << std::endl;
+    } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter) && this->get_current_option() == 2) {
+        // keyboard
+        this->state = showkb;
+        std::cout << "kb 2 opt" << std::endl;
+    } else {
+        this->state = none;
     }
 }
+
 void SubMenu::handle_events(WindowServer &window_server) {
     while (window_server.poll_event()) {
         switch (window_server.get_event().type) {
@@ -64,6 +83,7 @@ void SubMenu::handle_events(WindowServer &window_server) {
                 break;
             case sf::Event::KeyPressed: // any key pressed call events
                 this->events(window_server);
+
                 break;
             default:
                 break;

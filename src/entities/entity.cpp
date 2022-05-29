@@ -23,6 +23,10 @@ sf::Vector2f Entity::get_position() const {
     return this->sprite.getPosition();
 }
 
+void Entity::set_origin(sf::Vector2f origin) {
+    this->sprite.setOrigin(origin);
+}
+
 Entity::Entity() = default;
 Entity::~Entity() = default;
 

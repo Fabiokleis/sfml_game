@@ -1,21 +1,25 @@
 #include "menu.hpp"
 using namespace Controllers;
 
-Menu::Menu(Entities::Image &menu_image, sf::Vector2f position, std::vector<Entities::Text> &text_options):
-    menu_image(menu_image), text_options(text_options)
+Menu::Menu(Entities::Text &title, Entities::Image &menu_image, sf::Vector2f position, std::vector<Entities::Text> &text_options) :
+    menu_image(menu_image), text_options(text_options), title(title)
 {
-    this->menu_counter = 1;
+    this->menu_counter = 0;
     this->max_options = 0;
     this->menu_image.set_position(position);
     this->on_menu = true;
     this->on_submenu = false;
+    this->from_game = false;
+    this->from_player_dead = false;
 }
 
-Menu::~Menu() = default;
+
+Menu::~Menu() {};
 
 sf::RectangleShape Menu::get_sprite() {
     return this->menu_image.get_sprite();
 }
+
 
 void Menu::populate_option(Entities::Text &options) {
     this->max_options++;

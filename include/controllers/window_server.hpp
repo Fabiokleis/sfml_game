@@ -8,14 +8,19 @@
 #define FPS 60
 #define FONT_PATH "fonts/free_pixel.ttf"
 #define PLAYER_SPRITE_PATH "player/player_sprite.png"
+#define TIME 256
+#define SAVE_PATH "player/save_state.json"
+#define PLATFORM1 "platform.json"
+#define PLATFORM2 "platform2.json"
+#define KEYBOARD "menu/keyboard.png"
 
 namespace Controllers {
 
     class WindowServer {
         private:
             sf::RenderWindow* window;
-            sf::View view{};
-            sf::Event event{};
+            sf::View view;
+            sf::Event event;
 
         public:
             WindowServer(const std::string& window_title);
@@ -28,7 +33,6 @@ namespace Controllers {
             void set_view(sf::View view);
             void reset_view();
             void resize_view(sf::Vector2f size);
-            void set_fullscreen();
             void clear();
             void close();
             void display();

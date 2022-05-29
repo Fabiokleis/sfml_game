@@ -9,13 +9,25 @@
 
 namespace Entities {
 
-    enum State {
-        idle = 0,
-        jumping,
+    enum CollideStates {
+        top = 0,
         right,
         left,
-        falling,
         ground,
+        colliding,
+        not_colliding,
+    };
+
+    enum States {
+        idle = 0,
+        walking_right,
+        walking_left,
+        down,
+        jumping,
+        falling,
+        falling_right,
+        falling_left,
+        dead,
     };
 
     class Character : public Entity {
@@ -23,18 +35,19 @@ namespace Entities {
             Controllers::Animation *animation{};
 
         protected:
-            bool life;
             sf::IntRect shape;
             sf::Vector2f velocity;
             sf::Texture texture;
             std::string path_name;
             sf::Vector2u image_count;
-            float switch_time{};
-            State state;
+            float switch_time;
+            CollideStates collide_state;
+            States state;
+            States last_state;
 
         public:
             Character(sf::Vector2f size, sf::Vector2f velocity, sf::Vector2f position, sf::Vector2f cord,
-                      sf::Vector2u image_count, float switch_time, State state, std::string path_name);
+                      sf::Vector2u image_count, float switch_time, States state, std::string path_name);
 
             Character();
             virtual ~Character();
@@ -42,9 +55,11 @@ namespace Entities {
             sf::Vector2f& get_velocity();
             Controllers::Collider get_collider();
             Controllers::Animation& get_animation();
-            void set_life(bool flag);
-            bool get_life();
-            void set_state(State s);
+            States get_state();
+            void set_last_state(States s);
+            void set_state(States s);
+            void set_collide_state(CollideStates s);
+            CollideStates get_collide_state();
             void set_rect(sf::IntRect rect);
             virtual void move(float dir_x, float dir_y) = 0;
      };
