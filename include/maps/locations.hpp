@@ -9,8 +9,8 @@ namespace Maps {
             
         private:
             std::vector<Object> locations_array;
+            std::vector<Object> check_points;
             Object start;
-            Object check_point;
             Object end;
 
         public:
@@ -18,7 +18,7 @@ namespace Maps {
             Locations(rapidjson::Value &value);
             ~Locations();
             Object& get_start();
-            Object& get_check_point();
+            std::vector<Object> get_check_points();
             Object& get_end();
     };
 }

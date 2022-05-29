@@ -1,8 +1,8 @@
 #include "menu.hpp"
 using namespace Controllers;
 
-Menu::Menu(Entities::Image &menu_image, sf::Vector2f position, std::vector<Entities::Text> &text_options) :
-    menu_image(menu_image), text_options(text_options)
+Menu::Menu(Entities::Text &title, Entities::Image &menu_image, sf::Vector2f position, std::vector<Entities::Text> &text_options) :
+    menu_image(menu_image), text_options(text_options), title(title)
 {
     this->menu_counter = 0;
     this->max_options = 0;
@@ -12,6 +12,7 @@ Menu::Menu(Entities::Image &menu_image, sf::Vector2f position, std::vector<Entit
     this->from_game = false;
     this->from_player_dead = false;
 }
+
 
 Menu::~Menu() {};
 

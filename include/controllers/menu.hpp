@@ -12,10 +12,14 @@ namespace Controllers {
 
     class Menu {
         private:
-            bool on_menu;
+        Menu(std::vector<Entities::Text> &text_options, Entities::Text &title, Entities::Image &menu_image,
+             sf::Vector2f position);
+
+        bool on_menu;
             bool on_submenu;
 
         protected:
+            Entities::Text &title;
             Entities::Image &menu_image;
             std::vector<Entities::Text>& text_options;
             int max_options;
@@ -25,7 +29,7 @@ namespace Controllers {
 
             
         public:
-            Menu(Entities::Image &menu_image, sf::Vector2f position, std::vector<Entities::Text> &text_options);
+            Menu(Entities::Text &title, Entities::Image &menu_image, sf::Vector2f position, std::vector<Entities::Text> &text_options);
             ~Menu();
             sf::RectangleShape get_sprite();
             void populate_option(Entities::Text& options);

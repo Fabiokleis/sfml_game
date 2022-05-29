@@ -1,8 +1,8 @@
 #include "sub_menu.hpp"
 using namespace Controllers;
 
-SubMenu::SubMenu(Entities::Image &menu_image, sf::Vector2f position, std::vector<Entities::Text> &text_options) :
-    Menu(menu_image, position, text_options)
+SubMenu::SubMenu(Entities::Text &title, Entities::Image &menu_image, sf::Vector2f position, std::vector<Entities::Text> &text_options) :
+    Menu(title, menu_image, position, text_options)
 {
     // default submenu
     this->set_on_menu(false);
@@ -25,19 +25,23 @@ void SubMenu::update(bool from_game, bool from_player_dead) {
     }
     switch (this->menu_counter) {
         case 0:
-            this->text_options[0].set_attr(sf::Color::Cyan, sf::Color::White, 3.0f, 0);
+            this->text_options[0].set_attr(sf::Color::Green, sf::Color::White, 3.0f, 0);
+
             break;
         case 1:
-            this->text_options[1].set_attr(sf::Color::Cyan, sf::Color::White, 3.0f, 0);
+            this->text_options[1].set_attr(sf::Color::Green, sf::Color::White, 3.0f, 0);
+
             break;
         case 2:
-            this->text_options[2].set_attr(sf::Color::Cyan, sf::Color::White, 3.0f, 0);
+            this->text_options[2].set_attr(sf::Color::Green, sf::Color::White, 3.0f, 0);
+
             break;
 
         default:
             break;
     }
 }
+
 void SubMenu::events(WindowServer &window_server) {
     // Menu input updates
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
@@ -51,17 +55,18 @@ void SubMenu::events(WindowServer &window_server) {
         this->set_on_menu(false);
         std::cout << "resume opt" << std::endl;
     }
-    // map 1
+    // about 1
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter) && this->get_current_option() == 1) {
         this->set_on_menu(false);
-        std::cout << "map 1 opt" << std::endl;
+        std::cout << "about opt" << std::endl;
     }
-    // map 2
+    // keyboard
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter) && this->get_current_option() == 2) {
         this->set_on_menu(false);
-        std::cout << "map 2 opt" << std::endl;
+        std::cout << "kb 2 opt" << std::endl;
     }
 }
+
 void SubMenu::handle_events(WindowServer &window_server) {
     while (window_server.poll_event()) {
         switch (window_server.get_event().type) {
@@ -80,3 +85,4 @@ void SubMenu::handle_events(WindowServer &window_server) {
         }
     }
 }
+

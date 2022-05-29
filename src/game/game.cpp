@@ -5,8 +5,8 @@
 
 
 Game::Game() :
-        player(), map(), menu_bg(), menu(), load(), load_bg(), fps_text(), delta_time(), menu_options(),
-        coin_image(), coin_number(), time_text(), total_time(TIME), life_image(), life_text(), score_text()
+        player(), map(), menu_bg(), menu(), settings(), settings_bg(), fps_text(), delta_time(), menu_options(),
+        coin_image(), coin_number(), time_text(), total_time(TIME), life_image(), life_text(), score_text(), menu_title()
 {
     this->window_server = new Controllers::WindowServer("c++ game");
     this->on_menu = true;
@@ -19,7 +19,18 @@ void Game::exec() {
     this->menu_loop();
 
     if (this->window_server->is_open() && !this->on_menu) {
-        this->init_map("platform.json");
+
+        if (this->menu->get_saved()) {
+            // verify if saved map is first or second
+            if (verify_map()) {
+                this->init_map(PLATFORM1);
+            } else {
+                this->init_map(PLATFORM2);
+            }
+        } else {
+            // default first map when not save found and not from load
+            this->init_map(PLATFORM1);
+        }
         this->init_entities();
         // to init timer after load map and any other entity
         sf::Clock timer;
@@ -32,32 +43,47 @@ Game::~Game() {
     delete player;
     delete map;
     delete menu_bg;
-    delete load_bg;
-    delete load;
+    delete settings_bg;
+    delete settings;
     delete menu;
     delete window_server;
     delete coin_image;
     delete coin_number;
     delete life_image;
     delete life_text;
+    delete score_text;
+    delete menu_title;
 }
 
 void Game::menu_loop(bool from_game, bool from_player_dead) {
     while (this->window_server->is_open() && this->on_menu) {
-        if (this->load->get_on_menu()) {
-            this->load->handle_events(*this->window_server);
-            this->menu->set_on_submenu(this->load->get_on_menu());
-            this->load->update(from_game, from_player_dead);
-            this->render_load();
+        if (this->settings->get_on_menu()) {
+            this->settings->handle_events(*this->window_server);
+            this->menu->set_on_submenu(this->settings->get_on_menu());
+            this->settings->update(from_game, from_player_dead);
+            this->render_settings();
         } else {
+
             this->on_menu = this->menu->get_on_menu();
             this->menu->handle_events(*this->window_server);
-            this->load->set_on_menu(this->menu->get_on_submenu());
+            this->settings->set_on_menu(this->menu->get_on_submenu());
             this->menu->update(from_game, from_player_dead);
             this->render_menu();
         }
     }
 
+}
+
+bool Game::verify_map() {
+    std::string path = RESOURCE_PATH;
+    std::string buf = Maps::Map::read_file(path+SAVE_PATH);
+    rapidjson::Document saved_file;
+    saved_file.Parse(buf.c_str());
+    std::string map_name = saved_file["map_name"].GetString();
+    if (map_name == PLATFORM1) {
+        return true;
+    }
+    return false;
 }
 
 void Game::game_loop(sf::Clock timer) {
@@ -96,10 +122,22 @@ void Game::count_down() {
 void Game::init_menu() {
     // game menu
     this->menu_bg = new Entities::Image(sf::Vector2f(0.0f, 0.0f), sf::Vector2f(WINDOW_X, WINDOW_Y), sf::Color::Black);
-    this->load_bg = new Entities::Image(sf::Vector2f(0.0f, 0.0f), sf::Vector2f(WINDOW_X, WINDOW_Y), sf::Color::Black);
+    this->settings_bg = new Entities::Image(sf::Vector2f(0.0f, 0.0f), sf::Vector2f(WINDOW_X, WINDOW_Y), sf::Color::Black);
+    this->menu_title = new Entities::Text(
+            FONT_PATH,
+            80,
+            WINDOW_X / 2 - 240.0f,
+            100,
+            sf::Color::White,
+            1 << 1,
+            sf::Color::Transparent,
+            0.0f,
+            "Jaime Adventures");
 
-    this->menu = new Controllers::MainMenu(*menu_bg, sf::Vector2f(0.0f, 0.0f), this->menu_options);
-    this->load = new Controllers::SubMenu(*load_bg, sf::Vector2f(0.0f, 0.0f), this->load_options);
+    this->menu_title->set_attr(sf::Color::White, sf::Color::Green, 3.0f, 1 << 1);
+
+    this->menu = new Controllers::MainMenu(*menu_title, *menu_bg, sf::Vector2f(0.0f, 0.0f), this->menu_options);
+    this->settings = new Controllers::SubMenu(*menu_title, *settings_bg, sf::Vector2f(0.0f, 0.0f), this->settings_options);
 
     this->menu_entries();
 }
@@ -126,6 +164,7 @@ void Game::menu_entries() {
             sf::Color::Transparent,
             0.0f, "New Game"));
 
+    // score text on window
     if (this->menu->get_saved()) {
         std::string path = RESOURCE_PATH;
         path += SAVE_PATH;
@@ -133,14 +172,15 @@ void Game::menu_entries() {
         rapidjson::Document saved_file;
         saved_file.Parse(buf.c_str());
 
+        std::string map_name = saved_file["map_name"].GetString();
         int coin = saved_file["coin"].GetInt();
         int life = saved_file["life"].GetInt();
 
         std::string life_number_text("life: ");
-        life_number_text += std::to_string(life) + "\n";
+        life_number_text += std::to_string(life) + '\n';
         std::string coin_text("coins: ");
         coin_text += std::to_string(coin);
-        life_number_text += coin_text;
+        map_name += '\n' + life_number_text + coin_text;
 
 
         this->score_text = new Entities::Text(
@@ -151,7 +191,10 @@ void Game::menu_entries() {
                 sf::Color::Yellow,
                 0,
                 sf::Color::Transparent,
-                0.0f, life_number_text);
+                0.0f, map_name);
+
+        this->score_text->set_attr(sf::Color::Yellow, sf::Color::Green, 1.0f, 0);
+
     }
     this->menu->populate_option(*new Entities::Text(
             FONT_PATH,
@@ -173,7 +216,7 @@ void Game::menu_entries() {
             0,
             sf::Color::Transparent,
             0.0f,
-            "Load Map"));
+            "Settings"));
     this->menu->populate_option(*new Entities::Text(
             FONT_PATH,
             48,
@@ -196,7 +239,7 @@ void Game::menu_entries() {
             "Exit"));
 
     // populate load
-    this->load->populate_option(*new Entities::Text(
+    this->settings->populate_option(*new Entities::Text(
             FONT_PATH,
             48,
             WINDOW_X / 2.0f - 64.0f,
@@ -205,7 +248,7 @@ void Game::menu_entries() {
             0,
             sf::Color::Transparent,
             0.0f, "Resume"));
-    this->load->populate_option(*new Entities::Text(
+    this->settings->populate_option(*new Entities::Text(
             FONT_PATH,
             48,
             WINDOW_X / 2.0f - 64.0f,
@@ -213,8 +256,8 @@ void Game::menu_entries() {
             sf::Color::White,
             0,
             sf::Color::Transparent,
-            0.0f, "Map 1"));
-    this->load->populate_option(*new Entities::Text(
+            0.0f, "About"));
+    this->settings->populate_option(*new Entities::Text(
             FONT_PATH,
             48,
             WINDOW_X / 2.0f - 64.0f,
@@ -222,7 +265,7 @@ void Game::menu_entries() {
             sf::Color::White,
             0,
             sf::Color::Transparent,
-            0.0f, "Map 2"));
+            0.0f, "Show Controls"));
 }
 
 void Game::init_entities() {
@@ -276,7 +319,6 @@ void Game::init_entities() {
             );
 
     // coins
-
     this->coin_image = new Entities::Image("map/coin.png");
     this->coin_image->set_position(sf::Vector2f(WINDOW_X - 64, this->coin_image->get_sprite().getSize().y));
     this->coin_number = new Entities::Text(
@@ -305,7 +347,7 @@ void Game::init_map(std::string map_name) {
     this->walls = this->map->get_walls();
     this->platforms = this->map->get_platforms();
     this->start_location = locations.get_start(); // start position of player
-    this->check_point_location = locations.get_check_point(); // check point to save game
+    this->check_point_locations = locations.get_check_points(); // check points to save game
     this->end_location = locations.get_end(); // end of the map, defined to load other map
     this->tilemap = this->map->get_tilemap();
     this->map_backgrounds = this->map->get_backgrounds();
@@ -369,11 +411,13 @@ void Game::handle_player_collision() {
 
     if (this->end_location.get_collider().check_collision(this->player->get_collider(), this->player->get_velocity(), false)) {
         // verify if player collide with the end of map, to load next map
-        std::cout << "colidiu com o final da fase!\n";
+        this->next_map();
     }
-    if (this->check_point_location.get_collider().check_collision(this->player->get_collider(), this->player->get_velocity(), false)) {
-        // verify if player collide with check point to save the game
-        this->save_game();
+    for (auto &check_point : this->check_point_locations) {
+        if (check_point.get_collider().check_collision(this->player->get_collider(), this->player->get_velocity(), false)) {
+            // verify if player collide with check point to save the game
+            this->save_game(check_point);
+        }
     }
 
     // platform and player collision
@@ -487,14 +531,14 @@ void Game::update_player_view() {
     }
 }
 
-void Game::save_game() {
+void Game::save_game(Maps::Object current_check_point) {
     std::cout << "Saving the game on check point!" << std::endl;
 
     std::string path = RESOURCE_PATH;
     int coin = this->player->get_coins();
     int life = this->player->get_life_number();
-    double x = this->check_point_location.get_x();
-    double y = this->check_point_location.get_y();
+    double x = current_check_point.get_x();
+    double y = current_check_point.get_y();
     std::string map_name = this->map->get_name();
     std::fstream save_file(path+SAVE_PATH, std::ostream::out);
 
@@ -578,6 +622,22 @@ void Game::restart_player() {
                 this->total_time = TIME;
             }
         }
+    } else {
+        if (this->player->get_state() == Entities::dead) {
+            this->player->restart(
+                    sf::Vector2f(
+                            this->start_location.get_x(),
+                            this->start_location.get_y()),
+                    this->player->get_coins(),
+                    this->player->get_life_number(),
+                    Entities::idle);
+
+            std::string map_name = this->map->get_name();
+            // restart map
+            this->init_map(map_name);
+            // restart time
+            this->total_time = TIME;
+        }
     }
 }
 
@@ -594,6 +654,7 @@ void Game::render_menu() {
     this->window_server->reset_view();
     this->window_server->render(this->menu->get_sprite());
     this->window_server->reset_view();
+    this->window_server->render(this->menu_title->get_text());
     for (auto &option : this->menu_options) {
         this->window_server->render(option.get_text());
     }
@@ -605,11 +666,13 @@ void Game::render_menu() {
     this->window_server->display();
 }
 
-void Game::render_load() {
+void Game::render_settings() {
     this->window_server->clear();
     this->window_server->reset_view();
-    this->window_server->render(this->load->get_sprite());
-    for (auto &option : this->load_options) {
+    this->window_server->render(this->settings->get_sprite());
+    this->window_server->reset_view();
+    this->window_server->render(this->menu_title->get_text());
+    for (auto &option : this->settings_options) {
         this->window_server->render(option.get_text());
     }
     this->window_server->display();
@@ -662,4 +725,15 @@ void Game::render() {
 
     // finally, display everything
     this->window_server->display();
+}
+
+void Game::next_map() {
+    this->init_map(PLATFORM2);
+    this->player->restart(
+            sf::Vector2f(
+            this->start_location.get_x(),
+            this->start_location.get_y()),
+            this->player->get_coins(),
+            this->player->get_life_number(),
+            Entities::idle);
 }

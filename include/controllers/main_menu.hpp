@@ -17,7 +17,7 @@ namespace Controllers {
 
 
         public:
-            MainMenu(Entities::Image &menu_image, sf::Vector2f position, std::vector<Entities::Text> &text_options);
+            MainMenu(Entities::Text &title, Entities::Image &menu_image, sf::Vector2f position, std::vector<Entities::Text> &text_options);
             ~MainMenu();
 
             bool get_saved() const;

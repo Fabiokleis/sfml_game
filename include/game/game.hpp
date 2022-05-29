@@ -16,13 +16,14 @@ class Game {
         Controllers::WindowServer* window_server;
         Entities::Player *player;
 
+        Entities::Text *menu_title;
         std::vector<Entities::Text> menu_options;
         Entities::Image *menu_bg;
         Controllers::MainMenu *menu;
 
-        std::vector<Entities::Text> load_options;
-        Entities::Image *load_bg;
-        Controllers::SubMenu *load;
+        std::vector<Entities::Text> settings_options;
+        Entities::Image *settings_bg;
+        Controllers::SubMenu *settings;
 
         Entities::Text *score_text;
 
@@ -31,7 +32,7 @@ class Game {
         std::vector<Maps::TileMap> tilemap;
         std::vector<Entities::Image> map_backgrounds;
         Maps::Object start_location;
-        Maps::Object check_point_location;
+        std::vector<Maps::Object> check_point_locations;
         Maps::Object end_location;
         Maps::Locations locations;
         Maps::Platforms platforms;
@@ -51,7 +52,9 @@ class Game {
         int total_time;
         bool on_menu;
 
+
         bool player_out_of_window();
+        bool verify_map();
         void init_menu();
         void init_entities();
         void parse_save(const std::string& buf);
@@ -61,7 +64,7 @@ class Game {
         void set_fps(float fps);
         void set_score(int coin, int life_number);
         void count_down();
-        void save_game();
+        void save_game(Maps::Object current_check_point);
         void restart_player();
         void game_loop(sf::Clock timer);
         void menu_loop(bool from_game = false, bool from_player_dead = false);
@@ -69,8 +72,9 @@ class Game {
         void update_player_view();
         void handle_events();
         void update();
+        void next_map();
         void render_menu();
-        void render_load();
+        void render_settings();
         void render_map();
         void render();
         void handle_collision();

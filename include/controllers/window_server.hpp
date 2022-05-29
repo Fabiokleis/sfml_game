@@ -10,6 +10,8 @@
 #define PLAYER_SPRITE_PATH "player/player_sprite.png"
 #define TIME 256
 #define SAVE_PATH "player/save_state.json"
+#define PLATFORM1 "platform.json"
+#define PLATFORM2 "platform2.json"
 
 namespace Controllers {
 

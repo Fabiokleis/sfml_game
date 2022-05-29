@@ -4,8 +4,8 @@
 
 using namespace Controllers;
 
-MainMenu::MainMenu(Entities::Image &menu_image, sf::Vector2f position, std::vector<Entities::Text> &text_options) :
-    Menu(menu_image, position, text_options), load_save(), state()
+MainMenu::MainMenu(Entities::Text &title, Entities::Image &menu_image, sf::Vector2f position, std::vector<Entities::Text> &text_options) :
+    Menu(title, menu_image, position, text_options), load_save(), state()
 {
     std::string path = RESOURCE_PATH;
     std::string buf = Maps::Map::read_file(path+"player/save_state.json");
@@ -41,22 +41,22 @@ void MainMenu::update(bool from_game, bool from_player_dead) {
 
     switch (this->menu_counter) {
         case 0:
-            this->text_options[0].set_attr(sf::Color::Cyan, sf::Color::White, 3.0f, 0);
+            this->text_options[0].set_attr(sf::Color::Green, sf::Color::White, 3.0f, 0);
             this->state = restart;
             break;
         case 1:
-            this->text_options[1].set_attr(sf::Color::Cyan, sf::Color::White, 3.0f, 0);
+            this->text_options[1].set_attr(sf::Color::Green, sf::Color::White, 3.0f, 0);
             this->state = loading;
             break;
         case 2:
-            this->text_options[2].set_attr(sf::Color::Cyan, sf::Color::White, 3.0f, 0);
+            this->text_options[2].set_attr(sf::Color::Green, sf::Color::White, 3.0f, 0);
 
             break;
         case 3:
-            this->text_options[3].set_attr(sf::Color::Cyan, sf::Color::White, 3.0f, 0);
+            this->text_options[3].set_attr(sf::Color::Green, sf::Color::White, 3.0f, 0);
             break;
         case 4:
-            this->text_options[4].set_attr(sf::Color::Cyan, sf::Color::White, 3.0f, 0);
+            this->text_options[4].set_attr(sf::Color::Green, sf::Color::White, 3.0f, 0);
             this->state = exit;
             break;
         default:
@@ -88,14 +88,14 @@ void MainMenu::events(WindowServer &window_server) {
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter) && this->get_current_option() == 1) {
 
         if (saved_file) {
-            std::cout << "load opt" << std::endl;
+            std::cout << "load save opt" << std::endl;
             this->set_on_menu(false);
             this->load_save = true;
         }
     }
-    // load map opt
+    // settings
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter) && this->get_current_option() == 2) {
-        std::cout << "credits opt" << std::endl;
+        std::cout << "settings opt" << std::endl;
         this->set_on_submenu(true);
     }
     // credits opt
