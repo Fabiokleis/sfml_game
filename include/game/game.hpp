@@ -24,6 +24,9 @@ class Game {
         Entities::Image *load_bg;
         Controllers::SubMenu *load;
 
+        Entities::Text *score_text;
+
+
         Maps::Map* map;
         std::vector<Maps::TileMap> tilemap;
         std::vector<Entities::Image> map_backgrounds;
@@ -67,7 +70,7 @@ class Game {
         void handle_events();
         void update();
         void render_menu();
-        void render_settings();
+        void render_load();
         void render_map();
         void render();
         void handle_collision();

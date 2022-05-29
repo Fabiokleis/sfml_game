@@ -5,13 +5,13 @@
 using namespace Controllers;
 
 MainMenu::MainMenu(Entities::Image &menu_image, sf::Vector2f position, std::vector<Entities::Text> &text_options) :
-    Menu(menu_image, position, text_options), load_save(false)
+    Menu(menu_image, position, text_options), load_save(), state()
 {
     std::string path = RESOURCE_PATH;
     std::string buf = Maps::Map::read_file(path+"player/save_state.json");
-
     if (!buf.empty()) {
         this->saved_file = true;
+
     } else {
         this->saved_file = false;
     }
@@ -134,10 +134,15 @@ void MainMenu::handle_events(WindowServer &window_server) {
     }
 }
 
-bool MainMenu::get_load() {
-    return this->load_save;
+bool MainMenu::get_saved() const {
+    return this->saved_file;
 }
 
 MenuStates MainMenu::get_state() {
     return this->state;
 }
+
+bool MainMenu::get_load() const {
+    return this->load_save;
+}
+

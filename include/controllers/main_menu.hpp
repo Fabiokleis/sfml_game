@@ -20,7 +20,8 @@ namespace Controllers {
             MainMenu(Entities::Image &menu_image, sf::Vector2f position, std::vector<Entities::Text> &text_options);
             ~MainMenu();
 
-            bool get_load();
+            bool get_saved() const;
+            bool get_load() const;
 
             MenuStates get_state();
             void update(bool from_game, bool from_player_dead) override;

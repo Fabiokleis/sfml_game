@@ -6,7 +6,7 @@
 
 Game::Game() :
         player(), map(), menu_bg(), menu(), load(), load_bg(), fps_text(), delta_time(), menu_options(),
-        coin_image(), coin_number(), time_text(), total_time(TIME), life_image(), life_text()
+        coin_image(), coin_number(), time_text(), total_time(TIME), life_image(), life_text(), score_text()
 {
     this->window_server = new Controllers::WindowServer("c++ game");
     this->on_menu = true;
@@ -48,7 +48,7 @@ void Game::menu_loop(bool from_game, bool from_player_dead) {
             this->load->handle_events(*this->window_server);
             this->menu->set_on_submenu(this->load->get_on_menu());
             this->load->update(from_game, from_player_dead);
-            this->render_settings();
+            this->render_load();
         } else {
             this->on_menu = this->menu->get_on_menu();
             this->menu->handle_events(*this->window_server);
@@ -97,8 +97,10 @@ void Game::init_menu() {
     // game menu
     this->menu_bg = new Entities::Image(sf::Vector2f(0.0f, 0.0f), sf::Vector2f(WINDOW_X, WINDOW_Y), sf::Color::Black);
     this->load_bg = new Entities::Image(sf::Vector2f(0.0f, 0.0f), sf::Vector2f(WINDOW_X, WINDOW_Y), sf::Color::Black);
+
     this->menu = new Controllers::MainMenu(*menu_bg, sf::Vector2f(0.0f, 0.0f), this->menu_options);
     this->load = new Controllers::SubMenu(*load_bg, sf::Vector2f(0.0f, 0.0f), this->load_options);
+
     this->menu_entries();
 }
 
@@ -124,6 +126,33 @@ void Game::menu_entries() {
             sf::Color::Transparent,
             0.0f, "New Game"));
 
+    if (this->menu->get_saved()) {
+        std::string path = RESOURCE_PATH;
+        path += SAVE_PATH;
+        std::string buf = Maps::Map::read_file(path);
+        rapidjson::Document saved_file;
+        saved_file.Parse(buf.c_str());
+
+        int coin = saved_file["coin"].GetInt();
+        int life = saved_file["life"].GetInt();
+
+        std::string life_number_text("life: ");
+        life_number_text += std::to_string(life) + "\n";
+        std::string coin_text("coins: ");
+        coin_text += std::to_string(coin);
+        life_number_text += coin_text;
+
+
+        this->score_text = new Entities::Text(
+                FONT_PATH,
+                32,
+                WINDOW_X / 2.0f + 128.0f,
+                WINDOW_Y / 2.0f + 128.0f,
+                sf::Color::Yellow,
+                0,
+                sf::Color::Transparent,
+                0.0f, life_number_text);
+    }
     this->menu->populate_option(*new Entities::Text(
             FONT_PATH,
             48,
@@ -484,10 +513,13 @@ void Game::save_game() {
         std::cout << "ERROR::SAVE_FILE:: COULD NOT OPEN FILE." << std::endl;
     }
 }
+
+
 void Game::parse_save(const std::string& buf) {
     // parse json saved file to be a new instance of player and map
     rapidjson::Document saved_file;
     saved_file.Parse(buf.c_str());
+
     int coin = saved_file["coin"].GetInt();
     int life = saved_file["life"].GetInt();
     double x = saved_file["x"].GetDouble();
@@ -561,13 +593,19 @@ void Game::render_menu() {
     this->window_server->clear();
     this->window_server->reset_view();
     this->window_server->render(this->menu->get_sprite());
+    this->window_server->reset_view();
     for (auto &option : this->menu_options) {
         this->window_server->render(option.get_text());
+    }
+    if (this->menu->get_saved()) {
+        this->window_server->reset_view();
+        this->window_server->render(this->score_text->get_text());
+
     }
     this->window_server->display();
 }
 
-void Game::render_settings() {
+void Game::render_load() {
     this->window_server->clear();
     this->window_server->reset_view();
     this->window_server->render(this->load->get_sprite());
