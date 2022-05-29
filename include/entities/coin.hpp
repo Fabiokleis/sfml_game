@@ -7,9 +7,7 @@ namespace Entities {
 
     class Coin {
         private:
-        Coin();
-
-        int id;
+            int id;
             Entities::Image *image;
 
         public:

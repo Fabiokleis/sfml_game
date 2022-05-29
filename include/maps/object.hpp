@@ -5,10 +5,11 @@
 #include <string>
 #include "collider.hpp"
 #include <SFML/Graphics.hpp>
+#include "entity.hpp"
 
 namespace Maps {
 
-    class Object {
+    class Object: public Entities::Entity{
         protected:
             std::string name;
             std::string type;
@@ -18,7 +19,6 @@ namespace Maps {
             double width;
             double x;
             double y;
-            sf::RectangleShape shape;
 
         public:
             Object();

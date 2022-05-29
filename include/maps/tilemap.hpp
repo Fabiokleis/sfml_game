@@ -15,7 +15,7 @@ namespace Maps {
     		sf::VertexArray verts;
     		sf::Texture tex;
     		
-    	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const {
+    	void draw(sf::RenderTarget& target, sf::RenderStates states) const {
     		states.transform *= getTransform();
     		states.texture = &tex;
     		target.draw(verts, states);

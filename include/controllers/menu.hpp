@@ -12,10 +12,7 @@ namespace Controllers {
 
     class Menu {
         private:
-        Menu(std::vector<Entities::Text> &text_options, Entities::Text &title, Entities::Image &menu_image,
-             sf::Vector2f position);
-
-        bool on_menu;
+            bool on_menu;
             bool on_submenu;
 
         protected:
