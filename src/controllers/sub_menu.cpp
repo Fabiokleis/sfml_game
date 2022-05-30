@@ -29,15 +29,15 @@ void SubMenu::update(bool from_game, bool from_player_dead) {
     }
     switch (this->menu_counter) {
         case 0:
-            this->text_options[0].set_attr(sf::Color::Green, sf::Color::White, 3.0f, 0);
+            this->text_options[0].set_attr( sf::Color::White, sf::Color(95, 0, 160), 3.0f, 0);
 
             break;
         case 1:
-            this->text_options[1].set_attr(sf::Color::Green, sf::Color::White, 3.0f, 0);
+            this->text_options[1].set_attr(sf::Color::White, sf::Color(95, 0, 160),  3.0f, 0);
 
             break;
         case 2:
-            this->text_options[2].set_attr(sf::Color::Green, sf::Color::White, 3.0f, 0);
+            this->text_options[2].set_attr(sf::Color::White, sf::Color(95, 0, 160), 3.0f, 0);
 
             break;
 
@@ -57,17 +57,14 @@ void SubMenu::events(WindowServer &window_server) {
     // resume
     if ((sf::Keyboard::isKeyPressed(sf::Keyboard::Enter) || sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) && this->get_current_option() == 0) {
         this->set_on_menu(false);
-        std::cout << "resume opt" << std::endl;
     } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter) && this->get_current_option() == 1) {
         // about 1
         this->state = about;
-        std::cout << "about opt" << std::endl;
     } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter) && this->get_current_option() == 2) {
         // keyboard
         this->state = showkb;
-        std::cout << "kb 2 opt" << std::endl;
     } else {
-        this->state = none;
+        this->state = nones;
     }
 }
 

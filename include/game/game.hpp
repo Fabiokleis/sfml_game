@@ -25,6 +25,7 @@ class Game {
         Entities::Image *settings_bg;
         Controllers::SubMenu *settings;
         Entities::Text *about;
+        Entities::Text *credit;
         Entities::Image *showkb;
 
         Entities::Text *score_text;

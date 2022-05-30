@@ -14,7 +14,7 @@ Menu::Menu(Entities::Text &title, Entities::Image &menu_image, sf::Vector2f posi
 }
 
 
-Menu::~Menu() {};
+Menu::~Menu() {}
 
 sf::RectangleShape Menu::get_sprite() {
     return this->menu_image.get_sprite();

@@ -14,7 +14,7 @@ Object::Object(rapidjson::Value& value) {
 
 Object::Object() : id(), name(), type(), height(), width(), x(), y(), visible(), shape() {}
 
-Object::~Object() = default;
+Object::~Object() {}
 
 sf::RectangleShape Object::get_rect_sprite() {
     return this->shape;

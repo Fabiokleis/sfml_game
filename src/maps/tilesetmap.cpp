@@ -1,8 +1,8 @@
 #include "tilesetmap.hpp"
 using namespace Maps;
 
-TileSetMap::TileSetMap() = default;
-TileSetMap::~TileSetMap() = default;
+TileSetMap::TileSetMap() {}
+TileSetMap::~TileSetMap() {}
 
 TileSetMap::TileSetMap(rapidjson::Value& value) {
     this->firstid = value["firstgid"].GetInt();

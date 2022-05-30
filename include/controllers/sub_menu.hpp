@@ -6,9 +6,9 @@
 namespace Controllers {
 
     enum SubMenuStates {
-        none = 0,
+        nones = 0,
         about,
-        showkb
+        showkb,
     };
 
     class SubMenu : public Menu {

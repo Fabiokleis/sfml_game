@@ -15,7 +15,7 @@ Map::Map(std::string map_name) :
     this->load_tilemap();
 }
 
-Map::~Map() = default;
+Map::~Map(){}
 
 void Map::init_variables() {
 

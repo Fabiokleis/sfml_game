@@ -23,4 +23,4 @@ std::vector<Object> Walls::get_walls() {
     return this->walls_array;
 }
 
-Walls::~Walls() = default;
+Walls::~Walls() {}

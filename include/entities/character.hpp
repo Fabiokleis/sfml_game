@@ -32,7 +32,7 @@ namespace Entities {
 
     class Character : public Entity {
         private:
-            Controllers::Animation *animation{};
+            Controllers::Animation *animation;
 
         protected:
             sf::IntRect shape;

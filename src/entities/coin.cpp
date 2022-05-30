@@ -12,8 +12,6 @@ sf::RectangleShape Coin::get_sprite() {
     return this->image->get_sprite();
 }
 
-Coin::Coin() : id(), image() {}
-
 Coin::~Coin() {}
 
 int Coin::get_id() const {

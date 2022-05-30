@@ -25,9 +25,9 @@ Text::Text(const std::string& path_name, unsigned int size, float x, float y, sf
     this->text.setOrigin(size / 2.0f, size / 2.0f);
 }
 
-Text::Text() : default_style(), default_thick_size(), default_outline_color(), default_color() {};
+Text::Text() : default_style(), default_thick_size(), default_outline_color(), default_color() {}
 
-Text::~Text() {};
+Text::~Text() {}
 
 void Text::set_text(const std::string& str) {
     this->text.setString(str);

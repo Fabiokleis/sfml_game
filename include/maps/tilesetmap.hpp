@@ -7,7 +7,7 @@ namespace Maps {
 
     class TileSetMap {
         private:
-            int firstid{};
+            int firstid;
             std::string source;
     
     

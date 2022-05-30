@@ -10,7 +10,7 @@ Animation::Animation(sf::Vector2u size, sf::Vector2u image_count, float switch_t
     this->current_image.x = 0.0f;
 }
 
-Animation::~Animation() = default;
+Animation::~Animation() {}
 
 void Animation::update(int row, float delta_time, bool face_right) {
     this->current_image.y = row;
