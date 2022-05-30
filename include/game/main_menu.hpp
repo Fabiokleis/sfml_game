@@ -26,6 +26,7 @@ namespace Controllers {
             bool get_load() const;
 
             MenuStates get_state();
+            void verify_save();
             void update(bool from_game, bool from_player_dead) override;
             void events(WindowServer &window_server) override;
             void handle_events(WindowServer &window_server) override;

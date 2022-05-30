@@ -7,6 +7,12 @@ using namespace Controllers;
 MainMenu::MainMenu(Entities::Text &title, Entities::Image &menu_image, double x, double y, std::vector<Entities::Text> &text_options) :
     Menu(title, menu_image, x, y, text_options), load_save(), state(restart)
 {
+    this->verify_save();
+}
+
+MainMenu::~MainMenu() {}
+
+void MainMenu::verify_save() {
     std::string path = RESOURCE_PATH;
     std::string buf = Maps::Map::read_file(path+"player/save_state.json");
     if (!buf.empty()) {
@@ -16,9 +22,6 @@ MainMenu::MainMenu(Entities::Text &title, Entities::Image &menu_image, double x,
         this->saved_file = false;
     }
 }
-
-MainMenu::~MainMenu() {}
-
 void MainMenu::update(bool from_game, bool from_player_dead) {
     // limit menu_counter to be in range of [0-max_options-1]
     this->menu_counter = this->menu_counter >= this->max_options-1 ? this->max_options-1 : this->menu_counter <= 0 ? 0 : this->menu_counter;
@@ -98,6 +101,7 @@ void MainMenu::events(WindowServer &window_server) {
     } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter) && this->get_current_option() == 1) {
         // load save opt
         this->state = loading;
+        this->verify_save();
         if (saved_file) {
             std::cout << "load save opt" << std::endl;
             this->set_on_menu(false);

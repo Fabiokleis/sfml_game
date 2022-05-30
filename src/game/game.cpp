@@ -1,8 +1,6 @@
 #include <iostream>
 #include "game.hpp"
 #include <fstream>
-#include "../rapidjson/document.h"
-
 
 Game::Game() :
         player(), map(), menu_bg(), menu(), settings(), settings_bg(), fps_text(), delta_time(), menu_options(),
@@ -17,6 +15,7 @@ void Game::exec() {
     // setup game
 
     this->init_menu();
+    this->init_score();
     this->menu_loop();
 
     if (this->window_server->is_open() && !this->on_menu) {
@@ -65,7 +64,7 @@ void Game::menu_loop(bool from_game, bool from_player_dead) {
             this->settings->update(from_game, from_player_dead);
             this->render_settings();
         } else {
-
+            std::cout << "state: " << this->menu->get_state() << std::endl;
             this->on_menu = this->menu->get_on_menu();
             this->menu->handle_events(*this->window_server);
             this->settings->set_on_menu(this->menu->get_on_submenu());
@@ -190,28 +189,8 @@ void Game::init_menu() {
     this->menu_entries();
 }
 
-void Game::menu_entries() {
-    /*
-        [1] New Game
-        [2] Load save
-            [1] Resume
-            [2] About
-            [3] Show Controls
-        [3] Credits
-        [4] Exit
-    */
 
-    // populate menu
-    this->menu->populate_option(*new Entities::Text(
-            FONT_PATH,
-            48,
-            WINDOW_X / 2.0f - 64.0f,
-            WINDOW_Y / 2.0f - 128.0f,
-            sf::Color::White,
-            0,
-            sf::Color::Transparent,
-            0.0f, "New Game"));
-
+void Game::init_score() {
     // score text on window
     if (this->menu->get_saved()) {
         std::string path = RESOURCE_PATH;
@@ -242,8 +221,34 @@ void Game::menu_entries() {
                 0.0f, map_name);
 
         this->score_text->set_attr(sf::Color(192, 192, 192), sf::Color(95, 0, 160), 1.0f, 0);
-
+    } else {
+        this->score_text = new Entities::Text();
     }
+}
+
+void Game::menu_entries() {
+    /*
+        [1] New Game
+        [2] Load save
+            [1] Resume
+            [2] About
+            [3] Show Controls
+        [3] Credits
+        [4] Exit
+    */
+
+    // populate menu
+    this->menu->populate_option(*new Entities::Text(
+            FONT_PATH,
+            48,
+            WINDOW_X / 2.0f - 64.0f,
+            WINDOW_Y / 2.0f - 128.0f,
+            sf::Color::White,
+            0,
+            sf::Color::Transparent,
+            0.0f, "New Game"));
+
+
     this->menu->populate_option(*new Entities::Text(
             FONT_PATH,
             48,

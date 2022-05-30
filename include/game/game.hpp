@@ -60,6 +60,7 @@ class Game {
         bool verify_map();
         void init_menu();
         void init_entities();
+        void init_score();
         void parse_save(const std::string& buf);
         void init_map(std::string map_name);
         void menu_entries();
