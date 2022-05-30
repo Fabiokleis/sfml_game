@@ -12,14 +12,19 @@ namespace Entities {
 
 
         public:
-            Entity(sf::Vector2f position, sf::Vector2f size);
+            Entity(double x, double y, double width, double height);
             Entity();
             ~Entity();
             sf::RectangleShape get_sprite() const;
             sf::Vector2f get_position() const;
-            void set_position(sf::Vector2f position);
-            void set_size(sf::Vector2f size);
-            void set_origin(sf::Vector2f origin);
+            void set_position(double x, double y);
+            void set_size(double width, double height);
+            void set_origin(double x, double y);
+            void set_color(sf::Color color);
+            void set_texture(sf::Texture *texture);
+            void set_thickness(float thick);
+            void set_outline_color(sf::Color color);
+
     };
 }
 #endif /* end of include guard: ENTITY_HPP_NUO0WDEY */

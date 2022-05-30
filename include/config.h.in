@@ -1,4 +1,15 @@
 #ifndef CONFIG_H_IN_U5CSSGBG
 #define CONFIG_H_IN_U5CSSGBG
 #define RESOURCE_PATH "@RESOURCE_PATH@"
+#define WINDOW_X 1280
+#define WINDOW_Y 720
+#define FPS 60
+#define FONT_PATH "fonts/free_pixel.ttf"
+#define TIME 256
+#define COIN_PATH "map/coin.png"
+#define PLAYER_SPRITE_PATH "player/player_sprite.png"
+#define SAVE_PATH "player/save_state.json"
+#define PLATFORM1 "destroyed_world.json"
+#define PLATFORM2 "sorcerer_castle.json"
+#define KEYBOARD "menu/keyboard.png"
 #endif /* end of include guard: CONFIG_H_IN_U5CSSGBG */

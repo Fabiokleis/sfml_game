@@ -16,7 +16,7 @@ namespace Controllers {
             SubMenuStates state;
 
         public:
-            SubMenu(Entities::Text &title, Entities::Image &menu_image, sf::Vector2f position, std::vector<Entities::Text> &text_optionss);
+            SubMenu(Entities::Text &title, Entities::Image &menu_image, double x, double y, std::vector<Entities::Text> &text_optionss);
             ~SubMenu();
 
             SubMenuStates get_state();

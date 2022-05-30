@@ -1,7 +1,7 @@
 #include "object.hpp"
 using namespace Maps;
 
-Object::Object(rapidjson::Value& value) {
+Object::Object(rapidjson::Value& value) : Entities::Entity() {
     this->id = value["id"].GetInt();
     this->name = value["name"].GetString();
     this->type = value["type"].GetString();
@@ -9,16 +9,11 @@ Object::Object(rapidjson::Value& value) {
     this->width = value["width"].GetDouble();
     this->x = value["x"].GetDouble();
     this->y = value["y"].GetDouble();
-    this->visible = value["visible"].GetBool();
 }
 
-Object::Object() : id(), name(), type(), height(), width(), x(), y(), visible(), Entities::Entity() {}
+Object::Object() : id(), name(), type(), height(), width(), x(), y(), Entities::Entity() {}
 
 Object::~Object() {}
-
-sf::RectangleShape Object::get_rect_sprite() {
-    return this->sprite;
-}
 
 Controllers::Collider Object::get_collider() {
     return Controllers::Collider{this->sprite};
@@ -50,29 +45,4 @@ double Object::get_x() const {
 
 double Object::get_y() const {
     return this->y;
-}
-
-bool Object::get_visible() const {
-    return this->visible;
-}
-
-void Object::set_position(double x, double y) {
-    this->sprite.setPosition(x, y);
-}
-void Object::set_size(double width, double height) {
-    this->sprite.setSize(sf::Vector2f(width, height));
-}
-
-void Object::set_origin(double x, double y) {
-    this->sprite.setOrigin(x, y);
-}
-void Object::set_color(sf::Color color) {
-    this->sprite.setFillColor(color);
-}
-
-void Object::set_thickness(float thick) {
-    this->sprite.setOutlineThickness(thick);
-}
-void Object::set_outline_color(sf::Color color) {
-    this->sprite.setOutlineColor(color);
 }

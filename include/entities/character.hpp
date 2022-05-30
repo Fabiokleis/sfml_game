@@ -44,9 +44,10 @@ namespace Entities {
             CollideStates collide_state;
             States state;
             States last_state;
+            int life_number;
 
         public:
-            Character(sf::Vector2f size, sf::Vector2f velocity, sf::Vector2f position, sf::Vector2f cord,
+            Character(double x, double y, double width, double height, double vx, double vy, int cordx, int cordy,
                       sf::Vector2u image_count, float switch_time, States state, std::string path_name);
 
             Character();

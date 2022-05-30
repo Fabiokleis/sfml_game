@@ -18,11 +18,13 @@ namespace Entities {
             float gravity;
             float delta_time;
             int coin;
-            int life_number;
+
     
     
         public:
-            Player(sf::Vector2f size, sf::Vector2f velocity, sf::Vector2f position, int coin, int life_number, sf::Vector2f cord, sf::Vector2u image_count, float switch_time, States state, const std::string& path_name);
+            Player(double x, double y, double width, double height, double vx, double vy, int cordx, int cordy, int coin, int life_number,
+                   sf::Vector2u image_count, float switch_time, States state,
+                   const std::string &path_name);
 
             Player();
 
@@ -31,7 +33,7 @@ namespace Entities {
             int get_life_number() const;
             void init_physics();
             void update();
-            void restart(sf::Vector2f position, int coin, int life, States state);
+            void restart(double x, double y, int coin, int life, States state);
             void handle_events(Controllers::WindowServer &window_server);
             void handle_player_input(sf::Keyboard::Key key, bool is_pressed);
             void update_input();

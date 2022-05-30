@@ -2,18 +2,30 @@
 using namespace Entities;
 
 Image::Image(const std::string& path_name) {
+    this->load_texture(path_name);
+}
+
+Image::Image(double x, double y, double width, double height, sf::Color color) {
+    this->set_size(width, height);
+    this->set_position(x, y);
+    this->set_color(color);
+}
+
+Image::Image(double x, double y, double width, double height, const std::string& path_name) {
+    this->load_texture(path_name);
+    this->set_size(width, height);
+    this->set_position(x, y);
+}
+
+
+void Image::load_texture(const std::string &path_name) {
+    this->texture = new sf::Texture();
     std::string path = RESOURCE_PATH;
-    if (!this->texture.loadFromFile(path+path_name))
-        std::cout << "ERROR:GAME::COULD NOT LOAD BACKGROUND TEXTURE." << std::endl;
-    this->sprite.setTexture(&this->texture);
-    this->sprite.setSize(sf::Vector2f(this->texture.getSize()));
+    if (!this->texture->loadFromFile(path+path_name))
+        std::cout << "ERROR:GAME::COULD NOT LOAD IMAGE TEXTURE." << std::endl;
+    this->set_texture(this->texture);
+    this->set_size(this->texture->getSize().x, this->texture->getSize().y);
 }
 
-Image::Image(sf::Vector2f position, sf::Vector2f size, sf::Color color) {
-    this->sprite.setSize(size);
-    this->sprite.setPosition(position);
-    this->sprite.setFillColor(color);
-}
-
-Image::Image() = default;
+Image::Image() {}
 Image::~Image() {};

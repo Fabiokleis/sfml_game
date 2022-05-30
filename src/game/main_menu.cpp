@@ -4,8 +4,8 @@
 
 using namespace Controllers;
 
-MainMenu::MainMenu(Entities::Text &title, Entities::Image &menu_image, sf::Vector2f position, std::vector<Entities::Text> &text_options) :
-    Menu(title, menu_image, position, text_options), load_save(), state(restart)
+MainMenu::MainMenu(Entities::Text &title, Entities::Image &menu_image, double x, double y, std::vector<Entities::Text> &text_options) :
+    Menu(title, menu_image, x, y, text_options), load_save(), state(restart)
 {
     std::string path = RESOURCE_PATH;
     std::string buf = Maps::Map::read_file(path+"player/save_state.json");

@@ -26,7 +26,7 @@ namespace Controllers {
 
             
         public:
-            Menu(Entities::Text &title, Entities::Image &menu_image, sf::Vector2f position, std::vector<Entities::Text> &text_options);
+            Menu(Entities::Text &title, Entities::Image &menu_image, double x, double y, std::vector<Entities::Text> &text_options);
             ~Menu();
             sf::RectangleShape get_sprite();
             void populate_option(Entities::Text& options);

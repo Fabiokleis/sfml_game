@@ -5,14 +5,12 @@
 
 namespace Entities {
 
-    class Coin {
+    class Coin : public Image {
         private:
             int id;
-            Entities::Image *image;
 
         public:
-            Coin(int id, double x, double y, double width, double height);
-            sf::RectangleShape get_sprite();
+            Coin(const std::string& coin_path, int id, double x, double y, double width, double height);
             int get_id() const;
             ~Coin();
     };

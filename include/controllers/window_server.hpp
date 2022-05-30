@@ -3,16 +3,7 @@
 #include <iostream>
 #include <string>
 #include <SFML/Graphics.hpp>
-#define WINDOW_X 1280
-#define WINDOW_Y 720
-#define FPS 60
-#define FONT_PATH "fonts/free_pixel.ttf"
-#define PLAYER_SPRITE_PATH "player/player_sprite.png"
-#define TIME 256
-#define SAVE_PATH "player/save_state.json"
-#define PLATFORM1 "destroyed_world.json"
-#define PLATFORM2 "sorcerer_castle.json"
-#define KEYBOARD "menu/keyboard.png"
+#include "config.h"
 
 namespace Controllers {
 

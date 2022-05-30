@@ -1,22 +1,23 @@
 #include <iostream>
 #include "character.hpp"
 #include "player.hpp"
-
 using namespace Entities;
-Player::Player(sf::Vector2f size, sf::Vector2f velocity, sf::Vector2f position, int coin, int life_number,
-               sf::Vector2f cord, sf::Vector2u image_count, float switch_time, States state,
+
+Player::Player(double x, double y, double width, double height, double vx, double vy, int cordx, int cordy, int coin, int life_number,
+               sf::Vector2u image_count, float switch_time, States state,
                const std::string &path_name) :
-        Character(size, velocity, position, cord, image_count, switch_time, state, path_name),
-        acceleration(), jump_height(), gravity(), delta_time(), coin(coin), life_number(life_number)
+        Character(x, y, width, height, vx, vy, cordx, cordy, image_count, switch_time, state, path_name),
+        acceleration(), jump_height(), gravity(), delta_time(), coin(coin)
 {
     this->init_physics();
     this->sprite.setOutlineThickness(1.0f);
     this->sprite.setOutlineColor(sf::Color::Green);
+    this->life_number = life_number;
 }
 
-Player::Player() : acceleration(), jump_height(), gravity(), delta_time(), coin(), life_number() {}
+Player::Player() : acceleration(), jump_height(), gravity(), delta_time(), coin() {}
 
-Player::~Player() = default;
+Player::~Player() {}
 
 void Player::init_physics() {
     this->jump_height = 20.0f;
@@ -227,8 +228,8 @@ void Player::update() {
 
 }
 
-void Player::restart(sf::Vector2f position, int coin, int life, States state) {
-    this->set_position(position);
+void Player::restart(double x, double y, int coin, int life, States state) {
+    this->set_position(x, y);
     this->set_state(state);
     this->coin = coin;
     this->life_number = life;

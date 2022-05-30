@@ -9,11 +9,13 @@ namespace Entities {
 
     class Image : public Entity {
         private:
-            sf::Texture texture;
+            sf::Texture *texture;
 
         public:
             Image(const std::string& path_name);
-            Image(sf::Vector2f position, sf::Vector2f size, sf::Color color);
+            Image(double x, double y, double width, double height, sf::Color color=sf::Color::Black);
+            Image(double x, double y, double width, double height, const std::string &path_name);
+            void load_texture(const std::string& path_name);
             Image();
             ~Image();
     };

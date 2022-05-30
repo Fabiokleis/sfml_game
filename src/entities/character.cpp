@@ -5,20 +5,19 @@
 #include "collider.hpp"
 #include "config.h"
 using namespace Entities;
-
-Character::Character(sf::Vector2f size, sf::Vector2f velocity, sf::Vector2f position, sf::Vector2f cord, sf::Vector2u image_count, float switch_time, States state, std::string path_name) :
-        velocity(velocity), path_name(path_name), image_count(image_count), switch_time(switch_time), state(state), collide_state(), last_state(state),
-        Entity(position, size)
+Character::Character(double x, double y, double width, double height, double vx, double vy, int cordx, int cordy,
+          sf::Vector2u image_count, float switch_time, States state, std::string path_name) :
+        velocity(vx, vy), path_name(path_name), image_count(image_count), switch_time(switch_time), state(state), collide_state(), last_state(state), life_number(0),
+        Entity(x, y, width, height)
 {
-    this->shape = sf::IntRect(static_cast<int>(cord.x), static_cast<int>(cord.y), static_cast<int>(size.x), static_cast<int>(size.y));
+    this->shape = sf::IntRect(cordx, cordy, static_cast<int>(width), static_cast<int>(height));
     init_texture();
     this->sprite.setTextureRect(shape);
     this->sprite.setTexture(&this->texture);
     this->animation = new Controllers::Animation(this->texture.getSize(), this->image_count, this->switch_time);
-
 }
 
-Character::Character() : velocity(), path_name(), image_count(), switch_time(), state(idle), collide_state(), last_state(idle), animation() {};
+Character::Character() : life_number(), velocity(), path_name(), image_count(), switch_time(), state(idle), collide_state(), last_state(), animation() {}
 
 Character::~Character() {
     delete animation;

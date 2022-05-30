@@ -1,12 +1,12 @@
 #include "menu.hpp"
 using namespace Controllers;
 
-Menu::Menu(Entities::Text &title, Entities::Image &menu_image, sf::Vector2f position, std::vector<Entities::Text> &text_options) :
+Menu::Menu(Entities::Text &title, Entities::Image &menu_image, double x, double y, std::vector<Entities::Text> &text_options) :
     menu_image(menu_image), text_options(text_options), title(title)
 {
     this->menu_counter = 0;
     this->max_options = 0;
-    this->menu_image.set_position(position);
+    this->menu_image.set_position(x, y);
     this->on_menu = true;
     this->on_submenu = false;
     this->from_game = false;

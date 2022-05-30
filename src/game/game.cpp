@@ -123,8 +123,8 @@ void Game::count_down() {
 
 void Game::init_menu() {
     // game menu
-    this->menu_bg = new Entities::Image(sf::Vector2f(0.0f, 0.0f), sf::Vector2f(WINDOW_X, WINDOW_Y), sf::Color::Black);
-    this->settings_bg = new Entities::Image(sf::Vector2f(0.0f, 0.0f), sf::Vector2f(WINDOW_X, WINDOW_Y), sf::Color::Black);
+    this->menu_bg = new Entities::Image(0, 0, WINDOW_X, WINDOW_Y, sf::Color::Black);
+    this->settings_bg = new Entities::Image(0.0f, 0.0f, WINDOW_X, WINDOW_Y, sf::Color::Black);
     this->menu_title = new Entities::Text(
             FONT_PATH,
             80,
@@ -138,8 +138,8 @@ void Game::init_menu() {
 
     this->menu_title->set_attr(sf::Color::White, sf::Color(95, 0, 160), 3.0f, 1 << 1);
 
-    this->menu = new Controllers::MainMenu(*menu_title, *menu_bg, sf::Vector2f(0.0f, 0.0f), this->menu_options);
-    this->settings = new Controllers::SubMenu(*menu_title, *settings_bg, sf::Vector2f(0.0f, 0.0f), this->settings_options);
+    this->menu = new Controllers::MainMenu(*menu_title, *menu_bg, 0, 0, this->menu_options);
+    this->settings = new Controllers::SubMenu(*menu_title, *settings_bg, 0, 0, this->settings_options);
 
     // submenu actions
     this->about = new Entities::Text(
@@ -327,7 +327,6 @@ void Game::init_entities() {
             sf::Color::Yellow);
 
 
-    sf::Vector2f p_pos(this->start_location.get_x(), this->start_location.get_y());
     // create a new player with save
     if (this->menu->get_load()) {
         std::string path = RESOURCE_PATH;
@@ -340,43 +339,42 @@ void Game::init_entities() {
         this->total_time = TIME;
 
     } else {
+
         // create a new player without save
         this->player = new Entities::Player(
-                sf::Vector2f(45.0f, 80.0f),
-                sf::Vector2f(0.0f, 0.0f),
-                p_pos,
-                0,
-                5,
-                sf::Vector2f(0.0f, 0.0f),
-                sf::Vector2u(3, 6),
-                0.1f,
-                Entities::States::idle,
-                std::string(PLAYER_SPRITE_PATH));
+                this->start_location.get_x(), this->start_location.get_y(), 45, 80, 0, 0, 0, 0, 0, 5,
+                sf::Vector2u(3, 6), 0.1f, Entities::idle, PLAYER_SPRITE_PATH);
     }
-
 
     // life
     this->life_image = new Entities::Image("map/head_sprite.png");
-    this->life_image->set_position(sf::Vector2f(32.0f, 32.0f));
+    this->life_image->set_position(32.0f, 32.0f);
     this->life_text = new Entities::Text(
             FONT_PATH,
             32,
             0.0f,
             0.0f,
-            sf::Color(192, 192, 192)
+            sf::Color(255, 251, 232),
+            0,
+            sf::Color(0, 0, 0),
+            2.0f,
+            ""
             );
 
     // coins
     this->coin_image = new Entities::Image("map/coin.png");
-    this->coin_image->set_position(sf::Vector2f(WINDOW_X - 64, this->coin_image->get_sprite().getSize().y));
+    this->coin_image->set_position(WINDOW_X - 64, this->coin_image->get_sprite().getSize().y);
 
     this->coin_number = new Entities::Text(
             FONT_PATH,
             32,
             0.0f,
             0.0f,
-            sf::Color(192, 192, 192),
-            0
+            sf::Color(255, 251, 232),
+            0,
+            sf::Color(0, 0, 0),
+            2.0f,
+            ""
             );
 
     // time text
@@ -385,9 +383,9 @@ void Game::init_entities() {
             48,
             WINDOW_X / 2 - 32.0f,
             32.0f,
-            sf::Color(192, 192, 145),
+            sf::Color(255, 251, 232),
             0,
-            sf::Color(150, 0, 205),
+            sf::Color(0, 0, 0),
             2.0f,
             "");
 }
@@ -627,21 +625,12 @@ void Game::parse_save(const std::string& buf) {
     std::string map_name = saved_file["map_name"].GetString();
 
     if (this->player) {
-        this->player->restart(sf::Vector2f(x, y), coin, life, Entities::idle);
+        this->player->restart(x, y, coin, life, Entities::idle);
     } else {
         this->player = new Entities::Player(
-                sf::Vector2f(45.0f, 80.0f),
-                sf::Vector2f(0.0f, 0.0f),
-                sf::Vector2f(x, y),
-                coin,
-                life,
-                sf::Vector2f(0.0f, 0.0f),
-                sf::Vector2u(3, 6),
-                0.1f,
-                Entities::States::idle,
-                std::string(PLAYER_SPRITE_PATH));
+                x, y, 45, 80, 0, 0, 0, 0, coin, life,
+                sf::Vector2u(3, 6), 0.1f, Entities::idle, PLAYER_SPRITE_PATH);
     }
-
     this->init_map(map_name);
 
 }
@@ -662,9 +651,8 @@ void Game::restart_player() {
                 // restart at beginning of map
                 if (this->player->get_state() == Entities::dead) {
                     this->player->restart(
-                            sf::Vector2f(
-                                    this->start_location.get_x(),
-                                    this->start_location.get_y()),
+                            this->start_location.get_x(),
+                            this->start_location.get_y(),
                             this->player->get_coins(),
                             this->player->get_life_number(),
                             Entities::idle);
@@ -679,9 +667,8 @@ void Game::restart_player() {
     } else {
         if (this->player->get_state() == Entities::dead) {
             this->player->restart(
-                    sf::Vector2f(
-                            this->start_location.get_x(),
-                            this->start_location.get_y()),
+                    this->start_location.get_x(),
+                    this->start_location.get_y(),
                     this->player->get_coins(),
                     this->player->get_life_number(),
                     Entities::idle);
@@ -754,13 +741,13 @@ void Game::render_map() {
         this->window_server->render(this->tilemap[i]);
     }
     for (auto &plat : this->platforms.get_platforms()) {
-        this->window_server->render(plat.get_rect_sprite());
+        this->window_server->render(plat.get_sprite());
     }
     for (auto &wall : this->walls.get_walls()) {
-        this->window_server->render(wall.get_rect_sprite());
+        this->window_server->render(wall.get_sprite());
     }
     for (auto &tile : this->tiles.get_tiles()) {
-        this->window_server->render(tile.get_rect_sprite());
+        this->window_server->render(tile.get_sprite());
     }
     for (auto &coin : this->coins) {
         this->window_server->render(coin.get_sprite());
@@ -798,9 +785,8 @@ void Game::render() {
 void Game::next_map() {
     this->init_map(PLATFORM2);
     this->player->restart(
-            sf::Vector2f(
             this->start_location.get_x(),
-            this->start_location.get_y()),
+            this->start_location.get_y(),
             this->player->get_coins(),
             this->player->get_life_number(),
             Entities::idle);

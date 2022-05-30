@@ -1,8 +1,8 @@
 #include "sub_menu.hpp"
 using namespace Controllers;
 
-SubMenu::SubMenu(Entities::Text &title, Entities::Image &menu_image, sf::Vector2f position, std::vector<Entities::Text> &text_options) :
-    Menu(title, menu_image, position, text_options)
+SubMenu::SubMenu(Entities::Text &title, Entities::Image &menu_image, double x, double y, std::vector<Entities::Text> &text_options) :
+    Menu(title, menu_image, x, y, text_options), state()
 {
     // default submenu
     this->set_on_menu(false);
