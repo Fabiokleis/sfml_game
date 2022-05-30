@@ -5,8 +5,10 @@
 
 namespace Controllers {
     enum MenuStates {
-        restart = 0,
+        none = 0,
+        restart,
         loading,
+        credits,
         exit,
     };
     class MainMenu : public Menu {

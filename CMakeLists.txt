@@ -6,11 +6,12 @@ file(GLOB SOURCE ./src/main.cpp src/**/*.cpp)
 
 set(RESOURCE_PATH "${PROJECT_SOURCE_DIR}/assets/")
 
-#set(SFML_STATIC_LIBRARIES TRUE)
-
 configure_file(./include/config.h.in config.h)
 
-#set(SFML_DIR /usr/lib64/cmake/SFML)
+if (WIN32)
+    set(SFML_STATIC_LIBRARIES TRUE)
+    set(SFML_DIR C:/Program Files/SFML-2.5.1) # set your path on Windows
+endif()
 
 find_package(SFML REQUIRED graphics window)
 

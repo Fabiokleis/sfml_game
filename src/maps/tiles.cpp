@@ -31,4 +31,4 @@ std::vector<Entities::Coin> Tiles::get_coins() {
 }
 
 
-Tiles::~Tiles() = default;
+Tiles::~Tiles() {}

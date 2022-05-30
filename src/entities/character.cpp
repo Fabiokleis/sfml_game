@@ -18,7 +18,7 @@ Character::Character(sf::Vector2f size, sf::Vector2f velocity, sf::Vector2f posi
 
 }
 
-Character::Character() : velocity(), path_name(), image_count(), switch_time(), state(idle), collide_state(), last_state(idle) {};
+Character::Character() : velocity(), path_name(), image_count(), switch_time(), state(idle), collide_state(), last_state(idle), animation() {};
 
 Character::~Character() {
     delete animation;

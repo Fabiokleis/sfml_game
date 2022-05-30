@@ -41,7 +41,7 @@ void Player::update_life_number() {
     if (state == dead) {
         this->life_number--;
     } else {
-        if (this->life_number == 0) {
+        if (this->life_number <= 0) {
             this->life_number = 5;
 
         } else if (this->life_number >= 1) {

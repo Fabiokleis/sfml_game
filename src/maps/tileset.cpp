@@ -20,7 +20,10 @@ TileSet::TileSet (int firstg_id, const std::string& tileset) {
     this->type = tileset_doc["type"].GetString();
 }
 
-TileSet::~TileSet() = default;
+TileSet::TileSet() : firstg_id(), columns(), image(), image_height(), image_width(),
+        margin(), name(), tile_width(), tile_height(), type(), tile_count(), spacing() {}
+
+TileSet::~TileSet() {}
 
 int TileSet::get_firstg_id() const {
     return this->firstg_id;

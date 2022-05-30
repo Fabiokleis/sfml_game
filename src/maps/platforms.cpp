@@ -23,4 +23,4 @@ std::vector<Object> Platforms::get_platforms() {
     return this->platforms_array;
 }
 
-Platforms::~Platforms() = default;
+Platforms::~Platforms() {}

@@ -6,7 +6,8 @@
 
 Game::Game() :
         player(), map(), menu_bg(), menu(), settings(), settings_bg(), fps_text(), delta_time(), menu_options(),
-        coin_image(), coin_number(), time_text(), total_time(TIME), life_image(), life_text(), score_text(), menu_title()
+        coin_image(), coin_number(), time_text(), total_time(TIME), life_image(), life_text(), score_text(),
+        menu_title(), about(), showkb(), credit()
 {
     this->window_server = new Controllers::WindowServer("c++ game");
     this->on_menu = true;
@@ -20,9 +21,10 @@ void Game::exec() {
 
     if (this->window_server->is_open() && !this->on_menu) {
 
-        if (this->menu->get_saved()) {
+        // only load saved map if menu load save is selected
+        if (this->menu->get_saved() && this->menu->get_state() != Controllers::restart) {
             // verify if saved map is first or second
-            if (verify_map()) {
+            if (this->verify_map()) {
                 this->init_map(PLATFORM1);
             } else {
                 this->init_map(PLATFORM2);
@@ -130,14 +132,60 @@ void Game::init_menu() {
             100,
             sf::Color::White,
             1 << 1,
-            sf::Color::Transparent,
+            sf::Color(95, 0, 160),
             0.0f,
             "Jaime Adventures");
 
-    this->menu_title->set_attr(sf::Color::White, sf::Color::Green, 3.0f, 1 << 1);
+    this->menu_title->set_attr(sf::Color::White, sf::Color(95, 0, 160), 3.0f, 1 << 1);
 
     this->menu = new Controllers::MainMenu(*menu_title, *menu_bg, sf::Vector2f(0.0f, 0.0f), this->menu_options);
     this->settings = new Controllers::SubMenu(*menu_title, *settings_bg, sf::Vector2f(0.0f, 0.0f), this->settings_options);
+
+    // submenu actions
+    this->about = new Entities::Text(
+            FONT_PATH,
+            24,
+            WINDOW_X / 2.0f - 480.0f,
+            WINDOW_Y / 2.0f - 64.0f,
+            sf::Color::White,
+            0,
+            sf::Color::Transparent,
+            0.0f,
+            "About\n\n\n"
+            "Fabio Henrique Kleis Ribas Correa, Francisco Luis Dunaiski Bruginski\n"
+            "fabiohenrique@utfpr.edu.br, fbruginski@utfpr.edu.br\n"
+            "\n"
+            "Disciplina: Tecnicas de Programacao - CSE20 / S3  - Prof. Dr. Jean M. Simao\n"
+            "Departamento Academico de Informatica - DAINF - Campus de Curitiba\n"
+            "Curso Bacharelado em: Engenharia da Computacao / Sistemas de Informacao\n"
+            "Universidade Tecnologica Federal do Parana - UTFPR"
+
+    );
+
+    // credits
+    this->credit = new Entities::Text(
+            FONT_PATH,
+            24,
+            WINDOW_X / 2.0f - 480.0f,
+            WINDOW_Y / 2.0f - 64.0f,
+            sf::Color::White,
+            0,
+            sf::Color::Transparent,
+            0.0f,
+            "Desenvolvimento\n"
+            "\n"
+            "Fabio Henrique Kleis Ribas Correa, Francisco Luis Dunaiski Bruginski\n"
+            "fabiohenrique@utfpr.edu.br, fbruginski@utfpr.edu.br\n"
+            "\n"
+            "Artes e Mapas\n"
+            "\n"
+            "Fabio Henrique Kleis Ribas Correa, Alessandro Kleis\n"
+            "fabiohenrique@utfpr.edu.br"
+    );
+
+    // load a keyboard mapping explain
+    this->showkb = new Entities::Image(KEYBOARD);
+
 
     this->menu_entries();
 }
@@ -145,10 +193,10 @@ void Game::init_menu() {
 void Game::menu_entries() {
     /*
         [1] New Game
-        [2] Load Map
+        [2] Load save
             [1] Resume
-            [2] Map1
-            [3] Map2
+            [2] About
+            [3] Show Controls
         [3] Credits
         [4] Exit
     */
@@ -188,12 +236,12 @@ void Game::menu_entries() {
                 32,
                 WINDOW_X / 2.0f + 128.0f,
                 WINDOW_Y / 2.0f + 128.0f,
-                sf::Color::Yellow,
+                sf::Color(192, 192, 192),
                 0,
                 sf::Color::Transparent,
                 0.0f, map_name);
 
-        this->score_text->set_attr(sf::Color::Yellow, sf::Color::Green, 1.0f, 0);
+        this->score_text->set_attr(sf::Color(192, 192, 192), sf::Color(95, 0, 160), 1.0f, 0);
 
     }
     this->menu->populate_option(*new Entities::Text(
@@ -321,22 +369,27 @@ void Game::init_entities() {
     // coins
     this->coin_image = new Entities::Image("map/coin.png");
     this->coin_image->set_position(sf::Vector2f(WINDOW_X - 64, this->coin_image->get_sprite().getSize().y));
+
     this->coin_number = new Entities::Text(
             FONT_PATH,
             32,
             0.0f,
             0.0f,
-            sf::Color(192, 192, 192)
+            sf::Color(192, 192, 192),
+            0
             );
 
     // time text
     this->time_text = new Entities::Text(
             FONT_PATH,
             48,
-            0.0f,
-            0.0f,
-             sf::Color(192, 192, 192)
-            );
+            WINDOW_X / 2 - 32.0f,
+            32.0f,
+            sf::Color(192, 192, 145),
+            0,
+            sf::Color(150, 0, 205),
+            2.0f,
+            "");
 }
 
 void Game::init_map(std::string map_name) {
@@ -403,7 +456,6 @@ void Game::handle_resets() {
 
 void Game::handle_collision() {
 
-
     this->handle_player_collision();
 }
 
@@ -451,7 +503,9 @@ void Game::handle_player_collision() {
         if (tile.get_type() == "spike" ) {
             if (tile.get_collider().check_collision(this->player->get_collider(), this->player->get_velocity(),
                                                     true)) {
-                this->player->on_collision(tile.get_type());
+                if (this->player->get_state() != Entities::dead) {
+                    this->player->on_collision(tile.get_type());
+                }
             }
         }
         if (tile.get_type() == "block") {
@@ -588,7 +642,7 @@ void Game::parse_save(const std::string& buf) {
                 std::string(PLAYER_SPRITE_PATH));
     }
 
-    this->map = new Maps::Map(map_name);
+    this->init_map(map_name);
 
 }
 void Game::restart_player() {
@@ -600,27 +654,27 @@ void Game::restart_player() {
     if (!buf.empty()) {
         // parse save if not restarting
         if (this->menu->get_state() != Controllers::restart) {
-            if (this->menu->get_state() == Controllers::loading || this->player->get_state() == Entities::dead) {
+            if(this->menu->get_state() == Controllers::loading) {
                 this->parse_save(buf);
-            }
-        } else {
 
-            // restart at beginning of map
-            if (this->player->get_state() == Entities::dead) {
-                this->player->restart(
-                        sf::Vector2f(
-                                this->start_location.get_x(),
-                                this->start_location.get_y()),
-                        this->player->get_coins(),
-                        this->player->get_life_number(),
-                        Entities::idle);
-
-                std::string map_name = this->map->get_name();
-                // restart map
-                this->init_map(map_name);
-                // restart time
-                this->total_time = TIME;
             }
+        } else if (this->menu->get_state() == Controllers::restart) {
+                // restart at beginning of map
+                if (this->player->get_state() == Entities::dead) {
+                    this->player->restart(
+                            sf::Vector2f(
+                                    this->start_location.get_x(),
+                                    this->start_location.get_y()),
+                            this->player->get_coins(),
+                            this->player->get_life_number(),
+                            Entities::idle);
+
+                    std::string map_name = this->map->get_name();
+                    // restart map
+                    this->init_map(map_name);
+                    // restart time
+                    this->total_time = TIME;
+                }
         }
     } else {
         if (this->player->get_state() == Entities::dead) {
@@ -655,13 +709,19 @@ void Game::render_menu() {
     this->window_server->render(this->menu->get_sprite());
     this->window_server->reset_view();
     this->window_server->render(this->menu_title->get_text());
-    for (auto &option : this->menu_options) {
-        this->window_server->render(option.get_text());
-    }
-    if (this->menu->get_saved()) {
+    if (this->menu->get_state() == Controllers::credits) {
         this->window_server->reset_view();
-        this->window_server->render(this->score_text->get_text());
+        this->window_server->render(this->credit->get_text());
+        this->window_server->reset_view();
+    } else {
+        for (auto &option: this->menu_options) {
+            this->window_server->render(option.get_text());
+        }
+        if (this->menu->get_saved()) {
+            this->window_server->reset_view();
+            this->window_server->render(this->score_text->get_text());
 
+        }
     }
     this->window_server->display();
 }
@@ -671,10 +731,18 @@ void Game::render_settings() {
     this->window_server->reset_view();
     this->window_server->render(this->settings->get_sprite());
     this->window_server->reset_view();
-    this->window_server->render(this->menu_title->get_text());
-    for (auto &option : this->settings_options) {
-        this->window_server->render(option.get_text());
+
+    if (this->settings->get_state() == Controllers::showkb) {
+        this->window_server->render(this->showkb->get_sprite());
+    } else if (this->settings->get_state() == Controllers::about) {
+        this->window_server->render(this->about->get_text());
+    } else {
+        for (auto &option: this->settings_options) {
+            this->window_server->render(option.get_text());
+        }
     }
+    this->window_server->render(this->menu_title->get_text());
+    this->window_server->reset_view();
     this->window_server->display();
 }
 
