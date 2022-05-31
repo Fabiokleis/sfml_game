@@ -1819,7 +1819,7 @@ private:
 //!@cond RAPIDJSON_HIDDEN_FROM_DOXYGEN
 #define N NumberToken
 #define N16 N,N,N,N,N,N,N,N,N,N,N,N,N,N,N,N
-        // Maps from ASCII to Token
+        // Levels from ASCII to Token
         static const unsigned char tokenMap[256] = {
             N16, // 00~0F
             N16, // 10~1F

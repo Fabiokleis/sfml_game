@@ -3,12 +3,11 @@
 #include <fstream>
 
 Game::Game() :
-        player(), map(), menu_bg(), menu(), settings(), settings_bg(), fps_text(), delta_time(), menu_options(),
-        coin_image(), coin_number(), time_text(), total_time(TIME), life_image(), life_text(), score_text(),
-        menu_title(), about(), showkb(), credit()
+        player(), phase(), menu(), settings(), delta_time(), coin_image(), coin_number(),
+        time_text(), total_time(TIME), life_image(), life_text(), score_text(), on_menu()
 {
-    this->window_server = new Controllers::WindowServer("c++ game");
-    this->on_menu = true;
+    this->graphic_manager = new Managers::GraphicManager("c++ game");
+
 }
 
 void Game::exec() {
@@ -18,55 +17,51 @@ void Game::exec() {
     this->init_score();
     this->menu_loop();
 
-    if (this->window_server->is_open() && !this->on_menu) {
+    if (this->graphic_manager->is_open() && !this->on_menu) {
 
-        // only load saved map if menu load save is selected
-        if (this->menu->get_saved() && this->menu->get_state() != Controllers::restart) {
-            // verify if saved map is first or second
+        // only load saved phase if menu load save is selected
+        if (this->menu->get_saved() && this->menu->get_state() != Managers::restart) {
+            // verify if saved phase is first or second
             if (this->verify_map()) {
-                this->init_map(PLATFORM1);
+                this->init_phase(PLATFORM1);
             } else {
-                this->init_map(PLATFORM2);
+                this->init_phase(PLATFORM2);
             }
         } else {
-            // default first map when not save found and not from load
-            this->init_map(PLATFORM1);
+            // default first phase when not save found and not from load
+            this->init_phase(PLATFORM1);
         }
         this->init_entities();
-        // to init timer after load map and any other entity
+        // to init timer after load phase and any other entity
         sf::Clock timer;
         this->game_loop(timer);
     }
 }
 
 Game::~Game() {
-    delete fps_text;
     delete player;
-    delete map;
-    delete menu_bg;
-    delete settings_bg;
+    delete phase;
     delete settings;
     delete menu;
-    delete window_server;
+    delete graphic_manager;
     delete coin_image;
     delete coin_number;
     delete life_image;
     delete life_text;
     delete score_text;
-    delete menu_title;
 }
 
 void Game::menu_loop(bool from_game, bool from_player_dead) {
-    while (this->window_server->is_open() && this->on_menu) {
+    while (this->graphic_manager->is_open() && this->on_menu) {
         if (this->settings->get_on_menu()) {
-            this->settings->handle_events(*this->window_server);
+            this->settings->handle_events(*this->graphic_manager);
             this->menu->set_on_submenu(this->settings->get_on_menu());
             this->settings->update(from_game, from_player_dead);
             this->render_settings();
         } else {
             std::cout << "state: " << this->menu->get_state() << std::endl;
             this->on_menu = this->menu->get_on_menu();
-            this->menu->handle_events(*this->window_server);
+            this->menu->handle_events(*this->graphic_manager);
             this->settings->set_on_menu(this->menu->get_on_submenu());
             this->menu->update(from_game, from_player_dead);
             this->render_menu();
@@ -77,7 +72,7 @@ void Game::menu_loop(bool from_game, bool from_player_dead) {
 
 bool Game::verify_map() {
     std::string path = RESOURCE_PATH;
-    std::string buf = Maps::Map::read_file(path+SAVE_PATH);
+    std::string buf = Levels::Level::read_file(path + SAVE_PATH);
     rapidjson::Document saved_file;
     saved_file.Parse(buf.c_str());
     std::string map_name = saved_file["map_name"].GetString();
@@ -88,26 +83,17 @@ bool Game::verify_map() {
 }
 
 void Game::game_loop(sf::Clock timer) {
-    float fps;
-    sf::Clock local_clock;
-    sf::Time previousTime = local_clock.getElapsedTime();
-    sf::Time currentTime;
     this->clock.restart();
-    while (this->window_server->is_open() && !this->on_menu) {
+    while (this->graphic_manager->is_open() && !this->on_menu) {
         float aux_time = timer.getElapsedTime().asSeconds();
         if (aux_time > 1 && this->total_time >= 0) {
             this->set_time();
             timer.restart();
         }
 
-        currentTime = local_clock.getElapsedTime();
-        fps = 1.0f / (currentTime.asSeconds() - previousTime.asSeconds()); // the asSeconds returns a float
-        previousTime = currentTime;
-
         this->delta_time = this->clock.restart().asSeconds();
         this->player->reset_clock(delta_time);
         this->set_score(this->player->get_coins(), this->player->get_life_number());
-        this->set_fps(fps);
 
         this->update();
         this->render();
@@ -122,71 +108,21 @@ void Game::count_down() {
 
 void Game::init_menu() {
     // game menu
-    this->menu_bg = new Entities::Image(0, 0, WINDOW_X, WINDOW_Y, sf::Color::Black);
-    this->settings_bg = new Entities::Image(0.0f, 0.0f, WINDOW_X, WINDOW_Y, sf::Color::Black);
-    this->menu_title = new Entities::Text(
-            FONT_PATH,
-            80,
-            WINDOW_X / 2 - 240.0f,
-            100,
-            sf::Color::White,
-            1 << 1,
-            sf::Color(95, 0, 160),
-            0.0f,
-            "Jaime Adventures");
-
-    this->menu_title->set_attr(sf::Color::White, sf::Color(95, 0, 160), 3.0f, 1 << 1);
-
-    this->menu = new Controllers::MainMenu(*menu_title, *menu_bg, 0, 0, this->menu_options);
-    this->settings = new Controllers::SubMenu(*menu_title, *settings_bg, 0, 0, this->settings_options);
-
-    // submenu actions
-    this->about = new Entities::Text(
-            FONT_PATH,
-            24,
-            WINDOW_X / 2.0f - 480.0f,
-            WINDOW_Y / 2.0f - 64.0f,
-            sf::Color::White,
-            0,
-            sf::Color::Transparent,
-            0.0f,
-            "About\n\n\n"
-            "Fabio Henrique Kleis Ribas Correa, Francisco Luis Dunaiski Bruginski\n"
-            "fabiohenrique@utfpr.edu.br, fbruginski@utfpr.edu.br\n"
-            "\n"
-            "Disciplina: Tecnicas de Programacao - CSE20 / S3  - Prof. Dr. Jean M. Simao\n"
-            "Departamento Academico de Informatica - DAINF - Campus de Curitiba\n"
-            "Curso Bacharelado em: Engenharia da Computacao / Sistemas de Informacao\n"
-            "Universidade Tecnologica Federal do Parana - UTFPR"
-
-    );
-
-    // credits
-    this->credit = new Entities::Text(
-            FONT_PATH,
-            24,
-            WINDOW_X / 2.0f - 480.0f,
-            WINDOW_Y / 2.0f - 64.0f,
-            sf::Color::White,
-            0,
-            sf::Color::Transparent,
-            0.0f,
-            "Desenvolvimento\n"
-            "\n"
-            "Fabio Henrique Kleis Ribas Correa, Francisco Luis Dunaiski Bruginski\n"
-            "fabiohenrique@utfpr.edu.br, fbruginski@utfpr.edu.br\n"
-            "\n"
-            "Artes e Mapas\n"
-            "\n"
-            "Fabio Henrique Kleis Ribas Correa, Alessandro Kleis\n"
-            "fabiohenrique@utfpr.edu.br"
-    );
-
-    // load a keyboard mapping explain
-    this->showkb = new Entities::Image(KEYBOARD);
-
-
-    this->menu_entries();
+    /*
+    [0] New Game
+    [1] Load save
+    [2] Level 1
+    [3] Level 2
+    [4] Settings
+        [0] Resume
+        [1] About
+        [2] Show Controls
+    [5] Credits
+    [6] Exit
+    */
+    this->on_menu = true;
+    this->menu = new Managers::MainMenu(0, 0);
+    this->settings = new Managers::SubMenu(0, 0);
 }
 
 
@@ -195,7 +131,7 @@ void Game::init_score() {
     if (this->menu->get_saved()) {
         std::string path = RESOURCE_PATH;
         path += SAVE_PATH;
-        std::string buf = Maps::Map::read_file(path);
+        std::string buf = Levels::Level::read_file(path);
         rapidjson::Document saved_file;
         saved_file.Parse(buf.c_str());
 
@@ -226,120 +162,16 @@ void Game::init_score() {
     }
 }
 
-void Game::menu_entries() {
-    /*
-        [1] New Game
-        [2] Load save
-            [1] Resume
-            [2] About
-            [3] Show Controls
-        [3] Credits
-        [4] Exit
-    */
-
-    // populate menu
-    this->menu->populate_option(*new Entities::Text(
-            FONT_PATH,
-            48,
-            WINDOW_X / 2.0f - 64.0f,
-            WINDOW_Y / 2.0f - 128.0f,
-            sf::Color::White,
-            0,
-            sf::Color::Transparent,
-            0.0f, "New Game"));
-
-
-    this->menu->populate_option(*new Entities::Text(
-            FONT_PATH,
-            48,
-            WINDOW_X / 2.0f - 64.0f,
-            WINDOW_Y / 2.0f - 64.0f,
-            sf::Color::White,
-            0,
-            sf::Color::Transparent,
-            0.0f, "Load save"));
-
-
-    this->menu->populate_option(*new Entities::Text(
-            FONT_PATH,
-            48,
-            WINDOW_X / 2.0f - 64.0f,
-            WINDOW_Y / 2.0f,
-            sf::Color::White,
-            0,
-            sf::Color::Transparent,
-            0.0f,
-            "Settings"));
-    this->menu->populate_option(*new Entities::Text(
-            FONT_PATH,
-            48,
-            WINDOW_X / 2.0f - 64.0f,
-            WINDOW_Y / 2.0f + 64.0f,
-            sf::Color::White,
-            0,
-            sf::Color::Transparent,
-            0.0f,
-            "Credits"));
-    this->menu->populate_option(*new Entities::Text(
-            FONT_PATH,
-            48,
-            WINDOW_X / 2.0f - 64.0f,
-            WINDOW_Y / 2.0f + 128.0f,
-            sf::Color::White,
-            0,
-            sf::Color::Transparent,
-            0.0f,
-            "Exit"));
-
-    // populate load
-    this->settings->populate_option(*new Entities::Text(
-            FONT_PATH,
-            48,
-            WINDOW_X / 2.0f - 64.0f,
-            WINDOW_Y / 2.0f - 64.0f,
-            sf::Color::White,
-            0,
-            sf::Color::Transparent,
-            0.0f, "Resume"));
-    this->settings->populate_option(*new Entities::Text(
-            FONT_PATH,
-            48,
-            WINDOW_X / 2.0f - 64.0f,
-            WINDOW_Y / 2.0f,
-            sf::Color::White,
-            0,
-            sf::Color::Transparent,
-            0.0f, "About"));
-    this->settings->populate_option(*new Entities::Text(
-            FONT_PATH,
-            48,
-            WINDOW_X / 2.0f - 64.0f,
-            WINDOW_Y / 2.0f + 64.0f,
-            sf::Color::White,
-            0,
-            sf::Color::Transparent,
-            0.0f, "Show Controls"));
-}
-
 void Game::init_entities() {
-
-    // fps text
-    this->fps_text = new Entities::Text(
-            FONT_PATH,
-            32,
-            0.0f,
-            0.0f,
-            sf::Color::Yellow);
-
 
     // create a new player with save
     if (this->menu->get_load()) {
         std::string path = RESOURCE_PATH;
-        std::string buf = Maps::Map::read_file(path+SAVE_PATH);
+        std::string buf = Levels::Level::read_file(path + SAVE_PATH);
         this->parse_save(buf);
-        std::string map_name = this->map->get_name();
-        // restart map
-        this->init_map(map_name);
+        std::string map_name = this->phase->get_name();
+        // restart phase
+        this->init_phase(map_name);
         // restart time
         this->total_time = TIME;
 
@@ -347,12 +179,16 @@ void Game::init_entities() {
 
         // create a new player without save
         this->player = new Entities::Player(
-                this->start_location.get_x(), this->start_location.get_y(), 45, 80, 0, 0, 0, 0, 0, 5,
-                sf::Vector2u(3, 6), 0.1f, Entities::idle, PLAYER_SPRITE_PATH);
+                *this->graphic_manager,
+                this->start_location.get_x(),
+                this->start_location.get_y(),
+                45, 80, 0, 0, 0, 5, sf::Vector2u(3, 6), 0.1f,
+                Entities::idle,
+                PLAYER_SPRITE_PATH);
     }
 
     // life
-    this->life_image = new Entities::Image("map/head_sprite.png");
+    this->life_image = new Entities::Image(*this->graphic_manager, HEAD_SPRITE);
     this->life_image->set_position(32.0f, 32.0f);
     this->life_text = new Entities::Text(
             FONT_PATH,
@@ -367,9 +203,8 @@ void Game::init_entities() {
             );
 
     // coins
-    this->coin_image = new Entities::Image("map/coin.png");
-    this->coin_image->set_position(WINDOW_X - 64, this->coin_image->get_sprite().getSize().y);
-
+    this->coin_image = new Entities::Image(*this->graphic_manager, COIN_PATH);
+    this->coin_image->set_position(WINDOW_X - 64, 32.0f);
     this->coin_number = new Entities::Text(
             FONT_PATH,
             32,
@@ -395,25 +230,18 @@ void Game::init_entities() {
             "");
 }
 
-void Game::init_map(std::string map_name) {
-    this->map = new Maps::Map(map_name);
-    this->tiles = this->map->get_tiles();
+void Game::init_phase(std::string map_name) {
+    this->phase = new Levels::Level(map_name);
+    this->tiles = this->phase->get_tiles();
     this->coins = this->tiles.get_coins();
-    this->locations = this->map->get_locations();
-    this->walls = this->map->get_walls();
-    this->platforms = this->map->get_platforms();
+    this->locations = this->phase->get_locations();
+    this->walls = this->phase->get_walls();
+    this->platforms = this->phase->get_platforms();
     this->start_location = locations.get_start(); // start position of player
     this->check_point_locations = locations.get_check_points(); // check points to save game
-    this->end_location = locations.get_end(); // end of the map, defined to load other map
-    this->tilemap = this->map->get_tilemap();
-    this->map_backgrounds = this->map->get_backgrounds();
-}
-
-void Game::set_fps(float fps) {
-    sf::Vector2f pos(WINDOW_X, 8.0f);
-    pos.x -= 16;
-    this->fps_text->set_position(pos);
-    this->fps_text->set_text(std::to_string((int)fps));
+    this->end_location = locations.get_end(); // end of the phase, defined to load other phase
+    this->tilemap = this->phase->get_tilemap();
+    this->map_backgrounds = this->phase->get_backgrounds();
 }
 
 void Game::set_score(int coin, int life_number) {
@@ -437,7 +265,6 @@ void Game::set_time() {
     this->total_time--;
 }
 
-
 void Game::handle_resets() {
     if (this->player_out_of_window()) {
         this->player->set_state(Entities::dead);
@@ -456,7 +283,6 @@ void Game::handle_resets() {
     }
 }
 
-
 void Game::handle_collision() {
 
     this->handle_player_collision();
@@ -465,7 +291,7 @@ void Game::handle_collision() {
 void Game::handle_player_collision() {
 
     if (this->end_location.get_collider().check_collision(this->player->get_collider(), this->player->get_velocity(), false)) {
-        // verify if player collide with the end of map, to load next map
+        // verify if player collide with the end of phase, to load next phase
         this->next_map();
     }
     for (auto &check_point : this->check_point_locations) {
@@ -521,27 +347,27 @@ void Game::handle_player_collision() {
 }
 
 void Game::handle_events() {
-    while (this->window_server->poll_event()) {
+    while (this->graphic_manager->poll_event()) {
 
         if (this->player->get_state() != Entities::dead) {
-            this->player->handle_events(*this->window_server);
+            this->player->handle_events(this->graphic_manager->get_event());
         }
 
 
-        switch (this->window_server->get_event().type) {
+        switch (this->graphic_manager->get_event().type) {
 
             case sf::Event::Closed:
-                this->window_server->close();
+                this->graphic_manager->close();
                 break;
 
             case sf::Event::Resized:
-                this->window_server->resize_view(
-                        sf::Vector2f(this->window_server->get_event().size.width,
-                        this->window_server->get_event().size.height));
+                this->graphic_manager->resize_view(
+                        sf::Vector2f(this->graphic_manager->get_event().size.width,
+                        this->graphic_manager->get_event().size.height));
                 break;
             case sf::Event::KeyPressed:
                 // return to menu, automatically pause game loop
-                if (this->window_server->get_event().key.code == sf::Keyboard::Escape) {
+                if (this->graphic_manager->get_event().key.code == sf::Keyboard::Escape) {
                     this->menu->set_on_menu(true);
                     this->on_menu = this->menu->get_on_menu();
                     this->menu_loop(true);
@@ -556,10 +382,10 @@ void Game::handle_events() {
 }
 
 bool Game::player_out_of_window() {
-    auto map_height = this->map->get_height() * this->map->get_tile_height();
-    auto map_width = this->map->get_width() * this->map->get_tile_width();
+    auto map_height = this->phase->get_height() * this->phase->get_tile_height();
+    auto map_width = this->phase->get_width() * this->phase->get_tile_width();
 
-    // force player to stay in bottom/left/right position on map
+    // force player to stay in bottom/left/right position on phase
     if (this->player->get_position().y > map_height || this->player->get_position().x > map_width || this->player->get_position().x < 0.0f) {
         return true;
     }
@@ -567,12 +393,12 @@ bool Game::player_out_of_window() {
 }
 
 void Game::update_player_view() {
-    auto vhalfsize = this->window_server->get_view_size() / 2.0f;
-    auto map_height = this->map->get_height() * this->map->get_tile_height();
-    auto map_width = this->map->get_width() * this->map->get_tile_width();
+    auto vhalfsize = this->graphic_manager->get_view_size() / 2.0f;
+    auto map_height = this->phase->get_height() * this->phase->get_tile_height();
+    auto map_width = this->phase->get_width() * this->phase->get_tile_width();
     sf::Vector2f view_pos(this->player->get_position());
 
-    // force view to stay in map width, height, left and top
+    // force view to stay in phase width, height, left and top
     if (!this->player_out_of_window()) {
         if (this->player->get_position().x + vhalfsize.x >= map_width) {
             view_pos.x = map_width - vhalfsize.x;
@@ -582,21 +408,20 @@ void Game::update_player_view() {
         if (this->player->get_position().y + vhalfsize.y >= map_height) {
             view_pos.y = map_height - vhalfsize.y;
         }
-        this->window_server->set_view(sf::View(view_pos, this->window_server->get_window_size()));
+        this->graphic_manager->set_view(sf::View(view_pos, this->graphic_manager->get_window_size()));
     } else {
-        this->window_server->reset_view();
+        this->graphic_manager->reset_view();
     }
 }
 
-void Game::save_game(Maps::Object current_check_point) {
-    std::cout << "Saving the game on check point!" << std::endl;
+void Game::save_game(const Levels::Object& current_check_point) {
 
     std::string path = RESOURCE_PATH;
     int coin = this->player->get_coins();
     int life = this->player->get_life_number();
     double x = current_check_point.get_x();
     double y = current_check_point.get_y();
-    std::string map_name = this->map->get_name();
+    std::string map_name = this->phase->get_name();
     std::fstream save_file(path+SAVE_PATH, std::ostream::out);
 
     if (save_file.is_open()) {
@@ -615,9 +440,8 @@ void Game::save_game(Maps::Object current_check_point) {
     }
 }
 
-
 void Game::parse_save(const std::string& buf) {
-    // parse json saved file to be a new instance of player and map
+    // parse json saved file to be a new instance of player and phase
     rapidjson::Document saved_file;
     saved_file.Parse(buf.c_str());
 
@@ -633,27 +457,28 @@ void Game::parse_save(const std::string& buf) {
         this->player->restart(x, y, coin, life, Entities::idle);
     } else {
         this->player = new Entities::Player(
-                x, y, 45, 80, 0, 0, 0, 0, coin, life,
+                *this->graphic_manager,
+                x, y, 45, 80,  0, 0, coin,life,
                 sf::Vector2u(3, 6), 0.1f, Entities::idle, PLAYER_SPRITE_PATH);
     }
-    this->init_map(map_name);
-
+    this->init_phase(map_name);
 }
+
 void Game::restart_player() {
     // load save
     std::cout << "restart" << std::endl;
     std::string path = RESOURCE_PATH;
-    std::string buf = Maps::Map::read_file(path+SAVE_PATH);
+    std::string buf = Levels::Level::read_file(path + SAVE_PATH);
 
     if (!buf.empty()) {
         // parse save if not restarting
-        if (this->menu->get_state() != Controllers::restart) {
-            if(this->menu->get_state() == Controllers::loading) {
+        if (this->menu->get_state() != Managers::restart) {
+            if(this->menu->get_state() == Managers::loading) {
                 this->parse_save(buf);
 
             }
-        } else if (this->menu->get_state() == Controllers::restart) {
-                // restart at beginning of map
+        } else if (this->menu->get_state() == Managers::restart) {
+                // restart at beginning of phase
                 if (this->player->get_state() == Entities::dead) {
                     this->player->restart(
                             this->start_location.get_x(),
@@ -662,9 +487,9 @@ void Game::restart_player() {
                             this->player->get_life_number(),
                             Entities::idle);
 
-                    std::string map_name = this->map->get_name();
-                    // restart map
-                    this->init_map(map_name);
+                    std::string map_name = this->phase->get_name();
+                    // restart phase
+                    this->init_phase(map_name);
                     // restart time
                     this->total_time = TIME;
                 }
@@ -678,9 +503,9 @@ void Game::restart_player() {
                     this->player->get_life_number(),
                     Entities::idle);
 
-            std::string map_name = this->map->get_name();
-            // restart map
-            this->init_map(map_name);
+            std::string map_name = this->phase->get_name();
+            // restart phase
+            this->init_phase(map_name);
             // restart time
             this->total_time = TIME;
         }
@@ -696,99 +521,98 @@ void Game::update() {
 }
 
 void Game::render_menu() {
-    this->window_server->clear();
-    this->window_server->reset_view();
-    this->window_server->render(this->menu->get_sprite());
-    this->window_server->reset_view();
-    this->window_server->render(this->menu_title->get_text());
-    if (this->menu->get_state() == Controllers::credits) {
-        this->window_server->reset_view();
-        this->window_server->render(this->credit->get_text());
-        this->window_server->reset_view();
+    this->graphic_manager->clear();
+    this->graphic_manager->reset_view();
+    this->graphic_manager->render(this->menu->get_sprite());
+    this->graphic_manager->reset_view();
+
+    if (this->menu->get_state() == Managers::credits) {
+        this->graphic_manager->reset_view();
+        this->graphic_manager->render(this->menu->show_credit().get_text());
+        this->graphic_manager->reset_view();
     } else {
-        for (auto &option: this->menu_options) {
-            this->window_server->render(option.get_text());
+        for (auto &option: this->menu->get_options()) {
+            this->graphic_manager->render(option->get_text());
         }
         if (this->menu->get_saved()) {
-            this->window_server->reset_view();
-            this->window_server->render(this->score_text->get_text());
+            this->graphic_manager->reset_view();
+            this->graphic_manager->render(this->score_text->get_text());
 
         }
     }
-    this->window_server->display();
+    this->graphic_manager->render(this->menu->get_title().get_text());
+    this->graphic_manager->display();
 }
 
 void Game::render_settings() {
-    this->window_server->clear();
-    this->window_server->reset_view();
-    this->window_server->render(this->settings->get_sprite());
-    this->window_server->reset_view();
+    this->graphic_manager->clear();
+    this->graphic_manager->reset_view();
+    this->graphic_manager->render(this->settings->get_sprite());
+    this->graphic_manager->reset_view();
 
-    if (this->settings->get_state() == Controllers::showkb) {
-        this->window_server->render(this->showkb->get_sprite());
-    } else if (this->settings->get_state() == Controllers::about) {
-        this->window_server->render(this->about->get_text());
+    if (this->settings->get_state() == Managers::showkb) {
+        this->graphic_manager->render(this->settings->show_kb().get_sprite());
+    } else if (this->settings->get_state() == Managers::about) {
+        this->graphic_manager->render(this->settings->show_about().get_text());
     } else {
-        for (auto &option: this->settings_options) {
-            this->window_server->render(option.get_text());
+        for (auto &option: this->settings->get_options()) {
+            this->graphic_manager->render(option->get_text());
         }
     }
-    this->window_server->render(this->menu_title->get_text());
-    this->window_server->reset_view();
-    this->window_server->display();
+    this->graphic_manager->render(this->menu->get_title().get_text());
+    this->graphic_manager->reset_view();
+    this->graphic_manager->display();
 }
 
-void Game::render_map() {
+void Game::render_phase() {
     for (int i = static_cast<int>(this->map_backgrounds.size()-1); i >= 0; i--) {
-        this->window_server->render(this->map_backgrounds[i].get_sprite());
+        this->graphic_manager->render(this->map_backgrounds[i].get_sprite());
     }
     for (int i = static_cast<int>(this->tilemap.size()-1); i >= 0; i--) {
-        this->window_server->render(this->tilemap[i]);
+        this->graphic_manager->render(this->tilemap[i]);
     }
     for (auto &plat : this->platforms.get_platforms()) {
-        this->window_server->render(plat.get_sprite());
+        this->graphic_manager->render(plat.get_sprite());
     }
     for (auto &wall : this->walls.get_walls()) {
-        this->window_server->render(wall.get_sprite());
+        this->graphic_manager->render(wall.get_sprite());
     }
     for (auto &tile : this->tiles.get_tiles()) {
-        this->window_server->render(tile.get_sprite());
+        this->graphic_manager->render(tile.get_sprite());
     }
     for (auto &coin : this->coins) {
-        this->window_server->render(coin.get_sprite());
+        this->graphic_manager->render(coin.get_sprite());
     }
 }
 
 void Game::render() {
     // clear window each iteration
-    this->window_server->clear();
-    // render map first
-    this->render_map();
-    this->window_server->reset_view();
+    this->graphic_manager->clear();
+    // render phase first
+    this->render_phase();
+    this->graphic_manager->reset_view();
 
     // render objects to display information about score, time etc...
-    this->window_server->render(this->coin_number->get_text());
-    this->window_server->reset_view();
-    this->window_server->render(this->coin_image->get_sprite());
-    this->window_server->reset_view();
-    this->window_server->render(this->fps_text->get_text());
-    this->window_server->reset_view();
-    this->window_server->render(this->time_text->get_text());
-    this->window_server->reset_view();
-    this->window_server->render(this->life_text->get_text());
-    this->window_server->reset_view();
-    this->window_server->render(this->life_image->get_sprite());
+    this->graphic_manager->render(this->coin_number->get_text());
+    this->graphic_manager->reset_view();
+    this->coin_image->render();
+    this->graphic_manager->reset_view();
+    this->graphic_manager->render(this->time_text->get_text());
+    this->graphic_manager->reset_view();
+    this->graphic_manager->render(this->life_text->get_text());
+    this->graphic_manager->reset_view();
+    this->life_image->render();
 
     // render player sprite, but he needs a different view size
     this->update_player_view();
-    this->window_server->render(this->player->get_sprite());
+    this->player->render();
 
     // finally, display everything
-    this->window_server->display();
+    this->graphic_manager->display();
 }
 
 void Game::next_map() {
-    this->init_map(PLATFORM2);
+    this->init_phase(PLATFORM2);
     this->player->restart(
             this->start_location.get_x(),
             this->start_location.get_y(),

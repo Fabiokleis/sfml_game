@@ -3,7 +3,7 @@
 #include <SFML/Graphics.hpp>
 #include "menu.hpp"
 
-namespace Controllers {
+namespace Managers {
 
     enum SubMenuStates {
         nones = 0,
@@ -14,15 +14,23 @@ namespace Controllers {
     class SubMenu : public Menu {
         private:
             SubMenuStates state;
+            Entities::Text *about_text;
+            Entities::Image *keyboard_image;
 
-        public:
-            SubMenu(Entities::Text &title, Entities::Image &menu_image, double x, double y, std::vector<Entities::Text> &text_optionss);
+
+    public:
+            SubMenu(double x, double y);
             ~SubMenu();
 
+            Entities::Image& show_kb();
+            Entities::Text& show_about();
             SubMenuStates get_state();
-            void update(bool from_game, bool from_player_dead) override;
-            void events(WindowServer &window_server) override;
-            void handle_events(WindowServer &window_server) override;
+            void init_background(double x, double y);
+            void init_entries();
+            void init_title();
+            void update(bool from_game, bool from_player_dead);
+            void events(GraphicManager &window_server);
+            void handle_events(GraphicManager &window_server);
     };
 }
 

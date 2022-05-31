@@ -10,7 +10,7 @@ namespace Entities {
             int id;
 
         public:
-            Coin(const std::string& coin_path, int id, double x, double y, double width, double height);
+            Coin(Managers::GraphicManager &graphic_manager, const std::string& coin_path, int id, double x, double y, double width, double height);
             int get_id() const;
             ~Coin();
     };

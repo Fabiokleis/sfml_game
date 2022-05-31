@@ -1,41 +1,36 @@
-#include <iostream>
-#include "character.hpp"
 #include "player.hpp"
 using namespace Entities;
 
-Player::Player(double x, double y, double width, double height, double vx, double vy, int cordx, int cordy, int coin, int life_number,
-               sf::Vector2u image_count, float switch_time, States state,
+Player::Player(Managers::GraphicManager &graphicManager, double x, double y, double width, double height, int cordx, int cordy,
+               int coin, int life_number, sf::Vector2u image_count, float switch_time, States state,
                const std::string &path_name) :
-        Character(x, y, width, height, vx, vy, cordx, cordy, image_count, switch_time, state, path_name),
-        acceleration(), jump_height(), gravity(), delta_time(), coin(coin)
+    Character(graphicManager, width, height, cordx, cordy, life_number, image_count, switch_time, state, path_name),
+    coin(coin)
 {
+    this->set_position(x, y);
+    this->set_velocity(0.0f, 0.0f);
     this->init_physics();
-    this->sprite.setOutlineThickness(1.0f);
-    this->sprite.setOutlineColor(sf::Color::Green);
-    this->life_number = life_number;
 }
-
-Player::Player() : acceleration(), jump_height(), gravity(), delta_time(), coin() {}
 
 Player::~Player() {}
-
-void Player::init_physics() {
-    this->jump_height = 20.0f;
-    this->acceleration = 200.0f;
-    this->gravity = 9.810f;
-    this->delta_time = 0.01f;
-}
-
-void Player::reset_clock(float dt) {
-    this->delta_time = dt;
-}
 
 int Player::get_coins() const {
     return this->coin;
 }
 
-int Player::get_life_number() const {
-    return this->life_number;
+void Player::init_physics() {
+    this->jump_height = 20.0f;
+    this->acceleration = 200.0f;
+    this->delta_time = 0.01f;
+}
+
+void Player::restart(double x, double y, int _coin, int life, States _state) {
+    this->state = _state;
+    this->sprite.setPosition(x, y);
+    this->coin = _coin;
+    this->life_number = life;
+    this->velocity.x = 0.0f;
+    this->velocity.y = 0.0f;
 }
 
 void Player::update_life_number() {
@@ -54,13 +49,14 @@ void Player::update_life_number() {
         }
     }
 }
-void Player::handle_events(Controllers::WindowServer &window_server) {
-    switch (window_server.get_event().type) {
+
+void Player::handle_events(sf::Event &event) {
+    switch (event.type) {
         case sf::Event::KeyPressed:
-            this->handle_player_input(window_server.get_event().key.code, true);
+            this->handle_character_input(event.key.code, true);
             break;
         case sf::Event::KeyReleased:
-            this->handle_player_input(window_server.get_event().key.code, false);
+            this->handle_character_input(event.key.code, false);
             break;
 
         default:
@@ -127,7 +123,7 @@ void Player::update_input() {
     }
 }
 
-void Player::handle_player_input(sf::Keyboard::Key key, bool is_pressed) {
+void Player::handle_character_input(sf::Keyboard::Key key, bool is_pressed) {
     if (is_pressed) {
         if (this->collide_state == Entities::ground) {
             if (key == sf::Keyboard::Space) {
@@ -217,7 +213,7 @@ void Player::update_animation() {
 
             break;
     }
-    this->set_rect(this->get_animation().rect);
+    this->sprite.setTextureRect(this->get_animation().rect);
     this->last_state = state;
 }
 
@@ -225,14 +221,4 @@ void Player::update() {
     this->update_input();
     this->update_physics();
     this->update_animation();
-
-}
-
-void Player::restart(double x, double y, int coin, int life, States state) {
-    this->set_position(x, y);
-    this->set_state(state);
-    this->coin = coin;
-    this->life_number = life;
-    this->velocity.x = 0.0f;
-    this->velocity.y = 0.0f;
 }

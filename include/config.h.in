@@ -6,10 +6,11 @@
 #define FPS 60
 #define FONT_PATH "fonts/free_pixel.ttf"
 #define TIME 256
-#define COIN_PATH "map/coin.png"
+#define COIN_PATH "phase/coin.png"
 #define PLAYER_SPRITE_PATH "player/player_sprite.png"
 #define SAVE_PATH "player/save_state.json"
 #define PLATFORM1 "destroyed_world.json"
 #define PLATFORM2 "sorcerer_castle.json"
 #define KEYBOARD "menu/keyboard.png"
+#define HEAD_SPRITE "phase/head_sprite.png"
 #endif /* end of include guard: CONFIG_H_IN_U5CSSGBG */

@@ -1,8 +1,8 @@
 {
-    "time": 254,
-    "map_name": "sorcerer_castle.json",
+    "time": 255,
+    "map_name": "destroyed_world.json",
     "coin": 7,
-    "life": 10,
-    "x": 128,
-    "y": 1120
+    "life": 8,
+    "x": 2976.05,
+    "y": 832.197
 }

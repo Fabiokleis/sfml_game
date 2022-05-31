@@ -91,7 +91,7 @@
 
     In case of a single nesting level, defining \c RAPIDJSON_NAMESPACE
     to a custom name (e.g. \c MyRapidJSON) is sufficient.  If multiple
-    levels are needed, both \ref RAPIDJSON_NAMESPACE_BEGIN and \ref
+    Levels are needed, both \ref RAPIDJSON_NAMESPACE_BEGIN and \ref
     RAPIDJSON_NAMESPACE_END need to be defined as well:
 
     \code

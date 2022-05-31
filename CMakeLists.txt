@@ -29,8 +29,8 @@ target_include_directories(game
   PRIVATE
     "${PROJECT_BINARY_DIR}"
     "${CMAKE_CURRENT_SOURCE_DIR}/include/game"
-    "${CMAKE_CURRENT_SOURCE_DIR}/include/maps"
+    "${CMAKE_CURRENT_SOURCE_DIR}/include/levels"
     "${CMAKE_CURRENT_SOURCE_DIR}/include/entities"
-    "${CMAKE_CURRENT_SOURCE_DIR}/include/controllers"
+    "${CMAKE_CURRENT_SOURCE_DIR}/include/Managers"
 )
 

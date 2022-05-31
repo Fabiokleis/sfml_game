@@ -478,7 +478,7 @@ public:
         typedef typename ValueType::ConstMemberIterator ConstMemberIterator;
 
         // PR #1393
-        // Early add this Schema and its $ref(s) in schemaDocument's map to avoid infinite
+        // Early add this Schema and its $ref(s) in schemaDocument's phase to avoid infinite
         // recursion (with recursive schemas), since schemaDocument->getSchema() is always
         // checked before creating a new one. Don't cache typeless_, though.
         if (this != typeless_) {

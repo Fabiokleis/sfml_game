@@ -2,10 +2,10 @@
 #define GAME_HPP_WSHRPK2N
 #include <SFML/Graphics.hpp>
 #include <vector>
-#include "window_server.hpp"
+#include "graphic_manager.hpp"
 #include "player.hpp"
 #include "config.h"
-#include "map.hpp"
+#include "level.hpp"
 #include "object.hpp"
 #include "image.hpp"
 #include "main_menu.hpp"
@@ -13,37 +13,28 @@
 
 class Game {
     private:
-        Controllers::WindowServer* window_server;
+        Managers::GraphicManager* graphic_manager;
         Entities::Player *player;
 
-        Entities::Text *menu_title;
-        std::vector<Entities::Text> menu_options;
-        Entities::Image *menu_bg;
-        Controllers::MainMenu *menu;
+        Managers::MainMenu *menu;
+        Managers::SubMenu *settings;
 
-        std::vector<Entities::Text> settings_options;
-        Entities::Image *settings_bg;
-        Controllers::SubMenu *settings;
-        Entities::Text *about;
-        Entities::Text *credit;
-        Entities::Image *showkb;
 
         Entities::Text *score_text;
 
 
-        Maps::Map* map;
-        std::vector<Maps::TileMap> tilemap;
+        Levels::Level* phase;
+        std::vector<Levels::TileMap> tilemap;
         std::vector<Entities::Image> map_backgrounds;
-        Maps::Object start_location;
-        std::vector<Maps::Object> check_point_locations;
-        Maps::Object end_location;
-        Maps::Locations locations;
-        Maps::Platforms platforms;
-        Maps::Tiles tiles;
-        Maps::Walls walls;
+        Levels::Object start_location;
+        std::vector<Levels::Object> check_point_locations;
+        Levels::Object end_location;
+        Levels::Locations locations;
+        Levels::Platforms platforms;
+        Levels::Tiles tiles;
+        Levels::Walls walls;
 
         std::vector<Entities::Coin> coins;
-        Entities::Text *fps_text;
         Entities::Image *life_image;
         Entities::Text *life_text;
         Entities::Text *coin_number;
@@ -62,13 +53,11 @@ class Game {
         void init_entities();
         void init_score();
         void parse_save(const std::string& buf);
-        void init_map(std::string map_name);
-        void menu_entries();
+        void init_phase(std::string map_name);
         void set_time();
-        void set_fps(float fps);
         void set_score(int coin, int life_number);
         void count_down();
-        void save_game(Maps::Object current_check_point);
+        void save_game(const Levels::Object& current_check_point);
         void restart_player();
         void game_loop(sf::Clock timer);
         void menu_loop(bool from_game = false, bool from_player_dead = false);
@@ -79,7 +68,7 @@ class Game {
         void next_map();
         void render_menu();
         void render_settings();
-        void render_map();
+        void render_phase();
         void render();
         void handle_collision();
         void handle_player_collision();

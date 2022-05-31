@@ -1,27 +1,160 @@
 #include "main_menu.hpp"
-#include "map.hpp"
-#include "player.hpp"
+#include "level.hpp"
+#include "character.hpp"
 
-using namespace Controllers;
+using namespace Managers;
 
-MainMenu::MainMenu(Entities::Text &title, Entities::Image &menu_image, double x, double y, std::vector<Entities::Text> &text_options) :
-    Menu(title, menu_image, x, y, text_options), load_save(), state(restart)
-{
-    this->verify_save();
+MainMenu::MainMenu(double x, double y) : Menu(), load_save(), state(restart) {
+    this->saved_file = this->verify_save();
+    this->init_title();
+    this->init_background(x, y);
+    this->init_entries();
 }
 
-MainMenu::~MainMenu() {}
+MainMenu::~MainMenu() {
+    delete credit;
+}
 
-void MainMenu::verify_save() {
+void MainMenu::init_title() {
+    this->title = new Entities::Text(
+            FONT_PATH,
+            80,
+            WINDOW_X / 2 - 240.0f,
+            100,
+            sf::Color::White,
+            1 << 1,
+            sf::Color(95, 0, 160),
+            2.0f,
+            "Jaime Adventures");
+}
+
+void MainMenu::init_background(double x, double y) {
+    this->menu_image = new Entities::Image(0, 0, WINDOW_X, WINDOW_Y, sf::Color::Black);
+    this->menu_image->set_position(x, y);
+}
+
+void MainMenu::init_entries() {
+    this->max_options = 7;
+    this->text_options.emplace_back(new Entities::Text(
+            FONT_PATH,
+            48,
+            WINDOW_X / 2.0f - 64.0f,
+            WINDOW_Y / 2.0f - 128.0f,
+            sf::Color::White,
+            0,
+            sf::Color::Transparent,
+            0.0f, "New Game"));
+
+    this->text_options.emplace_back(new Entities::Text(
+            FONT_PATH,
+            48,
+            WINDOW_X / 2.0f - 64.0f,
+            WINDOW_Y / 2.0f - 64.0f,
+            sf::Color::White,
+            0,
+            sf::Color::Transparent,
+            0.0f, "Load save"));
+
+    this->text_options.emplace_back(new Entities::Text(
+            FONT_PATH,
+            48,
+            WINDOW_X / 2.0f - 64.0f,
+            WINDOW_Y / 2.0f,
+            sf::Color::White,
+            0,
+            sf::Color::Transparent,
+            0.0f,
+            "Level 1"));
+    this->text_options.emplace_back(new Entities::Text(
+            FONT_PATH,
+            48,
+            WINDOW_X / 2.0f - 64.0f,
+            WINDOW_Y / 2.0f + 64.0f,
+            sf::Color::White,
+            0,
+            sf::Color::Transparent,
+            0.0f,
+            "Level 2"));
+
+    this->text_options.emplace_back(new Entities::Text(
+            FONT_PATH,
+            48,
+            WINDOW_X / 2.0f - 64.0f,
+            WINDOW_Y / 2.0f + 128.0f,
+            sf::Color::White,
+            0,
+            sf::Color::Transparent,
+            0.0f,
+            "Settings"));
+    this->text_options.emplace_back(new Entities::Text(
+            FONT_PATH,
+            48,
+            WINDOW_X / 2.0f - 64.0f,
+            WINDOW_Y / 2.0f + 192.0f,
+            sf::Color::White,
+            0,
+            sf::Color::Transparent,
+            0.0f,
+            "Credits"));
+    this->text_options.emplace_back(new Entities::Text(
+            FONT_PATH,
+            48,
+            WINDOW_X / 2.0f - 64.0f,
+            WINDOW_Y / 2.0f + 256.0f,
+            sf::Color::White,
+            0,
+            sf::Color::Transparent,
+            0.0f,
+            "Exit"));
+
+    this->credit = new Entities::Text(
+            FONT_PATH,
+            24,
+            WINDOW_X / 2.0f - 480.0f,
+            WINDOW_Y / 2.0f - 64.0f,
+            sf::Color::White,
+            0,
+            sf::Color::Transparent,
+            0.0f,
+            "Desenvolvimento\n"
+            "\n"
+            "Fabio Henrique Kleis Ribas Correa, Francisco Luis Dunaiski Bruginski\n"
+            "fabiohenrique@utfpr.edu.br, fbruginski@utfpr.edu.br\n"
+            "\n"
+            "Artes e Mapas\n"
+            "\n"
+            "Fabio Henrique Kleis Ribas Correa, Alessandro Kleis\n"
+            "fabiohenrique@utfpr.edu.br"
+    );
+
+}
+
+
+bool MainMenu::verify_save() {
     std::string path = RESOURCE_PATH;
-    std::string buf = Maps::Map::read_file(path+"player/save_state.json");
+    std::string buf = Levels::Level::read_file(path + "player/save_state.json");
     if (!buf.empty()) {
-        this->saved_file = true;
-
-    } else {
-        this->saved_file = false;
+        return true;
     }
+    return false;
 }
+
+Entities::Text& MainMenu::show_credit() {
+    return *this->credit;
+}
+
+bool MainMenu::get_saved() const {
+    return this->saved_file;
+}
+
+MenuStates MainMenu::get_state() {
+    return this->state;
+}
+
+bool MainMenu::get_load() const {
+    return this->load_save;
+}
+
 void MainMenu::update(bool from_game, bool from_player_dead) {
     // limit menu_counter to be in range of [0-max_options-1]
     this->menu_counter = this->menu_counter >= this->max_options-1 ? this->max_options-1 : this->menu_counter <= 0 ? 0 : this->menu_counter;
@@ -30,45 +163,46 @@ void MainMenu::update(bool from_game, bool from_player_dead) {
 
     // clear all texts attr and set by flag1
     for (auto &option : this->text_options) {
-        option.reset();
+        option->reset();
         if (from_game) {
-            if (option.get_string() == "New Game" || option.get_string() == "Restart") {
-                option.set_text("Resume");
+            if (option->get_string() == "New Game" || option->get_string() == "Restart") {
+                option->set_text("Resume");
             }
         } else if(from_player_dead) {
-            if (option.get_string() == "Resume" || option.get_string() == "New Game") {
-                option.set_text("Restart");
+            if (option->get_string() == "Resume" || option->get_string() == "New Game") {
+                option->set_text("Restart");
             }
         }
     }
 
     switch (this->menu_counter) {
         case 0:
-            this->text_options[0].set_attr(sf::Color::White, sf::Color(95, 0, 160), 3.0f, 0);
-
+            this->text_options[0]->set_attr(sf::Color::White, sf::Color(95, 0, 160), 3.0f, 0);
             break;
         case 1:
-            this->text_options[1].set_attr(sf::Color::White, sf::Color(95, 0, 160), 3.0f, 0);
-
+            this->text_options[1]->set_attr(sf::Color::White, sf::Color(95, 0, 160), 3.0f, 0);
             break;
         case 2:
-            this->text_options[2].set_attr( sf::Color::White, sf::Color(95, 0, 160), 3.0f, 0);
-
+            this->text_options[2]->set_attr( sf::Color::White, sf::Color(95, 0, 160), 3.0f, 0);
             break;
         case 3:
-            this->text_options[3].set_attr( sf::Color::White, sf::Color(95, 0, 160), 3.0f, 0);
-
+            this->text_options[3]->set_attr( sf::Color::White, sf::Color(95, 0, 160), 3.0f, 0);
             break;
         case 4:
-            this->text_options[4].set_attr( sf::Color::White,sf::Color(95, 0, 160), 3.0f, 0);
-
+            this->text_options[4]->set_attr( sf::Color::White,sf::Color(95, 0, 160), 3.0f, 0);
+            break;
+        case 5:
+            this->text_options[5]->set_attr( sf::Color::White,sf::Color(95, 0, 160), 3.0f, 0);
+            break;
+        case 6:
+            this->text_options[6]->set_attr( sf::Color::White,sf::Color(95, 0, 160), 3.0f, 0);
             break;
         default:
             break;
     }
 }
 
-void MainMenu::events(WindowServer &window_server) {
+void MainMenu::events(GraphicManager &window_server) {
     // Menu input updates
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
         this->inc_option();
@@ -77,7 +211,7 @@ void MainMenu::events(WindowServer &window_server) {
         this->dec_option();
     }
 
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter) && this->get_current_option() == 3) {
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter) && this->get_current_option() == 5) {
         // credits opt
         std::cout << "credits opt" << std::endl;
         this->state = credits;
@@ -107,15 +241,24 @@ void MainMenu::events(WindowServer &window_server) {
             this->set_on_menu(false);
             this->load_save = true;
         }
-    } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter) && this->get_current_option() == 2) {
+    } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter) && this->get_current_option() == 4) {
         // settings
         std::cout << "settings opt" << std::endl;
         this->set_on_submenu(true);
-    } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter) && this->get_current_option() == 4) {
+    } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter) && this->get_current_option() == 6) {
         // exit opt
         this->set_on_menu(false);
         std::cout << "Exit opt" << std::endl;
         window_server.close();
+
+    } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter) && this->get_current_option() == 2) {
+        // phase 1
+        std::cout << "phase 1 opt" << std::endl;
+        this->state = phase1;
+    } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter) && this->get_current_option() == 3) {
+        // phase 2
+        std::cout << "phase 2 opt" << std::endl;
+        this->state = phase2;
     } else {
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
             this->state = none;
@@ -123,7 +266,7 @@ void MainMenu::events(WindowServer &window_server) {
     }
 }
 
-void MainMenu::handle_events(WindowServer &window_server) {
+void MainMenu::handle_events(GraphicManager &window_server) {
     while (window_server.poll_event()) {
         switch (window_server.get_event().type) {
             case sf::Event::Closed:
@@ -145,16 +288,3 @@ void MainMenu::handle_events(WindowServer &window_server) {
         }
     }
 }
-
-bool MainMenu::get_saved() const {
-    return this->saved_file;
-}
-
-MenuStates MainMenu::get_state() {
-    return this->state;
-}
-
-bool MainMenu::get_load() const {
-    return this->load_save;
-}
-

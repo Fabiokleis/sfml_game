@@ -1,12 +1,10 @@
 #include "menu.hpp"
-using namespace Controllers;
+using namespace Managers;
 
-Menu::Menu(Entities::Text &title, Entities::Image &menu_image, double x, double y, std::vector<Entities::Text> &text_options) :
-    menu_image(menu_image), text_options(text_options), title(title)
+Menu::Menu() : menu_image(), text_options(), title()
 {
     this->menu_counter = 0;
     this->max_options = 0;
-    this->menu_image.set_position(x, y);
     this->on_menu = true;
     this->on_submenu = false;
     this->from_game = false;
@@ -14,16 +12,13 @@ Menu::Menu(Entities::Text &title, Entities::Image &menu_image, double x, double 
 }
 
 
-Menu::~Menu() {}
-
-sf::RectangleShape Menu::get_sprite() {
-    return this->menu_image.get_sprite();
+Menu::~Menu() {
+    delete title;
+    delete menu_image;
 }
 
-
-void Menu::populate_option(Entities::Text &options) {
-    this->max_options++;
-    this->text_options.push_back(options);
+sf::RectangleShape Menu::get_sprite() {
+    return this->menu_image->get_sprite();
 }
 
 void Menu::dec_option() {
@@ -42,6 +37,10 @@ bool Menu::get_on_menu() const {
     return this->on_menu;
 }
 
+bool Menu::get_on_submenu() const {
+    return this->on_submenu;
+}
+
 void Menu::set_on_menu(bool flag) {
     this->on_menu = flag;
 }
@@ -50,6 +49,10 @@ void Menu::set_on_submenu(bool flag) {
     this->on_submenu = flag;
 }
 
-bool Menu::get_on_submenu() const {
-    return this->on_submenu;
+std::vector<Entities::Text*> Menu::get_options() {
+    return this->text_options;
+}
+
+Entities::Text Menu::get_title() {
+    return *this->title;
 }

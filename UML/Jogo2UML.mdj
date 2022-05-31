@@ -176,7 +176,7 @@
 											"top": 694,
 											"width": 815,
 											"height": 13,
-											"text": "Maps"
+											"text": "Levels"
 										},
 										{
 											"_type": "LabelView",
@@ -1466,7 +1466,7 @@
 											"top": 1494,
 											"width": 431,
 											"height": 13,
-											"text": "Controllers"
+											"text": "Managers"
 										},
 										{
 											"_type": "LabelView",
@@ -2985,7 +2985,7 @@
 											"top": 982,
 											"width": 271,
 											"height": 13,
-											"text": "-window_server: WindowServer*",
+											"text": "-graphic_manager: GraphicManager*",
 											"horizontalAlignment": 0
 										},
 										{
@@ -3002,7 +3002,7 @@
 											"top": 997,
 											"width": 271,
 											"height": 13,
-											"text": "-player: Player*",
+											"text": "-player: Character*",
 											"horizontalAlignment": 0
 										},
 										{
@@ -3155,7 +3155,7 @@
 											"top": 1132,
 											"width": 271,
 											"height": 13,
-											"text": "-map_ Map*",
+											"text": "-map_ Level*",
 											"horizontalAlignment": 0
 										},
 										{
@@ -4837,7 +4837,7 @@
 											"top": 3032,
 											"width": 123.5380859375,
 											"height": 13,
-											"text": "(from Controllers)"
+											"text": "(from Managers)"
 										},
 										{
 											"_type": "LabelView",
@@ -4963,7 +4963,7 @@
 											"top": 1824,
 											"width": 191,
 											"height": 13,
-											"text": "«create»+WindowServer()",
+											"text": "«create»+GraphicManager()",
 											"horizontalAlignment": 0
 										},
 										{
@@ -4980,7 +4980,7 @@
 											"top": 1839,
 											"width": 191,
 											"height": 13,
-											"text": "«destroy»+WindowServer()",
+											"text": "«destroy»+GraphicManager()",
 											"horizontalAlignment": 0
 										},
 										{
@@ -5310,7 +5310,7 @@
 											"top": 2768,
 											"width": 123.5380859375,
 											"height": 13,
-											"text": "(from Controllers)"
+											"text": "(from Managers)"
 										},
 										{
 											"_type": "LabelView",
@@ -5629,7 +5629,7 @@
 											"top": 2184,
 											"width": 101.12451171875,
 											"height": 13,
-											"text": "(from Controllers)"
+											"text": "(from Managers)"
 										},
 										{
 											"_type": "LabelView",
@@ -6819,7 +6819,7 @@
 											"top": 685,
 											"width": 223,
 											"height": 13,
-											"text": "«Entity»"
+											"text": "«Character»"
 										},
 										{
 											"_type": "LabelView",
@@ -7441,7 +7441,7 @@
 											"top": 684,
 											"width": 215,
 											"height": 13,
-											"text": "Player"
+											"text": "Character"
 										},
 										{
 											"_type": "LabelView",
@@ -7615,7 +7615,7 @@
 											"top": 790,
 											"width": 215,
 											"height": 13,
-											"text": "«create»+Player()",
+											"text": "«create»+Character()",
 											"horizontalAlignment": 0
 										},
 										{
@@ -7632,7 +7632,7 @@
 											"top": 805,
 											"width": 215,
 											"height": 13,
-											"text": "«destroy»+Player()",
+											"text": "«destroy»+Character()",
 											"horizontalAlignment": 0
 										},
 										{
@@ -8625,7 +8625,7 @@
 											"top": 669,
 											"width": 109.4716796875,
 											"height": 13,
-											"text": "«Entity»"
+											"text": "«Character»"
 										},
 										{
 											"_type": "LabelView",
@@ -10081,7 +10081,7 @@
 											"top": 709,
 											"width": 191,
 											"height": 13,
-											"text": "«Entity»"
+											"text": "«Character»"
 										},
 										{
 											"_type": "LabelView",
@@ -10108,7 +10108,7 @@
 											"top": -392,
 											"width": 73.67724609375,
 											"height": 13,
-											"text": "(from Maps)"
+											"text": "(from Levels)"
 										},
 										{
 											"_type": "LabelView",
@@ -10580,7 +10580,7 @@
 											"top": 1584,
 											"width": 73.67724609375,
 											"height": 13,
-											"text": "(from Maps)"
+											"text": "(from Levels)"
 										},
 										{
 											"_type": "LabelView",
@@ -11155,7 +11155,7 @@
 											"top": 168,
 											"width": 73.67724609375,
 											"height": 13,
-											"text": "(from Maps)"
+											"text": "(from Levels)"
 										},
 										{
 											"_type": "LabelView",
@@ -11492,7 +11492,7 @@
 											"top": 312,
 											"width": 73.67724609375,
 											"height": 13,
-											"text": "(from Maps)"
+											"text": "(from Levels)"
 										},
 										{
 											"_type": "LabelView",
@@ -11744,7 +11744,7 @@
 											"top": 2048,
 											"width": 73.67724609375,
 											"height": 13,
-											"text": "(from Maps)"
+											"text": "(from Levels)"
 										},
 										{
 											"_type": "LabelView",
@@ -11996,7 +11996,7 @@
 											"top": 528,
 											"width": 73.67724609375,
 											"height": 13,
-											"text": "(from Maps)"
+											"text": "(from Levels)"
 										},
 										{
 											"_type": "LabelView",
@@ -12281,7 +12281,7 @@
 											"top": 632,
 											"width": 73.67724609375,
 											"height": 13,
-											"text": "(from Maps)"
+											"text": "(from Levels)"
 										},
 										{
 											"_type": "LabelView",
@@ -12787,7 +12787,7 @@
 											"top": 1392,
 											"width": 73.67724609375,
 											"height": 13,
-											"text": "(from Maps)"
+											"text": "(from Levels)"
 										},
 										{
 											"_type": "LabelView",
@@ -12896,7 +12896,7 @@
 											"top": 1780,
 											"width": 142.7080078125,
 											"height": 13,
-											"text": "«create»+TileSetMap()",
+											"text": "«create»+TileSetWrapper()",
 											"horizontalAlignment": 0
 										},
 										{
@@ -12913,7 +12913,7 @@
 											"top": 1795,
 											"width": 142.7080078125,
 											"height": 13,
-											"text": "«destroy»+TileSetMap()",
+											"text": "«destroy»+TileSetWrapper()",
 											"horizontalAlignment": 0
 										},
 										{
@@ -13073,7 +13073,7 @@
 											"top": 192,
 											"width": 73.67724609375,
 											"height": 13,
-											"text": "(from Maps)"
+											"text": "(from Levels)"
 										},
 										{
 											"_type": "LabelView",
@@ -13311,7 +13311,7 @@
 											"top": 364,
 											"width": 211.376953125,
 											"height": 13,
-											"text": "Entity"
+											"text": "Character"
 										},
 										{
 											"_type": "LabelView",
@@ -13417,7 +13417,7 @@
 											"top": 410,
 											"width": 211.376953125,
 											"height": 13,
-											"text": "«create»+Entity()",
+											"text": "«create»+Character()",
 											"horizontalAlignment": 0
 										},
 										{
@@ -13434,7 +13434,7 @@
 											"top": 425,
 											"width": 211.376953125,
 											"height": 13,
-											"text": "«destroy»+Entity()",
+											"text": "«destroy»+Character()",
 											"horizontalAlignment": 0
 										},
 										{
@@ -14980,7 +14980,7 @@
 											"top": 991,
 											"width": 209.9296875,
 											"height": 13,
-											"text": "Map"
+											"text": "Level"
 										},
 										{
 											"_type": "LabelView",
@@ -14994,7 +14994,7 @@
 											"top": 320,
 											"width": 73.67724609375,
 											"height": 13,
-											"text": "(from Maps)"
+											"text": "(from Levels)"
 										},
 										{
 											"_type": "LabelView",
@@ -15171,7 +15171,7 @@
 											"top": 1119,
 											"width": 209.9296875,
 											"height": 13,
-											"text": "-tileset_maps: vector<TileSetMap>",
+											"text": "-tileset_maps: vector<TileSetWrapper>",
 											"horizontalAlignment": 0
 										},
 										{
@@ -15341,7 +15341,7 @@
 											"top": 1262,
 											"width": 209.9296875,
 											"height": 13,
-											"text": "«create»+Map()",
+											"text": "«create»+Level()",
 											"horizontalAlignment": 0
 										},
 										{
@@ -15358,7 +15358,7 @@
 											"top": 1277,
 											"width": 209.9296875,
 											"height": 13,
-											"text": "«destroy»+Map()",
+											"text": "«destroy»+Level()",
 											"horizontalAlignment": 0
 										},
 										{
@@ -27122,7 +27122,7 @@
 					"_parent": {
 						"$ref": "AAAAAAFF+qBWK6M3Z8Y="
 					},
-					"name": "Maps",
+					"name": "Levels",
 					"ownedElements": [
 						{
 							"_type": "UMLClass",
@@ -27177,7 +27177,7 @@
 									}
 								}
 							],
-							"stereotype": "Fase 2"
+							"stereotype": "Level 2"
 						},
 						{
 							"_type": "UMLClass",
@@ -27232,7 +27232,7 @@
 									}
 								}
 							],
-							"stereotype": "Fase 1"
+							"stereotype": "Level 1"
 						},
 						{
 							"_type": "UMLClass",
@@ -27240,7 +27240,7 @@
 							"_parent": {
 								"$ref": "AAAAAAGA92JIK5Bxj7E="
 							},
-							"name": "Fase",
+							"name": "Level",
 							"ownedElements": [
 								{
 									"_type": "UMLGeneralization",
@@ -27471,7 +27471,7 @@
 									}
 								}
 							],
-							"stereotype": "Entity",
+							"stereotype": "Character",
 							"attributes": [
 								{
 									"_type": "UMLAttribute",
@@ -29291,7 +29291,7 @@
 									"_parent": {
 										"$ref": "AAAAAAGBEYjSz6598DY="
 									},
-									"name": "TileSetMap",
+									"name": "TileSetWrapper",
 									"stereotype": "create"
 								},
 								{
@@ -29300,7 +29300,7 @@
 									"_parent": {
 										"$ref": "AAAAAAGBEYjSz6598DY="
 									},
-									"name": "TileSetMap",
+									"name": "TileSetWrapper",
 									"stereotype": "destroy"
 								},
 								{
@@ -29542,7 +29542,7 @@
 							"_parent": {
 								"$ref": "AAAAAAGA92JIK5Bxj7E="
 							},
-							"name": "Map",
+							"name": "Level",
 							"ownedElements": [
 								{
 									"_type": "UMLAssociation",
@@ -29654,7 +29654,7 @@
 									},
 									"name": "tileset_maps",
 									"visibility": "private",
-									"type": "vector<TileSetMap>"
+									"type": "vector<TileSetWrapper>"
 								},
 								{
 									"_type": "UMLAttribute",
@@ -29750,7 +29750,7 @@
 									"_parent": {
 										"$ref": "AAAAAAGBEYfBqD0NZLo="
 									},
-									"name": "Map",
+									"name": "Level",
 									"stereotype": "create"
 								},
 								{
@@ -29759,7 +29759,7 @@
 									"_parent": {
 										"$ref": "AAAAAAGBEYfBqD0NZLo="
 									},
-									"name": "Map",
+									"name": "Level",
 									"stereotype": "destroy"
 								},
 								{
@@ -30560,7 +30560,7 @@
 									}
 								}
 							],
-							"stereotype": "Entity",
+							"stereotype": "Character",
 							"attributes": [
 								{
 									"_type": "UMLAttribute",
@@ -30945,7 +30945,7 @@
 							"_parent": {
 								"$ref": "AAAAAAGA92K7mpCm1nk="
 							},
-							"name": "Player",
+							"name": "Character",
 							"ownedElements": [
 								{
 									"_type": "UMLGeneralization",
@@ -31064,7 +31064,7 @@
 									"_parent": {
 										"$ref": "AAAAAAGA/a83HxKX748="
 									},
-									"name": "Player",
+									"name": "Character",
 									"stereotype": "create"
 								},
 								{
@@ -31073,7 +31073,7 @@
 									"_parent": {
 										"$ref": "AAAAAAGA/a83HxKX748="
 									},
-									"name": "Player",
+									"name": "Character",
 									"stereotype": "destroy"
 								},
 								{
@@ -31840,7 +31840,7 @@
 									}
 								}
 							],
-							"stereotype": "Entity",
+							"stereotype": "Character",
 							"attributes": [
 								{
 									"_type": "UMLAttribute",
@@ -31881,7 +31881,7 @@
 					"_parent": {
 						"$ref": "AAAAAAFF+qBWK6M3Z8Y="
 					},
-					"name": "Controllers",
+					"name": "Managers",
 					"ownedElements": [
 						{
 							"_type": "UMLClass",
@@ -32054,7 +32054,7 @@
 									"_parent": {
 										"$ref": "AAAAAAGA/Z3fA0mr2Iw="
 									},
-									"name": "WindowServer",
+									"name": "GraphicManager",
 									"stereotype": "create"
 								},
 								{
@@ -32063,7 +32063,7 @@
 									"_parent": {
 										"$ref": "AAAAAAGA/Z3fA0mr2Iw="
 									},
-									"name": "WindowServer",
+									"name": "GraphicManager",
 									"stereotype": "destroy"
 								},
 								{
@@ -32848,9 +32848,9 @@
 							"_parent": {
 								"$ref": "AAAAAAGA/GIbiA9Ftco="
 							},
-							"name": "window_server",
+							"name": "graphic_manager",
 							"visibility": "private",
-							"type": "WindowServer*"
+							"type": "GraphicManager*"
 						},
 						{
 							"_type": "UMLAttribute",
@@ -32860,7 +32860,7 @@
 							},
 							"name": "player",
 							"visibility": "private",
-							"type": "Player*"
+							"type": "Character*"
 						},
 						{
 							"_type": "UMLAttribute",
@@ -32948,7 +32948,7 @@
 							"_parent": {
 								"$ref": "AAAAAAGA/GIbiA9Ftco="
 							},
-							"name": "map_ Map*",
+							"name": "map_ Level*",
 							"visibility": "private",
 							"type": ""
 						},
@@ -33297,7 +33297,7 @@
 							"_parent": {
 								"$ref": "AAAAAAGA/GIbiA9Ftco="
 							},
-							"name": "init_map",
+							"name": "init_phase",
 							"visibility": "private",
 							"parameters": [
 								{
@@ -33637,7 +33637,7 @@
 							"_parent": {
 								"$ref": "AAAAAAGA/GIbiA9Ftco="
 							},
-							"name": "render_map",
+							"name": "render_phase",
 							"visibility": "private",
 							"parameters": [
 								{
@@ -34676,7 +34676,7 @@
 					"_parent": {
 						"$ref": "AAAAAAFF+qBWK6M3Z8Y="
 					},
-					"name": "Entity",
+					"name": "Character",
 					"ownedElements": [
 						{
 							"_type": "UMLGeneralization",
@@ -34712,7 +34712,7 @@
 							"_parent": {
 								"$ref": "AAAAAAGA/aTpR/BF7TE="
 							},
-							"name": "Entity",
+							"name": "Entie",
 							"stereotype": "create"
 						},
 						{
@@ -34721,7 +34721,7 @@
 							"_parent": {
 								"$ref": "AAAAAAGA/aTpR/BF7TE="
 							},
-							"name": "Entity",
+							"name": "Character",
 							"stereotype": "destroy"
 						},
 						{
