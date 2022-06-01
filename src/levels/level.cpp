@@ -6,8 +6,14 @@
 #include "config.h"
 using namespace Levels;
 
-Level::Level(std::string map_name) :
-    height(), width(), tile_height(), tile_width(), locations(), platforms(), walls(), tiles()
+
+Level::Level() : height(), width(), tiles(), tile_height(), tile_width(), locations(),
+    platforms(), walls(), check_points(), end_location(), start_location(), coins(), background() {}
+
+Level::Level(Managers::GraphicManager *graphic_manager, std::string map_name) :
+    Entie(graphic_manager), height(), width(), tile_height(), tile_width(),
+    locations(), platforms(), walls(), tiles(), check_points(), end_location(), start_location(),
+    coins(), background()
 {
     this->load_map(map_name);
     this->init_variables();
@@ -61,21 +67,47 @@ void Level::init_variables() {
             this->walls = layer.get_walls();
         }
     }
-
+    this->coins = this->tiles->get_coins();
     this->tile_height = map_doc["tileheight"].GetInt();
 
     rapidjson::Value::Array tile_set_array = map_doc["tilesets"].GetArray();
 
     for (auto& tileset : tile_set_array) {
-        this->tileset_maps.emplace_back(tileset);
+        this->tileset_wrappers.emplace_back(tileset);
     }
 
-    std::reverse(this->tileset_maps.begin(), tileset_maps.end());
+    std::reverse(this->tileset_wrappers.begin(), tileset_wrappers.end());
 
     this->tile_width = map_doc["tilewidth"].GetInt();
     this->width = map_doc["width"].GetInt();
 
 }
+
+void Level::update() {
+
+}
+
+// render order of level
+void Level::render() {
+    this->background->render();
+
+    for (int i = static_cast<int>(this->tilemap_render.size()-1); i >= 0; i--) {
+        this->get_render()->render(this->tilemap_render[i]);
+    }
+    for (auto &plat : this->platforms->get_platforms()) {
+        plat.render();
+    }
+    for (auto &wall : this->walls->get_walls()) {
+        wall.render();
+    }
+    for (auto &tile : this->tiles->get_tiles()) {
+        tile.render();
+    }
+    for (auto &coin : this->coins) {
+        coin.render();
+    }
+}
+
 
 int Level::get_height() const {
     return this->height;
@@ -104,19 +136,19 @@ std::string Level::get_name() {
 // set buffer to each space
 void Level::load_map(std::string map_name) {
     std::string path = RESOURCE_PATH;
-    path += "phase/" + map_name;
+    path += "level/" + map_name;
     this->map_str = Levels::Level::read_file(path);
 }
 
 void Level::load_tileset_buffer(const std::string& filename) {
     std::string path = RESOURCE_PATH;
-    path += "phase/" + filename;
+    path += "level/" + filename;
     this->tileset_buffer = Levels::Level::read_file(path);
 }
 
-// initialize each tile of phase putting into vector of tiles
+// initialize each tile of level putting into vector of tiles
 void Level::load_tilesets() {
-    for (auto & tileset_map : this->tileset_maps) {
+    for (auto & tileset_map : this->tileset_wrappers) {
         std::string file = tileset_map.get_source();
         this->load_tileset_buffer(file);
 
@@ -125,7 +157,6 @@ void Level::load_tilesets() {
         this->tilesets.push_back(tileset);
     }
 }
-
 
 void Level::load_tilemap() {
     for (auto & layer : this->layers) {
@@ -137,7 +168,7 @@ void Level::load_tilemap() {
         // pass all information parsed to be a new image
         // assuming that exists only one imagelayer
         if (layer.get_type() == "imagelayer") {
-            this->background = Entities::Image("phase/"+layer.get_image());
+            this->background = new Entities::Image(this->get_render(), "level/"+layer.get_image());
         }
     }
 }
@@ -157,10 +188,61 @@ std::string Level::read_file(const std::string& filename) {
     return buf.str();
 }
 
-void Level::update() {
+void Level::handle_collision(Entities::Player *other) {
 
-}
+    if (this->end_location.get_collider().check_collision(other->get_collider(), other->get_velocity(), false)) {
+        // verify if jaime collide with the end of level, to load next level
+        this->next_map();
+    }
+    for (auto &check_point : this->check_points) {
+        if (check_point.get_collider().check_collision(other->get_collider(), other->get_velocity(), false)) {
+            // verify if jaime collide with check point to save the game
+            this->save_game(check_point);
+        }
+    }
 
-void Level::render() {
+    // platform and jaime collision
+    for (auto &platform: this->platforms->get_platforms()) {
+        if (platform.get_collider().check_collision(other->get_collider(), other->get_velocity(),true))
+        {
+            other->on_collision(platform.get_type());
+        }
+    }
+    // walls and jaime collision
+    for (auto &wall: this->walls->get_walls()) {
+        if (wall.get_collider().check_collision(other->get_collider(), other->get_velocity(), true)) {
+            other->on_collision(wall.get_type());
+        }
+    }
+    // tiles and jaime collision, set a different collision by type
+    for (auto &tile: this->tiles->get_tiles()) {
 
+        if (tile.get_type() == "coin" && !this->coins.empty()) {
+            if (tile.get_collider().check_collision(other->get_collider(), other->get_velocity(),false)) {
+                for (auto coin = this->coins.cbegin(); coin < this->coins.cend(); *coin++) {
+                    // if coin id is equal tile id, then increment jaime score and erase from coins after testing collision
+                    if (coin->get_id() == tile.get_id()) {
+                        coin = this->coins.erase(coin);
+                        other->on_collision(tile.get_type());
+                    }
+                }
+            }
+        }
+
+        if (tile.get_type() == "spike" ) {
+            if (tile.get_collider().check_collision(other->get_collider(),other->get_velocity(),
+                                                    true)) {
+                if (other->get_state() != Entities::dead) {
+                    other->on_collision(tile.get_type());
+                }
+            }
+        }
+
+        if (tile.get_type() == "block") {
+            if (tile.get_collider().check_collision(other->get_collider(), other->get_velocity(),
+                                                    true)) {
+                other->on_collision(tile.get_type());
+            }
+        }
+    }
 }

@@ -19,7 +19,8 @@ namespace Entities {
             float gravity;
 
         public:
-            Entity(Managers::GraphicManager &graphicManager);
+            Entity();
+            Entity(Managers::GraphicManager *graphic_manager);
             ~Entity();
 
             sf::Vector2f& get_velocity();

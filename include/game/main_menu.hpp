@@ -22,8 +22,9 @@ namespace Managers {
             Entities::Text *credit;
 
 
-        public:
-            MainMenu(double x, double y);
+    public:
+            MainMenu();
+            MainMenu(Managers::GraphicManager *graphic_manager, double x, double y);
             ~MainMenu();
 
             Entities::Text& show_credit();
@@ -34,6 +35,8 @@ namespace Managers {
             void init_title();
             void init_entries();
             void init_background(double x, double y);
+            void init_score();
+            void render();
             void update(bool from_game, bool from_player_dead);
             void events(GraphicManager &window_server);
             void handle_events(GraphicManager &window_server);

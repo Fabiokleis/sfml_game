@@ -3,7 +3,7 @@ using namespace Levels;
 
 bool TileMap::load(TileSet tileset, Layer &layer) {
     std::string path = RESOURCE_PATH;
-    path += "phase/";
+    path += "level/";
     if (!this->tex.loadFromFile(path + tileset.get_image())) {
         std::cerr << "ERROR on loading the texture file of tileset!\n";
         return false;

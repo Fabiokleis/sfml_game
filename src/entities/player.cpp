@@ -1,10 +1,10 @@
 #include "player.hpp"
 using namespace Entities;
 
-Player::Player(Managers::GraphicManager &graphicManager, double x, double y, double width, double height, int cordx, int cordy,
+Player::Player(Managers::GraphicManager *graphic_manager, double x, double y, double width, double height, int cordx, int cordy,
                int coin, int life_number, sf::Vector2u image_count, float switch_time, States state,
                const std::string &path_name) :
-    Character(graphicManager, width, height, cordx, cordy, life_number, image_count, switch_time, state, path_name),
+    Character(graphic_manager, width, height, cordx, cordy, life_number, image_count, switch_time, state, path_name),
     coin(coin)
 {
     this->set_position(x, y);
@@ -111,7 +111,7 @@ void Player::update_physics() {
 
 void Player::update_input() {
     this->velocity.x = 0.0f;
-    // player movement - kb
+    // jaime movement - kb
     if (state == walking_left || state == falling_left) {
         this->move(-1.0f, 0.0f);
     } else if (state == walking_right || state == falling_right) {

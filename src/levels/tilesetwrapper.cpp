@@ -1,10 +1,8 @@
 #include "tilesetwrapper.hpp"
 using namespace Levels;
 
-
 TileSetWrapper::TileSetWrapper() : firstid() {}
 TileSetWrapper::~TileSetWrapper() {}
-
 
 TileSetWrapper::TileSetWrapper(rapidjson::Value& value) {
     this->firstid = value["firstgid"].GetInt();

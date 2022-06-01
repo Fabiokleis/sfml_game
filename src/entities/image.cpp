@@ -1,13 +1,13 @@
 #include "image.hpp"
 using namespace Entities;
 
-Image::Image(Managers::GraphicManager &graphicManager, const std::string& path_name) :
-    Entity(graphicManager), texture()
+Image::Image(Managers::GraphicManager *graphic_manager, const std::string& path_name) :
+    Entity(graphic_manager), texture()
 {
     this->load_texture(path_name);
 }
-
-Image::Image(Managers::GraphicManager &graphicManager, double x, double y, double width, double height, sf::Color color) :
+Image::Image() : texture() {}
+Image::Image(Managers::GraphicManager *graphicManager, double x, double y, double width, double height, sf::Color color) :
         Entity(graphicManager)
 {
     this->texture = nullptr;

@@ -22,6 +22,7 @@ namespace Levels {
             double y;
 
         public:
+            Object();
             Object(Managers::GraphicManager &graphic_manager, rapidjson::Value& value);
             ~Object();
 
@@ -32,8 +33,7 @@ namespace Levels {
             double get_width() const;
             double get_x() const;
             double get_y() const;
-            void render();
-            virtual void update() = 0;
+            virtual void update();
     };
 }
 

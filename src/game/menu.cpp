@@ -1,8 +1,7 @@
 #include "menu.hpp"
 using namespace Managers;
 
-Menu::Menu() : menu_image(), text_options(), title()
-{
+Menu::Menu(Managers::GraphicManager *graphic_manager) : menu_image(), text_options(), title(), score_text(), Entities::Entie(graphic_manager) {
     this->menu_counter = 0;
     this->max_options = 0;
     this->on_menu = true;
@@ -11,6 +10,7 @@ Menu::Menu() : menu_image(), text_options(), title()
     this->from_player_dead = false;
 }
 
+Menu::Menu() : menu_image(), text_options(), title(), score_text(), from_game(), on_menu(), from_player_dead(), menu_counter(), max_options(), on_submenu() {}
 
 Menu::~Menu() {
     delete title;

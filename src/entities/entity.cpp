@@ -2,12 +2,14 @@
 #include "collider.hpp"
 using namespace Entities;
 
-Entity::Entity(Managers::GraphicManager &graphicManager) :
+Entity::Entity(Managers::GraphicManager *graphic_manager) :
         velocity(0.0f, 0.0f), gravity(9.81f),
-        Entie(graphicManager)
+        Entie(graphic_manager)
 {
     this->sprite = sf::RectangleShape();
 }
+
+Entity::Entity() : gravity() {}
 
 Entity::~Entity() {}
 

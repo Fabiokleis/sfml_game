@@ -14,27 +14,13 @@
 class Game {
     private:
         Managers::GraphicManager* graphic_manager;
-        Entities::Player *player;
+        Entities::Player *jaime;
 
         Managers::MainMenu *menu;
         Managers::SubMenu *settings;
 
+        Levels::Level* level;
 
-        Entities::Text *score_text;
-
-
-        Levels::Level* phase;
-        std::vector<Levels::TileMap> tilemap;
-        std::vector<Entities::Image> map_backgrounds;
-        Levels::Object start_location;
-        std::vector<Levels::Object> check_point_locations;
-        Levels::Object end_location;
-        Levels::Locations locations;
-        Levels::Platforms platforms;
-        Levels::Tiles tiles;
-        Levels::Walls walls;
-
-        std::vector<Entities::Coin> coins;
         Entities::Image *life_image;
         Entities::Text *life_text;
         Entities::Text *coin_number;
@@ -53,7 +39,7 @@ class Game {
         void init_entities();
         void init_score();
         void parse_save(const std::string& buf);
-        void init_phase(std::string map_name);
+        void init_level(std::string map_name);
         void set_time();
         void set_score(int coin, int life_number);
         void count_down();
@@ -68,7 +54,6 @@ class Game {
         void next_map();
         void render_menu();
         void render_settings();
-        void render_phase();
         void render();
         void handle_collision();
         void handle_player_collision();

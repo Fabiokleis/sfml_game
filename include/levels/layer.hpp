@@ -18,10 +18,10 @@ namespace Levels {
             std::string image;
             std::string name;
             std::string type;
-            Locations locations;
-            Tiles tiles;
-            Platforms platforms;
-            Walls walls;
+            Locations* locations;
+            Tiles* tiles;
+            Platforms* platforms;
+            Walls* walls;
     
         public:
             Layer (rapidjson::Value& value);
@@ -29,10 +29,10 @@ namespace Levels {
             ~Layer();
 
             void init_object_layers(rapidjson::Value& value);
-            Locations get_locations();
-            Tiles get_tiles();
-            Platforms get_platforms();
-            Walls get_walls();
+            Locations* get_locations();
+            Tiles* get_tiles();
+            Platforms* get_platforms();
+            Walls* get_walls();
             std::vector<long> get_data();
             int get_height() const;
             std::string get_image();

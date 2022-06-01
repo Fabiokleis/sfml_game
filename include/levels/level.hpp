@@ -19,6 +19,7 @@
 #include "config.h"
 #include "image.hpp"
 #include "entie.hpp"
+#include "player.hpp"
 
 namespace Levels {
 
@@ -38,14 +39,20 @@ class Level : public Entities::Entie {
             std::vector<TileSetWrapper> tileset_wrappers;
             std::vector<TileMap> tilemap_render;
 
-            Entities::Image background;
-            Locations locations;
-            Tiles tiles;
-            Platforms platforms;
-            Walls walls;
+            Entities::Image *background;
+            Locations *locations;
+            Tiles *tiles;
+            Platforms *platforms;
+            Walls *walls;
+
+            Object end_location;
+            Object start_location;
+            std::vector<Object> check_points;
+            std::vector<Entities::Coin> coins;
     
         public:
-            Level(std::string map_name);
+            Level();
+            Level(Managers::GraphicManager *graphic_manager, std::string map_name);
             ~Level();
     
             void init_variables();
@@ -62,6 +69,7 @@ class Level : public Entities::Entie {
             void load_map(std::string map_name);
             void load_tilesets();
             void load_tilemap();
+            void handle_collision(Entities::Player *other);
             void update();
             void render();
     };

@@ -2,9 +2,8 @@
 #include "text.hpp"
 using namespace Entities;
 
-
-Text::Text(const std::string& path_name, unsigned int size, float x, float y, sf::Color color,
-           unsigned style, sf::Color outline, float thick, const std::string& str)
+Text::Text(Managers::GraphicManager *graphic_manager, const std::string& path_name, unsigned int size, float x, float y, sf::Color color,
+           unsigned style, sf::Color outline, float thick, const std::string& str) : Entie(graphic_manager)
 {
     std::string path = RESOURCE_PATH;
     if (!this->font.loadFromFile(path+path_name)) {
@@ -37,9 +36,11 @@ void Text::set_position(sf::Vector2f position) {
     this->text.setPosition(position);
 }
 
-sf::Text & Text::get_text() {
-    return this->text;
+void Text::render() {
+    this->get_render().render(this->text);
 }
+
+void Text::update() {}
 
 void Text::set_attr(sf::Color color, sf::Color outline_color, float thick, unsigned style) {
     this->text.setFillColor(color);

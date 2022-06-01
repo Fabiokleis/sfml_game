@@ -13,6 +13,8 @@ Object::Object(Managers::GraphicManager &graphic_manager, rapidjson::Value &valu
     this->y = value["y"].GetDouble();
 }
 
+Object::Object() : Entities::Entity() {}
+
 Object::~Object() {}
 
 int Object::get_id() const {
@@ -42,3 +44,5 @@ double Object::get_x() const {
 double Object::get_y() const {
     return this->y;
 }
+
+void Object::update() {}

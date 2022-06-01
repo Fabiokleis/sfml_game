@@ -1,8 +1,10 @@
 #include "sub_menu.hpp"
 using namespace Managers;
 
-SubMenu::SubMenu(double x, double y) :
-    Menu(), state()
+SubMenu::SubMenu() : state(), about_text(), keyboard_image() {}
+
+SubMenu::SubMenu(Managers::GraphicManager *graphic_manager, double x, double y) :
+    Menu(graphic_manager), state(), keyboard_image(), about_text()
 {
     // default submenu
     this->set_on_menu(false);
@@ -17,7 +19,7 @@ SubMenu::~SubMenu() {
 }
 
 void SubMenu::init_title() {
-    this->title = new Entities::Text(
+    this->title = new Entities::Text(this->get_render(),
             FONT_PATH,
             80,
             WINDOW_X / 2 - 240.0f,
@@ -30,13 +32,13 @@ void SubMenu::init_title() {
 }
 
 void SubMenu::init_background(double x, double y) {
-    this->menu_image = new Entities::Image(0.0f, 0.0f, WINDOW_X, WINDOW_Y, sf::Color::Black);
+    this->menu_image = new Entities::Image(this->get_render(), 0.0f, 0.0f, WINDOW_X, WINDOW_Y, sf::Color::Black);
     this->menu_image->set_position(x, y);
 }
 
 void SubMenu::init_entries() {
     this->max_options = 3;
-    this->text_options.emplace_back(new Entities::Text(
+    this->text_options.emplace_back(new Entities::Text(this->get_render(),
             FONT_PATH,
             48,
             WINDOW_X / 2.0f - 64.0f,
@@ -45,7 +47,7 @@ void SubMenu::init_entries() {
             0,
             sf::Color::Transparent,
             0.0f, "Resume"));
-    this->text_options.emplace_back(new Entities::Text(
+    this->text_options.emplace_back(new Entities::Text(this->get_render(),
             FONT_PATH,
             48,
             WINDOW_X / 2.0f - 64.0f,
@@ -54,7 +56,7 @@ void SubMenu::init_entries() {
             0,
             sf::Color::Transparent,
             0.0f, "About"));
-    this->text_options.emplace_back(new Entities::Text(
+    this->text_options.emplace_back(new Entities::Text(this->get_render(),
             FONT_PATH,
             48,
             WINDOW_X / 2.0f - 64.0f,
@@ -64,8 +66,8 @@ void SubMenu::init_entries() {
             sf::Color::Transparent,
             0.0f, "Show Controls"));
 
-    this->keyboard_image = new Entities::Image(KEYBOARD);
-    this->about_text = new Entities::Text(
+    this->keyboard_image = new Entities::Image(this->get_render(), KEYBOARD);
+    this->about_text = new Entities::Text(this->get_render(),
             FONT_PATH,
             24,
             WINDOW_X / 2.0f - 480.0f,
@@ -168,3 +170,16 @@ void SubMenu::handle_events(GraphicManager &window_server) {
     }
 }
 
+void SubMenu::render() {
+    this->menu_image->render();
+    this->title->render();
+    if (state == Managers::showkb) {
+        this->keyboard_image->render();
+    } else if (state == Managers::about) {
+        this->about_text->render();
+    } else {
+        for (auto &option : this->text_options) {
+            option->render();
+        }
+    }
+}

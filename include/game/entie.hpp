@@ -8,14 +8,14 @@ namespace Entities {
 
     class Entie {
         private:
-            Managers::GraphicManager &graphic_manager;
-
+            Managers::GraphicManager *graphic_manager;
 
         public:
-            Entie(Managers::GraphicManager &graphicManager);
+            Entie();
+            Entie(Managers::GraphicManager *graphicManager);
             ~Entie();
 
-            Managers::GraphicManager& get_render();
+            Managers::GraphicManager* get_render();
             virtual void render() = 0;
             virtual void update() = 0;
     };

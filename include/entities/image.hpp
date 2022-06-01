@@ -12,8 +12,9 @@ namespace Entities {
             sf::Texture *texture;
 
         public:
-            Image(Managers::GraphicManager &graphicManager, const std::string& path_name);
-            Image(Managers::GraphicManager &graphicManager, double x, double y, double width, double height, sf::Color color=sf::Color::Black);
+            Image();
+            Image(Managers::GraphicManager *graphic_manager, const std::string& path_name);
+            Image(Managers::GraphicManager *graphic_manager, double x, double y, double width, double height, sf::Color color=sf::Color::Black);
             void load_texture(const std::string& path_name);
             ~Image();
             void update();

@@ -50,7 +50,8 @@ namespace Entities {
             int life_number;
 
         public:
-            Character(Managers::GraphicManager &graphicManager, double width, double height, int cordx, int cordy, int life_number,
+            Character();
+            Character(Managers::GraphicManager *graphic_manager, double width, double height, int cordx, int cordy, int life_number,
                       sf::Vector2u image_count, float switch_time, States state,
                       const std::string &path_name);
 

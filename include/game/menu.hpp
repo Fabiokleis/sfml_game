@@ -10,7 +10,7 @@
 
 namespace Managers {
 
-    class Menu {
+    class Menu : public Entities::Entie {
         private:
             bool on_menu;
             bool on_submenu;
@@ -18,6 +18,7 @@ namespace Managers {
         protected:
             Entities::Text *title;
             Entities::Image *menu_image;
+            Entities::Text *score_text;
             std::vector<Entities::Text*> text_options;
             int max_options;
             int menu_counter;
@@ -27,7 +28,8 @@ namespace Managers {
             
         public:
             Menu();
-            ~Menu();
+            Menu(Managers::GraphicManager *graphic_manager);
+            virtual ~Menu();
             sf::RectangleShape get_sprite();
             int get_current_option() const;
             void inc_option();
@@ -38,6 +40,8 @@ namespace Managers {
             bool get_on_submenu() const;
             std::vector<Entities::Text*> get_options();
             Entities::Text get_title();
+            virtual void render() = 0;
+            virtual void update();
             virtual void update(bool from_game, bool from_player_dead) = 0;
             virtual void events(GraphicManager &window_server) = 0;
             virtual void handle_events(GraphicManager &window_server) = 0;

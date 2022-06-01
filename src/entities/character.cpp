@@ -3,10 +3,10 @@
 #include "character.hpp"
 using namespace Entities;
 
-Character::Character(Managers::GraphicManager &graphicManager, double width, double height, int cordx, int cordy, int life_number,
+Character::Character(Managers::GraphicManager *graphic_manager, double width, double height, int cordx, int cordy, int life_number,
                      sf::Vector2u image_count, float switch_time, States state,
                      const std::string &path_name) :
-        Entity(graphicManager), collide_state(not_colliding), image_count(image_count),
+        Entity(graphic_manager), collide_state(not_colliding), image_count(image_count),
         state(state), last_state(idle), jump_height(0), delta_time(0), switch_time(switch_time), acceleration(0), life_number(life_number)
 
 {
@@ -18,6 +18,8 @@ Character::Character(Managers::GraphicManager &graphicManager, double width, dou
     this->sprite.setOutlineColor(sf::Color::Green);
     this->animation = new Managers::Animation(this->texture.getSize(), this->image_count, this->switch_time);
 }
+
+Character::Character() : state(), last_state(), jump_height(), delta_time(), switch_time(), acceleration(), life_number(), collide_state(), animation() {}
 
 Character::~Character() {
     delete animation;

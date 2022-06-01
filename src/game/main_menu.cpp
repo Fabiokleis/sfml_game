@@ -4,11 +4,14 @@
 
 using namespace Managers;
 
-MainMenu::MainMenu(double x, double y) : Menu(), load_save(), state(restart) {
+MainMenu::MainMenu() : load_save(), state(), credit(), saved_file() {}
+
+MainMenu::MainMenu(Managers::GraphicManager *graphic_manager, double x, double y) : Menu(graphic_manager), load_save(), state(restart), credit() {
     this->saved_file = this->verify_save();
     this->init_title();
     this->init_background(x, y);
     this->init_entries();
+    this->init_score();
 }
 
 MainMenu::~MainMenu() {
@@ -16,7 +19,7 @@ MainMenu::~MainMenu() {
 }
 
 void MainMenu::init_title() {
-    this->title = new Entities::Text(
+    this->title = new Entities::Text(this->get_render(),
             FONT_PATH,
             80,
             WINDOW_X / 2 - 240.0f,
@@ -29,13 +32,13 @@ void MainMenu::init_title() {
 }
 
 void MainMenu::init_background(double x, double y) {
-    this->menu_image = new Entities::Image(0, 0, WINDOW_X, WINDOW_Y, sf::Color::Black);
+    this->menu_image = new Entities::Image(this->get_render(), 0, 0, WINDOW_X, WINDOW_Y, sf::Color::Black);
     this->menu_image->set_position(x, y);
 }
 
 void MainMenu::init_entries() {
     this->max_options = 7;
-    this->text_options.emplace_back(new Entities::Text(
+    this->text_options.emplace_back(new Entities::Text(this->get_render(),
             FONT_PATH,
             48,
             WINDOW_X / 2.0f - 64.0f,
@@ -45,7 +48,7 @@ void MainMenu::init_entries() {
             sf::Color::Transparent,
             0.0f, "New Game"));
 
-    this->text_options.emplace_back(new Entities::Text(
+    this->text_options.emplace_back(new Entities::Text(this->get_render(),
             FONT_PATH,
             48,
             WINDOW_X / 2.0f - 64.0f,
@@ -55,7 +58,7 @@ void MainMenu::init_entries() {
             sf::Color::Transparent,
             0.0f, "Load save"));
 
-    this->text_options.emplace_back(new Entities::Text(
+    this->text_options.emplace_back(new Entities::Text(this->get_render(),
             FONT_PATH,
             48,
             WINDOW_X / 2.0f - 64.0f,
@@ -65,7 +68,7 @@ void MainMenu::init_entries() {
             sf::Color::Transparent,
             0.0f,
             "Level 1"));
-    this->text_options.emplace_back(new Entities::Text(
+    this->text_options.emplace_back(new Entities::Text(this->get_render(),
             FONT_PATH,
             48,
             WINDOW_X / 2.0f - 64.0f,
@@ -76,7 +79,7 @@ void MainMenu::init_entries() {
             0.0f,
             "Level 2"));
 
-    this->text_options.emplace_back(new Entities::Text(
+    this->text_options.emplace_back(new Entities::Text(this->get_render(),
             FONT_PATH,
             48,
             WINDOW_X / 2.0f - 64.0f,
@@ -86,7 +89,7 @@ void MainMenu::init_entries() {
             sf::Color::Transparent,
             0.0f,
             "Settings"));
-    this->text_options.emplace_back(new Entities::Text(
+    this->text_options.emplace_back(new Entities::Text(this->get_render(),
             FONT_PATH,
             48,
             WINDOW_X / 2.0f - 64.0f,
@@ -96,7 +99,7 @@ void MainMenu::init_entries() {
             sf::Color::Transparent,
             0.0f,
             "Credits"));
-    this->text_options.emplace_back(new Entities::Text(
+    this->text_options.emplace_back(new Entities::Text(this->get_render(),
             FONT_PATH,
             48,
             WINDOW_X / 2.0f - 64.0f,
@@ -107,7 +110,7 @@ void MainMenu::init_entries() {
             0.0f,
             "Exit"));
 
-    this->credit = new Entities::Text(
+    this->credit = new Entities::Text(this->get_render(),
             FONT_PATH,
             24,
             WINDOW_X / 2.0f - 480.0f,
@@ -129,10 +132,45 @@ void MainMenu::init_entries() {
 
 }
 
+void MainMenu::init_score() {
+    if (saved_file) {
+        std::string path = RESOURCE_PATH;
+        path += SAVE_PATH;
+        std::string buf = Levels::Level::read_file(path);
+        rapidjson::Document saved_file;
+        saved_file.Parse(buf.c_str());
+
+        std::string map_name = saved_file["map_name"].GetString();
+        int coin = saved_file["coin"].GetInt();
+        int life = saved_file["life"].GetInt();
+
+        std::string life_number_text("life: ");
+        life_number_text += std::to_string(life) + '\n';
+        std::string coin_text("coins: ");
+        coin_text += std::to_string(coin);
+        map_name += '\n' + life_number_text + coin_text;
+
+
+        this->score_text = new Entities::Text(this->get_render(),
+                                              FONT_PATH,
+                                              32,
+                                              WINDOW_X / 2.0f + 128.0f,
+                                              WINDOW_Y / 2.0f + 128.0f,
+                                              sf::Color(192, 192, 192),
+                                              0,
+                                              sf::Color::Transparent,
+                                              0.0f, map_name);
+
+        this->score_text->set_attr(sf::Color(192, 192, 192), sf::Color(95, 0, 160), 1.0f, 0);
+    } else {
+        this->score_text = new Entities::Text();
+    }
+}
+
 
 bool MainMenu::verify_save() {
     std::string path = RESOURCE_PATH;
-    std::string buf = Levels::Level::read_file(path + "player/save_state.json");
+    std::string buf = Levels::Level::read_file(path + "jaime/save_state.json");
     if (!buf.empty()) {
         return true;
     }
@@ -154,6 +192,7 @@ MenuStates MainMenu::get_state() {
 bool MainMenu::get_load() const {
     return this->load_save;
 }
+
 
 void MainMenu::update(bool from_game, bool from_player_dead) {
     // limit menu_counter to be in range of [0-max_options-1]
@@ -252,12 +291,12 @@ void MainMenu::events(GraphicManager &window_server) {
         window_server.close();
 
     } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter) && this->get_current_option() == 2) {
-        // phase 1
-        std::cout << "phase 1 opt" << std::endl;
+        // level 1
+        std::cout << "level 1 opt" << std::endl;
         this->state = phase1;
     } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter) && this->get_current_option() == 3) {
-        // phase 2
-        std::cout << "phase 2 opt" << std::endl;
+        // level 2
+        std::cout << "level 2 opt" << std::endl;
         this->state = phase2;
     } else {
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
@@ -285,6 +324,22 @@ void MainMenu::handle_events(GraphicManager &window_server) {
                 break;
             default:
                 break;
+        }
+    }
+}
+
+void MainMenu::render() {
+    this->menu_image->render();
+    this->title->render();
+    if (state == Managers::credits) {
+        this->credit->render();
+
+    } else {
+        for (auto &option : this->text_options) {
+            option->render();
+        }
+        if (saved_file) {
+            this->score_text->render();
         }
     }
 }

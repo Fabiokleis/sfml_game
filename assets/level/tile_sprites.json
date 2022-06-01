@@ -6,7 +6,7 @@
  "name":"tile_sprites",
  "spacing":0,
  "tilecount":36,
- "tiledversion":"1.8.4",
+ "tiledversion":"1.8.5",
  "tileheight":32,
  "tilewidth":32,
  "type":"tileset",

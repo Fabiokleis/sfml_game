@@ -3,8 +3,8 @@
 #include <fstream>
 
 Game::Game() :
-        player(), phase(), menu(), settings(), delta_time(), coin_image(), coin_number(),
-        time_text(), total_time(TIME), life_image(), life_text(), score_text(), on_menu()
+        jaime(), level(), menu(), settings(), delta_time(), coin_image(), coin_number(),
+        time_text(), total_time(TIME), life_image(), life_text(), on_menu()
 {
     this->graphic_manager = new Managers::GraphicManager("c++ game");
 
@@ -19,28 +19,28 @@ void Game::exec() {
 
     if (this->graphic_manager->is_open() && !this->on_menu) {
 
-        // only load saved phase if menu load save is selected
+        // only load saved level if menu load save is selected
         if (this->menu->get_saved() && this->menu->get_state() != Managers::restart) {
-            // verify if saved phase is first or second
+            // verify if saved level is first or second
             if (this->verify_map()) {
-                this->init_phase(PLATFORM1);
+                this->init_level(PLATFORM1);
             } else {
-                this->init_phase(PLATFORM2);
+                this->init_level(PLATFORM2);
             }
         } else {
-            // default first phase when not save found and not from load
-            this->init_phase(PLATFORM1);
+            // default first level when not save found and not from load
+            this->init_level(PLATFORM1);
         }
         this->init_entities();
-        // to init timer after load phase and any other entity
+        // to init timer after load level and any other entity
         sf::Clock timer;
         this->game_loop(timer);
     }
 }
 
 Game::~Game() {
-    delete player;
-    delete phase;
+    delete jaime;
+    delete level;
     delete settings;
     delete menu;
     delete graphic_manager;
@@ -48,7 +48,6 @@ Game::~Game() {
     delete coin_number;
     delete life_image;
     delete life_text;
-    delete score_text;
 }
 
 void Game::menu_loop(bool from_game, bool from_player_dead) {
@@ -92,8 +91,8 @@ void Game::game_loop(sf::Clock timer) {
         }
 
         this->delta_time = this->clock.restart().asSeconds();
-        this->player->reset_clock(delta_time);
-        this->set_score(this->player->get_coins(), this->player->get_life_number());
+        this->jaime->reset_clock(delta_time);
+        this->set_score(this->jaime->get_coins(), this->jaime->get_life_number());
 
         this->update();
         this->render();
@@ -102,7 +101,7 @@ void Game::game_loop(sf::Clock timer) {
 
 void Game::count_down() {
     if (this->total_time == -1) {
-        this->player->set_state(Entities::dead);
+        this->jaime->set_state(Entities::dead);
     }
 }
 
@@ -121,64 +120,33 @@ void Game::init_menu() {
     [6] Exit
     */
     this->on_menu = true;
-    this->menu = new Managers::MainMenu(0, 0);
-    this->settings = new Managers::SubMenu(0, 0);
+    this->menu = new Managers::MainMenu(this->graphic_manager, 0, 0);
+    this->settings = new Managers::SubMenu(this->graphic_manager, 0, 0);
 }
 
 
 void Game::init_score() {
     // score text on window
-    if (this->menu->get_saved()) {
-        std::string path = RESOURCE_PATH;
-        path += SAVE_PATH;
-        std::string buf = Levels::Level::read_file(path);
-        rapidjson::Document saved_file;
-        saved_file.Parse(buf.c_str());
 
-        std::string map_name = saved_file["map_name"].GetString();
-        int coin = saved_file["coin"].GetInt();
-        int life = saved_file["life"].GetInt();
-
-        std::string life_number_text("life: ");
-        life_number_text += std::to_string(life) + '\n';
-        std::string coin_text("coins: ");
-        coin_text += std::to_string(coin);
-        map_name += '\n' + life_number_text + coin_text;
-
-
-        this->score_text = new Entities::Text(
-                FONT_PATH,
-                32,
-                WINDOW_X / 2.0f + 128.0f,
-                WINDOW_Y / 2.0f + 128.0f,
-                sf::Color(192, 192, 192),
-                0,
-                sf::Color::Transparent,
-                0.0f, map_name);
-
-        this->score_text->set_attr(sf::Color(192, 192, 192), sf::Color(95, 0, 160), 1.0f, 0);
-    } else {
-        this->score_text = new Entities::Text();
-    }
 }
 
 void Game::init_entities() {
 
-    // create a new player with save
+    // create a new jaime with save
     if (this->menu->get_load()) {
         std::string path = RESOURCE_PATH;
         std::string buf = Levels::Level::read_file(path + SAVE_PATH);
         this->parse_save(buf);
-        std::string map_name = this->phase->get_name();
-        // restart phase
-        this->init_phase(map_name);
+        std::string map_name = this->level->get_name();
+        // restart level
+        this->init_level(map_name);
         // restart time
         this->total_time = TIME;
 
     } else {
 
-        // create a new player without save
-        this->player = new Entities::Player(
+        // create a new jaime without save
+        this->jaime = new Entities::Player(
                 *this->graphic_manager,
                 this->start_location.get_x(),
                 this->start_location.get_y(),
@@ -188,9 +156,9 @@ void Game::init_entities() {
     }
 
     // life
-    this->life_image = new Entities::Image(*this->graphic_manager, HEAD_SPRITE);
+    this->life_image = new Entities::Image(this->graphic_manager, HEAD_SPRITE);
     this->life_image->set_position(32.0f, 32.0f);
-    this->life_text = new Entities::Text(
+    this->life_text = new Entities::Text(this->graphic_manager,
             FONT_PATH,
             32,
             0.0f,
@@ -203,9 +171,9 @@ void Game::init_entities() {
             );
 
     // coins
-    this->coin_image = new Entities::Image(*this->graphic_manager, COIN_PATH);
+    this->coin_image = new Entities::Image(this->graphic_manager, COIN_PATH);
     this->coin_image->set_position(WINDOW_X - 64, 32.0f);
-    this->coin_number = new Entities::Text(
+    this->coin_number = new Entities::Text(this->graphic_manager,
             FONT_PATH,
             32,
             0.0f,
@@ -218,7 +186,7 @@ void Game::init_entities() {
             );
 
     // time text
-    this->time_text = new Entities::Text(
+    this->time_text = new Entities::Text(this->graphic_manager,
             FONT_PATH,
             48,
             WINDOW_X / 2 - 32.0f,
@@ -230,18 +198,8 @@ void Game::init_entities() {
             "");
 }
 
-void Game::init_phase(std::string map_name) {
-    this->phase = new Levels::Level(map_name);
-    this->tiles = this->phase->get_tiles();
-    this->coins = this->tiles.get_coins();
-    this->locations = this->phase->get_locations();
-    this->walls = this->phase->get_walls();
-    this->platforms = this->phase->get_platforms();
-    this->start_location = locations.get_start(); // start position of player
-    this->check_point_locations = locations.get_check_points(); // check points to save game
-    this->end_location = locations.get_end(); // end of the phase, defined to load other phase
-    this->tilemap = this->phase->get_tilemap();
-    this->map_backgrounds = this->phase->get_backgrounds();
+void Game::init_level(std::string map_name) {
+    this->level = new Levels::Level(this->graphic_manager, map_name);
 }
 
 void Game::set_score(int coin, int life_number) {
@@ -267,12 +225,12 @@ void Game::set_time() {
 
 void Game::handle_resets() {
     if (this->player_out_of_window()) {
-        this->player->set_state(Entities::dead);
-        this->player->update_life_number();
+        this->jaime->set_state(Entities::dead);
+        this->jaime->update_life_number();
     }
 
-    // verify if player dead and restart
-    if (this->player->get_state() == Entities::dead) {
+    // verify if jaime dead and restart
+    if (this->jaime->get_state() == Entities::dead) {
         this->menu->set_on_menu(true);
         this->on_menu = this->menu->get_on_menu();
         this->menu_loop(false, true); // create a specific flag to restart game
@@ -284,73 +242,19 @@ void Game::handle_resets() {
 }
 
 void Game::handle_collision() {
-
+    // all collisions are triggered here
     this->handle_player_collision();
 }
 
 void Game::handle_player_collision() {
-
-    if (this->end_location.get_collider().check_collision(this->player->get_collider(), this->player->get_velocity(), false)) {
-        // verify if player collide with the end of phase, to load next phase
-        this->next_map();
-    }
-    for (auto &check_point : this->check_point_locations) {
-        if (check_point.get_collider().check_collision(this->player->get_collider(), this->player->get_velocity(), false)) {
-            // verify if player collide with check point to save the game
-            this->save_game(check_point);
-        }
-    }
-
-    // platform and player collision
-    for (auto &platform: this->platforms.get_platforms()) {
-        if (platform.get_collider().check_collision(this->player->get_collider(), this->player->get_velocity(),
-                                                    true)) {
-            this->player->on_collision(platform.get_type());
-        }
-    }
-    // walls and player collision
-    for (auto &wall: this->walls.get_walls()) {
-        if (wall.get_collider().check_collision(this->player->get_collider(), this->player->get_velocity(), true)) {
-            this->player->on_collision(wall.get_type());
-        }
-    }
-    // tiles and player collision, set a different collision by type
-    for (auto &tile: this->tiles.get_tiles()) {
-
-        if (tile.get_type() == "coin" && !this->coins.empty()) {
-            if (tile.get_collider().check_collision(this->player->get_collider(), this->player->get_velocity(),false)) {
-                for (auto coin = this->coins.cbegin(); coin < this->coins.cend(); *coin++) {
-                    // if coin id is equal tile id, then increment player score and erase from coins after testing collision
-                    if (coin->get_id() == tile.get_id()) {
-                        coin = this->coins.erase(coin);
-                        this->player->on_collision(tile.get_type());
-                    }
-                }
-            }
-        }
-
-        if (tile.get_type() == "spike" ) {
-            if (tile.get_collider().check_collision(this->player->get_collider(), this->player->get_velocity(),
-                                                    true)) {
-                if (this->player->get_state() != Entities::dead) {
-                    this->player->on_collision(tile.get_type());
-                }
-            }
-        }
-        if (tile.get_type() == "block") {
-            if (tile.get_collider().check_collision(this->player->get_collider(), this->player->get_velocity(),
-                                                    true)) {
-                this->player->on_collision(tile.get_type());
-            }
-        }
-    }
+    this->level->handle_collision(this->jaime);
 }
 
 void Game::handle_events() {
     while (this->graphic_manager->poll_event()) {
 
-        if (this->player->get_state() != Entities::dead) {
-            this->player->handle_events(this->graphic_manager->get_event());
+        if (this->jaime->get_state() != Entities::dead) {
+            this->jaime->handle_events(this->graphic_manager->get_event());
         }
 
 
@@ -382,11 +286,11 @@ void Game::handle_events() {
 }
 
 bool Game::player_out_of_window() {
-    auto map_height = this->phase->get_height() * this->phase->get_tile_height();
-    auto map_width = this->phase->get_width() * this->phase->get_tile_width();
+    auto map_height = this->level->get_height() * this->level->get_tile_height();
+    auto map_width = this->level->get_width() * this->level->get_tile_width();
 
-    // force player to stay in bottom/left/right position on phase
-    if (this->player->get_position().y > map_height || this->player->get_position().x > map_width || this->player->get_position().x < 0.0f) {
+    // force jaime to stay in bottom/left/right position on level
+    if (this->jaime->get_position().y > map_height || this->jaime->get_position().x > map_width || this->jaime->get_position().x < 0.0f) {
         return true;
     }
     return false;
@@ -394,18 +298,18 @@ bool Game::player_out_of_window() {
 
 void Game::update_player_view() {
     auto vhalfsize = this->graphic_manager->get_view_size() / 2.0f;
-    auto map_height = this->phase->get_height() * this->phase->get_tile_height();
-    auto map_width = this->phase->get_width() * this->phase->get_tile_width();
-    sf::Vector2f view_pos(this->player->get_position());
+    auto map_height = this->level->get_height() * this->level->get_tile_height();
+    auto map_width = this->level->get_width() * this->level->get_tile_width();
+    sf::Vector2f view_pos(this->jaime->get_position());
 
-    // force view to stay in phase width, height, left and top
+    // force view to stay in level width, height, left and top
     if (!this->player_out_of_window()) {
-        if (this->player->get_position().x + vhalfsize.x >= map_width) {
+        if (this->jaime->get_position().x + vhalfsize.x >= map_width) {
             view_pos.x = map_width - vhalfsize.x;
-        } else if (this->player->get_position().x <= vhalfsize.x) {
+        } else if (this->jaime->get_position().x <= vhalfsize.x) {
             view_pos.x = vhalfsize.x;
         }
-        if (this->player->get_position().y + vhalfsize.y >= map_height) {
+        if (this->jaime->get_position().y + vhalfsize.y >= map_height) {
             view_pos.y = map_height - vhalfsize.y;
         }
         this->graphic_manager->set_view(sf::View(view_pos, this->graphic_manager->get_window_size()));
@@ -417,11 +321,11 @@ void Game::update_player_view() {
 void Game::save_game(const Levels::Object& current_check_point) {
 
     std::string path = RESOURCE_PATH;
-    int coin = this->player->get_coins();
-    int life = this->player->get_life_number();
+    int coin = this->jaime->get_coins();
+    int life = this->jaime->get_life_number();
     double x = current_check_point.get_x();
     double y = current_check_point.get_y();
-    std::string map_name = this->phase->get_name();
+    std::string map_name = this->level->get_name();
     std::fstream save_file(path+SAVE_PATH, std::ostream::out);
 
     if (save_file.is_open()) {
@@ -441,7 +345,7 @@ void Game::save_game(const Levels::Object& current_check_point) {
 }
 
 void Game::parse_save(const std::string& buf) {
-    // parse json saved file to be a new instance of player and phase
+    // parse json saved file to be a new instance of jaime and level
     rapidjson::Document saved_file;
     saved_file.Parse(buf.c_str());
 
@@ -453,15 +357,14 @@ void Game::parse_save(const std::string& buf) {
     this->total_time = time;
     std::string map_name = saved_file["map_name"].GetString();
 
-    if (this->player) {
-        this->player->restart(x, y, coin, life, Entities::idle);
+    if (this->jaime) {
+        this->jaime->restart(x, y, coin, life, Entities::idle);
     } else {
-        this->player = new Entities::Player(
-                *this->graphic_manager,
+        this->jaime = new Entities::Player(this->graphic_manager,
                 x, y, 45, 80,  0, 0, coin,life,
                 sf::Vector2u(3, 6), 0.1f, Entities::idle, PLAYER_SPRITE_PATH);
     }
-    this->init_phase(map_name);
+    this->init_level(map_name);
 }
 
 void Game::restart_player() {
@@ -478,34 +381,34 @@ void Game::restart_player() {
 
             }
         } else if (this->menu->get_state() == Managers::restart) {
-                // restart at beginning of phase
-                if (this->player->get_state() == Entities::dead) {
-                    this->player->restart(
+                // restart at beginning of level
+                if (this->jaime->get_state() == Entities::dead) {
+                    this->jaime->restart(
                             this->start_location.get_x(),
                             this->start_location.get_y(),
-                            this->player->get_coins(),
-                            this->player->get_life_number(),
+                            this->jaime->get_coins(),
+                            this->jaime->get_life_number(),
                             Entities::idle);
 
-                    std::string map_name = this->phase->get_name();
-                    // restart phase
-                    this->init_phase(map_name);
+                    std::string map_name = this->level->get_name();
+                    // restart level
+                    this->init_level(map_name);
                     // restart time
                     this->total_time = TIME;
                 }
         }
     } else {
-        if (this->player->get_state() == Entities::dead) {
-            this->player->restart(
+        if (this->jaime->get_state() == Entities::dead) {
+            this->jaime->restart(
                     this->start_location.get_x(),
                     this->start_location.get_y(),
-                    this->player->get_coins(),
-                    this->player->get_life_number(),
+                    this->jaime->get_coins(),
+                    this->jaime->get_life_number(),
                     Entities::idle);
 
-            std::string map_name = this->phase->get_name();
-            // restart phase
-            this->init_phase(map_name);
+            std::string map_name = this->level->get_name();
+            // restart level
+            this->init_level(map_name);
             // restart time
             this->total_time = TIME;
         }
@@ -515,108 +418,43 @@ void Game::restart_player() {
 void Game::update() {
     this->handle_events();
     this->count_down();
-    this->player->update();
+    this->jaime->update();
     this->handle_resets();
     this->handle_collision();
-}
-
-void Game::render_menu() {
-    this->graphic_manager->clear();
-    this->graphic_manager->reset_view();
-    this->graphic_manager->render(this->menu->get_sprite());
-    this->graphic_manager->reset_view();
-
-    if (this->menu->get_state() == Managers::credits) {
-        this->graphic_manager->reset_view();
-        this->graphic_manager->render(this->menu->show_credit().get_text());
-        this->graphic_manager->reset_view();
-    } else {
-        for (auto &option: this->menu->get_options()) {
-            this->graphic_manager->render(option->get_text());
-        }
-        if (this->menu->get_saved()) {
-            this->graphic_manager->reset_view();
-            this->graphic_manager->render(this->score_text->get_text());
-
-        }
-    }
-    this->graphic_manager->render(this->menu->get_title().get_text());
-    this->graphic_manager->display();
-}
-
-void Game::render_settings() {
-    this->graphic_manager->clear();
-    this->graphic_manager->reset_view();
-    this->graphic_manager->render(this->settings->get_sprite());
-    this->graphic_manager->reset_view();
-
-    if (this->settings->get_state() == Managers::showkb) {
-        this->graphic_manager->render(this->settings->show_kb().get_sprite());
-    } else if (this->settings->get_state() == Managers::about) {
-        this->graphic_manager->render(this->settings->show_about().get_text());
-    } else {
-        for (auto &option: this->settings->get_options()) {
-            this->graphic_manager->render(option->get_text());
-        }
-    }
-    this->graphic_manager->render(this->menu->get_title().get_text());
-    this->graphic_manager->reset_view();
-    this->graphic_manager->display();
-}
-
-void Game::render_phase() {
-    for (int i = static_cast<int>(this->map_backgrounds.size()-1); i >= 0; i--) {
-        this->graphic_manager->render(this->map_backgrounds[i].get_sprite());
-    }
-    for (int i = static_cast<int>(this->tilemap.size()-1); i >= 0; i--) {
-        this->graphic_manager->render(this->tilemap[i]);
-    }
-    for (auto &plat : this->platforms.get_platforms()) {
-        this->graphic_manager->render(plat.get_sprite());
-    }
-    for (auto &wall : this->walls.get_walls()) {
-        this->graphic_manager->render(wall.get_sprite());
-    }
-    for (auto &tile : this->tiles.get_tiles()) {
-        this->graphic_manager->render(tile.get_sprite());
-    }
-    for (auto &coin : this->coins) {
-        this->graphic_manager->render(coin.get_sprite());
-    }
 }
 
 void Game::render() {
     // clear window each iteration
     this->graphic_manager->clear();
-    // render phase first
-    this->render_phase();
+    // render level first
+    this->level->render();
     this->graphic_manager->reset_view();
 
     // render objects to display information about score, time etc...
-    this->graphic_manager->render(this->coin_number->get_text());
+    this->coin_number->render();
     this->graphic_manager->reset_view();
     this->coin_image->render();
     this->graphic_manager->reset_view();
-    this->graphic_manager->render(this->time_text->get_text());
+    this->time_text->render();
     this->graphic_manager->reset_view();
-    this->graphic_manager->render(this->life_text->get_text());
+    this->life_text->render();
     this->graphic_manager->reset_view();
     this->life_image->render();
 
-    // render player sprite, but he needs a different view size
+    // render jaime sprite, but he needs a different view size
     this->update_player_view();
-    this->player->render();
+    this->jaime->render();
 
     // finally, display everything
     this->graphic_manager->display();
 }
 
 void Game::next_map() {
-    this->init_phase(PLATFORM2);
-    this->player->restart(
+    this->init_level(PLATFORM2);
+    this->jaime->restart(
             this->start_location.get_x(),
             this->start_location.get_y(),
-            this->player->get_coins(),
-            this->player->get_life_number(),
+            this->jaime->get_coins(),
+            this->jaime->get_life_number(),
             Entities::idle);
 }

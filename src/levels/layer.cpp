@@ -1,7 +1,7 @@
 #include "layer.hpp"
 using namespace Levels;
 
-Layer::Layer(rapidjson::Value& value) : tiles(), walls(), platforms() {
+Layer::Layer(rapidjson::Value& value) : tiles(), walls(), platforms(), locations() {
     // in case the layer type is tilelayer
 	if (value.HasMember("data")) {
 		for (auto& i : value["data"].GetArray()) {
@@ -26,45 +26,45 @@ Layer::Layer(rapidjson::Value& value) : tiles(), walls(), platforms() {
 	}
 
     init_object_layers(value);
-
 }
+
 void Layer::init_object_layers(rapidjson::Value& value) {
     // case a layer of objects
     if (value.HasMember("objects")) {
-        // pass all informations parsed to be a new location obj
+        // pass all information parsed to be a new location obj
         if (this->name == "locations") {
-            this->locations = Locations(value);
+            this->locations = new Locations(value);
 
-        } else if (this->name == "platforms") { // pass all informations parsed to be a new platform obj
-            this->platforms = Platforms(value);
+        } else if (this->name == "platforms") { // pass all information parsed to be a new platform obj
+            this->platforms = new Platforms(value);
 
-        } else if (this->name == "tiles") { // pass all informations parsed to be a new tile obj
-            this->tiles = Tiles(value);
+        } else if (this->name == "tiles") { // pass all information parsed to be a new tile obj
+            this->tiles = new Tiles(value);
 
-        } else if (this->name == "walls") {  // pass all informations parsed to be a new wall obj
-            this->walls = Walls(value);
+        } else if (this->name == "walls") {  // pass all information parsed to be a new wall obj
+            this->walls = new Walls(value);
         }
     }
 }
-Locations Layer::get_locations() {
+Locations* Layer::get_locations() {
     return this->locations;
 }
 
-Tiles Layer::get_tiles() {
+Tiles* Layer::get_tiles() {
     return this->tiles;
 }
 
-Platforms Layer::get_platforms() {
+Platforms* Layer::get_platforms() {
     return this->platforms;
 }
 
-Walls Layer::get_walls() {
+Walls* Layer::get_walls() {
     return this->walls;
 }
 
-Layer::Layer() : name(), type(), width(), height(), tiles(), walls(), platforms() {}
+Layer::Layer() : name(), type(), width(), height(), tiles(), walls(), platforms(), locations() {}
 
-Layer::~Layer() = default;
+Layer::~Layer() {}
 
 std::vector<long> Layer::get_data() {
 	return this->data;

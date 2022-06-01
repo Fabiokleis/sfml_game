@@ -3002,7 +3002,7 @@
 											"top": 997,
 											"width": 271,
 											"height": 13,
-											"text": "-player: Character*",
+											"text": "-jaime: Character*",
 											"horizontalAlignment": 0
 										},
 										{
@@ -32858,7 +32858,7 @@
 							"_parent": {
 								"$ref": "AAAAAAGA/GIbiA9Ftco="
 							},
-							"name": "player",
+							"name": "jaime",
 							"visibility": "private",
 							"type": "Character*"
 						},
@@ -33297,7 +33297,7 @@
 							"_parent": {
 								"$ref": "AAAAAAGA/GIbiA9Ftco="
 							},
-							"name": "init_phase",
+							"name": "init_level",
 							"visibility": "private",
 							"parameters": [
 								{
@@ -33637,7 +33637,7 @@
 							"_parent": {
 								"$ref": "AAAAAAGA/GIbiA9Ftco="
 							},
-							"name": "render_phase",
+							"name": "render_level",
 							"visibility": "private",
 							"parameters": [
 								{

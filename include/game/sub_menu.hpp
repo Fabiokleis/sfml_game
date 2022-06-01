@@ -19,7 +19,8 @@ namespace Managers {
 
 
     public:
-            SubMenu(double x, double y);
+            SubMenu();
+            SubMenu(Managers::GraphicManager *graphic_manager, double x, double y);
             ~SubMenu();
 
             Entities::Image& show_kb();
@@ -28,6 +29,8 @@ namespace Managers {
             void init_background(double x, double y);
             void init_entries();
             void init_title();
+            void init_score();
+            void render();
             void update(bool from_game, bool from_player_dead);
             void events(GraphicManager &window_server);
             void handle_events(GraphicManager &window_server);
