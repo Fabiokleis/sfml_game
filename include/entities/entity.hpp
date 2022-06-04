@@ -30,10 +30,9 @@ namespace Entities {
             void set_position(double x, double y);
             void set_size(double width, double height);
             void set_origin(double x, double y);
+            void set_velocity(float x, float y);
             void render();
             virtual void update() = 0;
-
-        void set_velocity(float x, float y);
     };
 }
 #endif /* end of include guard: ENTITY_HPP_RMVC7YT5 */

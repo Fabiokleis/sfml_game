@@ -1,13 +1,13 @@
-#include "image.hpp"
+#include "obstacle.hpp"
 using namespace Entities;
 
-Image::Image(Managers::GraphicManager *graphic_manager, const std::string& path_name) :
+Obstacle::Obstacle(Managers::GraphicManager *graphic_manager, const std::string& path_name) :
     Entity(graphic_manager), texture()
 {
     this->load_texture(path_name);
 }
-Image::Image() : texture() {}
-Image::Image(Managers::GraphicManager *graphicManager, double x, double y, double width, double height, sf::Color color) :
+Obstacle::Obstacle() : texture() {}
+Obstacle::Obstacle(Managers::GraphicManager *graphicManager, double x, double y, double width, double height, sf::Color color) :
         Entity(graphicManager)
 {
     this->texture = nullptr;
@@ -16,9 +16,9 @@ Image::Image(Managers::GraphicManager *graphicManager, double x, double y, doubl
     this->sprite.setFillColor(color);
 }
 
-Image::~Image() {}
+Obstacle::~Obstacle() {}
 
-void Image::load_texture(const std::string &path_name) {
+void Obstacle::load_texture(const std::string &path_name) {
     this->texture = new sf::Texture();
     std::string path = RESOURCE_PATH;
     if (!this->texture->loadFromFile(path+path_name))
@@ -28,4 +28,4 @@ void Image::load_texture(const std::string &path_name) {
     this->sprite.setSize(sf::Vector2f(this->texture->getSize().x, this->texture->getSize().y));
 }
 
-void Image::update() {}
+void Obstacle::update() {}

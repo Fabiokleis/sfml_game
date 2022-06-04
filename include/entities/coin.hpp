@@ -1,11 +1,11 @@
 #ifndef COIN_HPP_VCSQHMPZ
 #define COIN_HPP_VCSQHMPZ
-#include "image.hpp"
+#include "obstacle.hpp"
 #include <SFML/Graphics.hpp>
 
 namespace Entities {
 
-    class Coin : public Image {
+    class Coin : public Obstacle {
         private:
             int id;
 
@@ -13,6 +13,7 @@ namespace Entities {
             Coin();
             Coin(Managers::GraphicManager *graphic_manager, const std::string& coin_path, int id, double x, double y, double width, double height);
             int get_id() const;
+            void update();
             ~Coin();
     };
 }

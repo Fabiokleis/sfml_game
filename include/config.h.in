@@ -4,13 +4,14 @@
 #define WINDOW_X 1280
 #define WINDOW_Y 720
 #define FPS 60
-#define FONT_PATH "fonts/free_pixel.ttf"
 #define TIME 256
+#define FONT_PATH "fonts/free_pixel.ttf"
 #define COIN_PATH "level/coin.png"
 #define PLAYER_SPRITE_PATH "jaime/player_sprite.png"
 #define SAVE_PATH "jaime/save_state.json"
-#define PLATFORM1 "destroyed_world.json"
-#define PLATFORM2 "sorcerer_castle.json"
+#define PLATFORM_STEEL "level/platform_steel.png"
+#define WALL_BRICK "level/wall_brick.png"
 #define KEYBOARD "menu/keyboard.png"
 #define HEAD_SPRITE "level/head_sprite.png"
+#define SPIKE_PATH "level/spike.png"
 #endif /* end of include guard: CONFIG_H_IN_U5CSSGBG */
