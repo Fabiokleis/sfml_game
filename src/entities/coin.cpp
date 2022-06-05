@@ -7,6 +7,7 @@ Coin::Coin(Managers::GraphicManager *graphic_manager, sf::Texture *texture, cons
 {
     this->set_size(width, height);
     this->set_position(x, y);
+    this->set_origin(width/2.0f, height/2.0f);
     this->type = "coin";
 }
 

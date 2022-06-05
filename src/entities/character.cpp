@@ -14,22 +14,24 @@ Character::Character(Managers::GraphicManager *graphic_manager, double width, do
     this->shape = sf::IntRect(cordx, cordy, width, height);
     this->sprite.setSize(sf::Vector2f(width, height));
     this->sprite.setTextureRect(shape);
-    this->sprite.setTexture(&this->texture);
+    this->sprite.setTexture(this->texture);
     this->sprite.setOutlineThickness(1.0f);
     this->sprite.setOutlineColor(sf::Color::Green);
-    this->animation = new Managers::Animation(this->texture.getSize(), this->image_count, this->switch_time);
+    this->animation = new Managers::Animation(this->texture->getSize(), this->image_count, this->switch_time);
 }
 
 Character::Character() : state(), last_state(), jump_height(), delta_time(), switch_time(), acceleration(), life_number(), collide_state(), animation() {}
 
 Character::~Character() {
     delete animation;
+    delete texture;
 }
 
 void Character::init_texture() {
+    this->texture = new sf::Texture();
     std::string assets_path = RESOURCE_PATH;
-    std::cout << std::endl << assets_path + this->path_name << std::endl;
-    if (!this->texture.loadFromFile(assets_path+this->path_name)) {
+//    std::cout << std::endl << assets_path + this->path_name << std::endl;
+    if (!this->texture->loadFromFile(assets_path+this->path_name)) {
         std::cout << "ERROR::ENTITIE_TEXTURE:: COULD NOT LOAD TEXTURE FILE." << std::endl;
     }
 }

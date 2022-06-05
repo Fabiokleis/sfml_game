@@ -43,7 +43,6 @@ void Level1::update() {
     }
 
     if ((this->spikes[0].get_position().y + this->spikes[0].get_size().y) <= (this->platforms[0].get_position().y - this->platforms[0].get_size().y)) {
-        std::cout << "no loop\n";
         for (int s = 0; s <= this->spikes_number; s++) {
             this->spikes[s].move(0, this->gravity + 50.0f);
             if (this->spikes[s].get_position().y >= (this->platforms[s].get_position().y - this->platforms[s].get_size().y)) {
@@ -70,7 +69,7 @@ void Level1::generate_instances() {
 
     std::uniform_int_distribution<> distrW(10, 15); // define the range
     this->walls_number = distrW(gen);
-    // populate the walls vector with a random number of instances 5-10
+    // populate the walls vector with a random number of instances 10-15
     for (int i = 0; i < this->walls_number; i++) {
         this->walls.emplace_back(Entities::Wall());
         this->walls[i].set_color(sf::Color::Black);
@@ -78,17 +77,18 @@ void Level1::generate_instances() {
     }
 
     std::uniform_int_distribution<> distrS(10, 15); // define the range
+    // populate the spikes vector with a random number of instances 10-15
     this->spikes_number = distrS(gen);
     for (int i = 0; i < this->spikes_number; i++) {
         this->spikes.emplace_back(this->get_render(), this->spike_tex, 0, 0, 32, 32, SPIKE_PATH);
     }
-//
-//    std::uniform_int_distribution<> distrC(40, 60); // define the range
-//    this->coins_number = distrC(gen);
-//    // populate the coins vector with a random number of instances 20-40
-//    for (int i = 0; i < this->coins_number; i++) {
-//        this->coins.emplace_back(this->get_render(), COIN_PATH, i, 0, 0, 32, 32);
-//    }
+
+    std::uniform_int_distribution<> distrC(60, 80); // define the range
+    this->coins_number = distrC(gen);
+    // populate the coins vector with a random number of instances 20-40
+    for (int i = 0; i < this->coins_number; i++) {
+        this->coins.emplace_back(this->get_render(), this->coin_tex, COIN_PATH, i, 0, 0, 32, 32);
+    }
 }
 
 
@@ -109,7 +109,6 @@ void Level1::generate_sizes() {
     }
 }
 
-
 void Level1::arbritary_positions() {
     std::random_device rd; // get random number from hardware
     std::mt19937 gen(rd()); // seed generator
@@ -117,8 +116,8 @@ void Level1::arbritary_positions() {
     Entities::Platform aux_p;
     float i = 0;
     float p = 0;
-    for (auto &plat : this->platforms) {
-        plat.set_position((aux_p.get_position().x + aux_p.get_size().x + (i*32))*p, plat.get_position().y);
+    for (auto &plat: this->platforms) {
+        plat.set_position((aux_p.get_position().x + aux_p.get_size().x + (i * 32)) * p, plat.get_position().y);
         i = distrSpaceP(gen);
         p = 1;
         aux_p = plat;
@@ -135,15 +134,22 @@ void Level1::arbritary_positions() {
     // generate a position to spikes
     for (int s = 0; s < this->spikes_number; s++) {
         float plat_sx = this->platforms[s].get_size().x;
-        std::uniform_int_distribution<> distrSpaceW(0, 128); // the local of wall
+        std::uniform_int_distribution<> distrSpaceW(32, 128); // the local of wall
         float space = (distrSpaceW(gen) + this->platforms[s].get_position().x);
         this->spikes[s].set_position(space, this->spikes[s].get_position().y - this->platforms[s].get_size().y);
     }
 
-    // generate a position to spikes between every platform
-//    for (auto &coin : this->coins) {
-//
-//    }
+    // generate a position to coins
+    Entities::Coin aux_c;
+    int prop = round(this->coins_number / this->platforms_number);
+    std::cout << "prop: " << prop << "tm: " << this->coins_number << std::endl;
+    for (int pp = 0; pp < this->platforms_number; pp++) {
+        for (int c = 0; c <= prop; c++) {
+            float plat_sy = this->platforms[pp].get_size().y;
+            this->coins[c+pp].set_position(aux_c.get_position().x + 48, this->height - plat_sy - 160);
+            aux_c = this->coins[c+pp];
+        }
+    }
 }
 
 void Level1::init_textures() {

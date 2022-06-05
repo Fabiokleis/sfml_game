@@ -146,7 +146,7 @@ void Game::init_entities() {
         // create a new jaime without save
         this->jaime = new Entities::Player(
                 this->graphic_manager,
-                16,
+                0,
                 500,
                 45, 80, 0, 0, 0, 5, sf::Vector2u(3, 6), 0.1f,
                 Entities::idle,
@@ -389,8 +389,8 @@ void Game::update_player_view() {
 void Game::update() {
     this->handle_events();
     this->count_down();
-    this->jaime->update();
     this->level->update();
+    this->jaime->update();
     this->handle_resets();
     this->handle_collision();
 }

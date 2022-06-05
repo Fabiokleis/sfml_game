@@ -34,13 +34,12 @@ namespace Entities {
     class Character : public Entity {
         private:
             Managers::Animation *animation;
-
+            sf::Texture *texture;
 
         protected:
             CollideStates collide_state;
             States state;
             States last_state;
-            sf::Texture texture;
             std::string path_name;
             sf::Vector2u image_count;
             float jump_height;
