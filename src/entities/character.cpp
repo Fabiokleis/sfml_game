@@ -6,12 +6,13 @@ using namespace Entities;
 Character::Character(Managers::GraphicManager *graphic_manager, double width, double height, int cordx, int cordy, int life_number,
                      sf::Vector2u image_count, float switch_time, States state,
                      const std::string &path_name) :
-        Entity(graphic_manager), collide_state(not_colliding), image_count(image_count),
+        Entity(graphic_manager), collide_state(not_colliding), image_count(image_count), path_name(path_name),
         state(state), last_state(idle), jump_height(0), delta_time(0), switch_time(switch_time), acceleration(0), life_number(life_number)
 
 {
     this->init_texture();
     this->shape = sf::IntRect(cordx, cordy, width, height);
+    this->sprite.setSize(sf::Vector2f(width, height));
     this->sprite.setTextureRect(shape);
     this->sprite.setTexture(&this->texture);
     this->sprite.setOutlineThickness(1.0f);

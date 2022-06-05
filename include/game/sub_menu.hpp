@@ -15,7 +15,8 @@ namespace Managers {
         private:
             SubMenuStates state;
             Entities::Text *about_text;
-            Entities::Image *keyboard_image;
+            Entities::Obstacle *keyboard_image;
+            sf::Texture *kb_tex;
 
 
     public:
@@ -23,7 +24,7 @@ namespace Managers {
             SubMenu(Managers::GraphicManager *graphic_manager, double x, double y);
             ~SubMenu();
 
-            Entities::Image& show_kb();
+            Entities::Obstacle& show_kb();
             Entities::Text& show_about();
             SubMenuStates get_state();
             void init_background(double x, double y);

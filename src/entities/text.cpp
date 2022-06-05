@@ -37,7 +37,7 @@ void Text::set_position(sf::Vector2f position) {
 }
 
 void Text::render() {
-    this->get_render().render(this->text);
+    this->get_render()->render(this->text);
 }
 
 void Text::update() {}

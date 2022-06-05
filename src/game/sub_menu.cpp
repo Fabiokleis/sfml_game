@@ -15,6 +15,7 @@ SubMenu::SubMenu(Managers::GraphicManager *graphic_manager, double x, double y) 
 
 SubMenu::~SubMenu() {
     delete about_text;
+    delete kb_tex;
     delete keyboard_image;
 }
 
@@ -32,7 +33,7 @@ void SubMenu::init_title() {
 }
 
 void SubMenu::init_background(double x, double y) {
-    this->menu_image = new Entities::Image(this->get_render(), 0.0f, 0.0f, WINDOW_X, WINDOW_Y, sf::Color::Black);
+    this->menu_image = new Entities::Obstacle(this->get_render(), 0.0f, 0.0f, WINDOW_X, WINDOW_Y, sf::Color::Black);
     this->menu_image->set_position(x, y);
 }
 
@@ -66,7 +67,8 @@ void SubMenu::init_entries() {
             sf::Color::Transparent,
             0.0f, "Show Controls"));
 
-    this->keyboard_image = new Entities::Image(this->get_render(), KEYBOARD);
+    this->kb_tex = new sf::Texture();
+    this->keyboard_image = new Entities::Obstacle(this->kb_tex, this->get_render(), KEYBOARD);
     this->about_text = new Entities::Text(this->get_render(),
             FONT_PATH,
             24,
@@ -92,7 +94,7 @@ SubMenuStates SubMenu::get_state() {
     return state;
 }
 
-Entities::Image &SubMenu::show_kb() {
+Entities::Obstacle &SubMenu::show_kb() {
     return *this->keyboard_image;
 }
 
@@ -171,6 +173,7 @@ void SubMenu::handle_events(GraphicManager &window_server) {
 }
 
 void SubMenu::render() {
+    this->get_render()->reset_view();
     this->menu_image->render();
     this->title->render();
     if (state == Managers::showkb) {
@@ -182,4 +185,5 @@ void SubMenu::render() {
             option->render();
         }
     }
+    this->get_render()->display();
 }

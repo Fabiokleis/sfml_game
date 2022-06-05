@@ -1,16 +1,16 @@
 #include "obstacle.hpp"
 using namespace Entities;
 
-Obstacle::Obstacle(Managers::GraphicManager *graphic_manager, const std::string& path_name) :
-    Entity(graphic_manager), texture()
+Obstacle::Obstacle( sf::Texture *texture, Managers::GraphicManager *graphic_manager, const std::string& path_name) :
+    Entity(graphic_manager)
 {
-    this->load_texture(path_name);
+    this->type = "obstacle";
+    this->load_texture(texture, path_name);
 }
-Obstacle::Obstacle() : texture() {}
+Obstacle::Obstacle() {}
 Obstacle::Obstacle(Managers::GraphicManager *graphicManager, double x, double y, double width, double height, sf::Color color) :
         Entity(graphicManager)
 {
-    this->texture = nullptr;
     this->set_position(x, y);
     this->set_size(width, height);
     this->sprite.setFillColor(color);
@@ -18,14 +18,21 @@ Obstacle::Obstacle(Managers::GraphicManager *graphicManager, double x, double y,
 
 Obstacle::~Obstacle() {}
 
-void Obstacle::load_texture(const std::string &path_name) {
-    this->texture = new sf::Texture();
+void Obstacle::load_texture(sf::Texture *texture, const std::string &path_name) {
     std::string path = RESOURCE_PATH;
-    if (!this->texture->loadFromFile(path+path_name))
-        std::cout << "ERROR:GAME::COULD NOT LOAD IMAGE TEXTURE." << std::endl;
+    if (!texture->loadFromFile(path+path_name))
+        std::cout << "ERROR::OBSTACLE::COULD NOT LOAD IMAGE TEXTURE." << std::endl;
 
-    this->sprite.setTexture(this->texture);
-    this->sprite.setSize(sf::Vector2f(this->texture->getSize().x, this->texture->getSize().y));
+    this->sprite.setTexture(texture);
+    this->sprite.setSize(sf::Vector2f(texture->getSize().x, texture->getSize().y));
 }
 
 void Obstacle::update() {}
+
+std::string Obstacle::get_type() const {
+    return this->type;
+}
+
+void Obstacle::move(float dir_x, float dir_y) {
+    this->sprite.move(dir_x, dir_y);
+}

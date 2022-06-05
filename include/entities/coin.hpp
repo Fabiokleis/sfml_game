@@ -9,10 +9,12 @@ namespace Entities {
         private:
             int id;
 
+
         public:
             Coin();
-            Coin(Managers::GraphicManager *graphic_manager, const std::string& coin_path, int id, double x, double y, double width, double height);
+            Coin(Managers::GraphicManager *graphic_manager, sf::Texture *texture, const std::string& coin_path, int id, double x, double y, double width, double height);
             int get_id() const;
+
             void update();
             ~Coin();
     };

@@ -9,12 +9,14 @@ namespace Entities {
         
         private:
 
+
         public:
             Platform();
-            Platform();
+            Platform(Managers::GraphicManager *graphic_manager, double x, double y, double width, double height, sf::Color color);
             ~Platform();
+
+            void update();
     };
 }
-
 
 #endif /* end of include guard: PLATFORM_HPP_KWHTQICM */

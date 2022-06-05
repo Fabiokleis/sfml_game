@@ -7,6 +7,7 @@ namespace Managers {
     class Collider {
         private:
     		sf::RectangleShape &body;
+
     
         public:
             Collider(sf::RectangleShape &body);

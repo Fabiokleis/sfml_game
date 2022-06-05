@@ -15,7 +15,10 @@ Menu::Menu() : menu_image(), text_options(), title(), score_text(), from_game(),
 Menu::~Menu() {
     delete title;
     delete menu_image;
+    delete score_text;
 }
+
+void Menu::update() {}
 
 sf::RectangleShape Menu::get_sprite() {
     return this->menu_image->get_sprite();

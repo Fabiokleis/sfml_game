@@ -1,6 +1,8 @@
 #include "player.hpp"
 using namespace Entities;
 
+Player::Player() : Character(), coin() {}
+
 Player::Player(Managers::GraphicManager *graphic_manager, double x, double y, double width, double height, int cordx, int cordy,
                int coin, int life_number, sf::Vector2u image_count, float switch_time, States state,
                const std::string &path_name) :
@@ -10,6 +12,7 @@ Player::Player(Managers::GraphicManager *graphic_manager, double x, double y, do
     this->set_position(x, y);
     this->set_velocity(0.0f, 0.0f);
     this->init_physics();
+    this->set_origin(width/2, height/2);
 }
 
 Player::~Player() {}

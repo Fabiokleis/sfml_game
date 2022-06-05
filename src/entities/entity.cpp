@@ -30,7 +30,16 @@ Managers::Collider Entity::get_collider() {
 }
 
 void Entity::render() {
-    this->get_render().render(this->sprite);
+    this->get_render()->render(this->sprite);
+}
+
+void Entity::set_color(sf::Color color) {
+    this->sprite.setFillColor(color);
+}
+
+void Entity::set_out_color(sf::Color color) {
+    this->sprite.setOutlineColor(color);
+    this->sprite.setOutlineThickness(2.0f);
 }
 
 void Entity::set_position(double x, double y) {
@@ -48,4 +57,8 @@ void Entity::set_velocity(float x, float y) {
 
 void Entity::set_origin(double x, double y) {
     this->sprite.setOrigin(x, y);
+}
+
+sf::Vector2f Entity::get_size() const {
+    return this->sprite.getSize();
 }

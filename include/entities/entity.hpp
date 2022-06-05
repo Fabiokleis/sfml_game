@@ -27,12 +27,17 @@ namespace Entities {
             Managers::Collider get_collider();
             sf::RectangleShape get_sprite() const;
             sf::Vector2f get_position() const;
+            sf::Vector2f get_size() const;
             void set_position(double x, double y);
             void set_size(double width, double height);
             void set_origin(double x, double y);
             void set_velocity(float x, float y);
+
+            void set_color(sf::Color color);
+            void set_out_color(sf::Color color);
             void render();
             virtual void update() = 0;
+
     };
 }
 #endif /* end of include guard: ENTITY_HPP_RMVC7YT5 */

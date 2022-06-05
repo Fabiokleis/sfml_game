@@ -1,5 +1,6 @@
 #include <iostream>
 #include "game.hpp"
+#include "level1.hpp"
 #include <fstream>
 
 Game::Game() :
@@ -14,23 +15,23 @@ void Game::exec() {
     // setup game
 
     this->init_menu();
-    this->init_score();
     this->menu_loop();
 
     if (this->graphic_manager->is_open() && !this->on_menu) {
 
-        // only load saved level if menu load save is selected
-        if (this->menu->get_saved() && this->menu->get_state() != Managers::restart) {
-            // verify if saved level is first or second
-            if (this->verify_map()) {
-                this->init_level(PLATFORM1);
-            } else {
-                this->init_level(PLATFORM2);
-            }
-        } else {
-            // default first level when not save found and not from load
-            this->init_level(PLATFORM1);
-        }
+//        // only load saved level if menu load save is selected
+//        if (this->menu->get_saved() && this->menu->get_state() != Managers::restart) {
+//            // verify if saved level is first or second
+//            if (this->verify_map()) {
+//                this->init_level(PLATFORM1);
+//            } else {
+//                this->init_level(PLATFORM2);
+//            }
+//        } else {
+//            // default first level when not save found and not from load
+//            this->init_level(PLATFORM1);
+//        }
+        this->init_level(BACKGROUN_1);
         this->init_entities();
         // to init timer after load level and any other entity
         sf::Clock timer;
@@ -46,9 +47,12 @@ Game::~Game() {
     delete graphic_manager;
     delete coin_image;
     delete coin_number;
+    delete life_tex;
+    delete coin_tex;
     delete life_image;
     delete life_text;
 }
+
 
 void Game::menu_loop(bool from_game, bool from_player_dead) {
     while (this->graphic_manager->is_open() && this->on_menu) {
@@ -56,30 +60,30 @@ void Game::menu_loop(bool from_game, bool from_player_dead) {
             this->settings->handle_events(*this->graphic_manager);
             this->menu->set_on_submenu(this->settings->get_on_menu());
             this->settings->update(from_game, from_player_dead);
-            this->render_settings();
+            this->settings->render();
         } else {
             std::cout << "state: " << this->menu->get_state() << std::endl;
             this->on_menu = this->menu->get_on_menu();
             this->menu->handle_events(*this->graphic_manager);
             this->settings->set_on_menu(this->menu->get_on_submenu());
             this->menu->update(from_game, from_player_dead);
-            this->render_menu();
+            this->menu->render();
         }
     }
 
 }
-
-bool Game::verify_map() {
-    std::string path = RESOURCE_PATH;
-    std::string buf = Levels::Level::read_file(path + SAVE_PATH);
-    rapidjson::Document saved_file;
-    saved_file.Parse(buf.c_str());
-    std::string map_name = saved_file["map_name"].GetString();
-    if (map_name == PLATFORM1) {
-        return true;
-    }
-    return false;
-}
+//
+//bool Game::verify_map() {
+//    std::string path = RESOURCE_PATH;
+//    std::string buf = Levels::Level::read_file(path + SAVE_PATH);
+//    rapidjson::Document saved_file;
+//    saved_file.Parse(buf.c_str());
+//    std::string map_name = saved_file["map_name"].GetString();
+//    if (map_name == PLATFORM1) {
+//        return true;
+//    }
+//    return false;
+//}
 
 void Game::game_loop(sf::Clock timer) {
     this->clock.restart();
@@ -124,39 +128,34 @@ void Game::init_menu() {
     this->settings = new Managers::SubMenu(this->graphic_manager, 0, 0);
 }
 
-
-void Game::init_score() {
-    // score text on window
-
-}
-
 void Game::init_entities() {
 
     // create a new jaime with save
     if (this->menu->get_load()) {
-        std::string path = RESOURCE_PATH;
-        std::string buf = Levels::Level::read_file(path + SAVE_PATH);
-        this->parse_save(buf);
-        std::string map_name = this->level->get_name();
-        // restart level
-        this->init_level(map_name);
-        // restart time
-        this->total_time = TIME;
+//        std::string path = RESOURCE_PATH;
+//        std::string buf = Levels::Level::read_file(path + SAVE_PATH);
+//        this->parse_save(buf);
+//        std::string map_name = this->level->get_name();
+//        // restart level
+//        this->init_level(map_name);
+//        // restart time
+//        this->total_time = TIME;
 
     } else {
 
         // create a new jaime without save
         this->jaime = new Entities::Player(
-                *this->graphic_manager,
-                this->start_location.get_x(),
-                this->start_location.get_y(),
+                this->graphic_manager,
+                100,
+                200,
                 45, 80, 0, 0, 0, 5, sf::Vector2u(3, 6), 0.1f,
                 Entities::idle,
                 PLAYER_SPRITE_PATH);
     }
 
     // life
-    this->life_image = new Entities::Image(this->graphic_manager, HEAD_SPRITE);
+    this->life_tex = new sf::Texture();
+    this->life_image = new Entities::Obstacle(this->life_tex, this->graphic_manager, HEAD_SPRITE);
     this->life_image->set_position(32.0f, 32.0f);
     this->life_text = new Entities::Text(this->graphic_manager,
             FONT_PATH,
@@ -171,7 +170,8 @@ void Game::init_entities() {
             );
 
     // coins
-    this->coin_image = new Entities::Image(this->graphic_manager, COIN_PATH);
+    this->coin_tex = new sf::Texture();
+    this->coin_image = new Entities::Obstacle(this->coin_tex, this->graphic_manager, COIN_PATH);
     this->coin_image->set_position(WINDOW_X - 64, 32.0f);
     this->coin_number = new Entities::Text(this->graphic_manager,
             FONT_PATH,
@@ -198,8 +198,8 @@ void Game::init_entities() {
             "");
 }
 
-void Game::init_level(std::string map_name) {
-    this->level = new Levels::Level(this->graphic_manager, map_name);
+void Game::init_level(const std::string& map_name) {
+    this->level = new Levels::Level1(this->graphic_manager, map_name);
 }
 
 void Game::set_score(int coin, int life_number) {
@@ -235,7 +235,7 @@ void Game::handle_resets() {
         this->on_menu = this->menu->get_on_menu();
         this->menu_loop(false, true); // create a specific flag to restart game
         // out of the menu, after select a restart option
-        this->restart_player();
+        //this->restart_player();
         this->on_menu = this->menu->get_on_menu();
 
     }
@@ -243,11 +243,7 @@ void Game::handle_resets() {
 
 void Game::handle_collision() {
     // all collisions are triggered here
-    this->handle_player_collision();
-}
-
-void Game::handle_player_collision() {
-    this->level->handle_collision(this->jaime);
+    this->level->collision_manager(this->jaime);
 }
 
 void Game::handle_events() {
@@ -276,7 +272,7 @@ void Game::handle_events() {
                     this->on_menu = this->menu->get_on_menu();
                     this->menu_loop(true);
                     this->on_menu = this->menu->get_on_menu();
-                    this->restart_player();
+                    //this->restart_player();
                 }
                 break;
             default:
@@ -286,8 +282,8 @@ void Game::handle_events() {
 }
 
 bool Game::player_out_of_window() {
-    auto map_height = this->level->get_height() * this->level->get_tile_height();
-    auto map_width = this->level->get_width() * this->level->get_tile_width();
+    auto map_height = this->level->get_height();
+    auto map_width = this->level->get_width();
 
     // force jaime to stay in bottom/left/right position on level
     if (this->jaime->get_position().y > map_height || this->jaime->get_position().x > map_width || this->jaime->get_position().x < 0.0f) {
@@ -298,8 +294,8 @@ bool Game::player_out_of_window() {
 
 void Game::update_player_view() {
     auto vhalfsize = this->graphic_manager->get_view_size() / 2.0f;
-    auto map_height = this->level->get_height() * this->level->get_tile_height();
-    auto map_width = this->level->get_width() * this->level->get_tile_width();
+    auto map_height = this->level->get_height();
+    auto map_width = this->level->get_width();
     sf::Vector2f view_pos(this->jaime->get_position());
 
     // force view to stay in level width, height, left and top
@@ -318,107 +314,83 @@ void Game::update_player_view() {
     }
 }
 
-void Game::save_game(const Levels::Object& current_check_point) {
-
-    std::string path = RESOURCE_PATH;
-    int coin = this->jaime->get_coins();
-    int life = this->jaime->get_life_number();
-    double x = current_check_point.get_x();
-    double y = current_check_point.get_y();
-    std::string map_name = this->level->get_name();
-    std::fstream save_file(path+SAVE_PATH, std::ostream::out);
-
-    if (save_file.is_open()) {
-        // write a save file in json format
-        save_file << "{\n"
-                << "    \"time\": " << this->total_time << ",\n"
-                << "    \"map_name\": " <<  "\"" << map_name << "\",\n"
-                << "    \"coin\": " << coin << ",\n"
-                << "    \"life\": " << life << ",\n"
-                << "    \"x\": " << x << ",\n"
-                << "    \"y\": " << y << "\n"
-                << "}";
-        save_file.close();
-    } else {
-        std::cout << "ERROR::SAVE_FILE:: COULD NOT OPEN FILE." << std::endl;
-    }
-}
-
-void Game::parse_save(const std::string& buf) {
-    // parse json saved file to be a new instance of jaime and level
-    rapidjson::Document saved_file;
-    saved_file.Parse(buf.c_str());
-
-    int coin = saved_file["coin"].GetInt();
-    int life = saved_file["life"].GetInt();
-    double x = saved_file["x"].GetDouble();
-    double y = saved_file["y"].GetDouble();
-    int time = saved_file["time"].GetInt();
-    this->total_time = time;
-    std::string map_name = saved_file["map_name"].GetString();
-
-    if (this->jaime) {
-        this->jaime->restart(x, y, coin, life, Entities::idle);
-    } else {
-        this->jaime = new Entities::Player(this->graphic_manager,
-                x, y, 45, 80,  0, 0, coin,life,
-                sf::Vector2u(3, 6), 0.1f, Entities::idle, PLAYER_SPRITE_PATH);
-    }
-    this->init_level(map_name);
-}
-
-void Game::restart_player() {
-    // load save
-    std::cout << "restart" << std::endl;
-    std::string path = RESOURCE_PATH;
-    std::string buf = Levels::Level::read_file(path + SAVE_PATH);
-
-    if (!buf.empty()) {
-        // parse save if not restarting
-        if (this->menu->get_state() != Managers::restart) {
-            if(this->menu->get_state() == Managers::loading) {
-                this->parse_save(buf);
-
-            }
-        } else if (this->menu->get_state() == Managers::restart) {
-                // restart at beginning of level
-                if (this->jaime->get_state() == Entities::dead) {
-                    this->jaime->restart(
-                            this->start_location.get_x(),
-                            this->start_location.get_y(),
-                            this->jaime->get_coins(),
-                            this->jaime->get_life_number(),
-                            Entities::idle);
-
-                    std::string map_name = this->level->get_name();
-                    // restart level
-                    this->init_level(map_name);
-                    // restart time
-                    this->total_time = TIME;
-                }
-        }
-    } else {
-        if (this->jaime->get_state() == Entities::dead) {
-            this->jaime->restart(
-                    this->start_location.get_x(),
-                    this->start_location.get_y(),
-                    this->jaime->get_coins(),
-                    this->jaime->get_life_number(),
-                    Entities::idle);
-
-            std::string map_name = this->level->get_name();
-            // restart level
-            this->init_level(map_name);
-            // restart time
-            this->total_time = TIME;
-        }
-    }
-}
+//
+//void Game::parse_save(const std::string& buf) {
+//    // parse json saved file to be a new instance of jaime and level
+//
+//
+//
+//    int coin = saved_file["coin"].GetInt();
+//    int life = saved_file["life"].GetInt();
+//    double x = saved_file["x"].GetDouble();
+//    double y = saved_file["y"].GetDouble();
+//    int time = saved_file["time"].GetInt();
+//    this->total_time = time;
+//    std::string map_name = saved_file["map_name"].GetString();
+//
+//    if (this->jaime) {
+//        this->jaime->restart(x, y, coin, life, Entities::idle);
+//    } else {
+//        this->jaime = new Entities::Player(this->graphic_manager,
+//                x, y, 45, 80,  0, 0, coin,life,
+//                sf::Vector2u(3, 6), 0.1f, Entities::idle, PLAYER_SPRITE_PATH);
+//    }
+//    this->init_level(map_name);
+//}
+//
+//void Game::restart_player() {
+//    // load save
+//    std::cout << "restart" << std::endl;
+//    std::string path = RESOURCE_PATH;
+//    std::string buf = Levels::Level::read_file(path + SAVE_PATH);
+//
+//    if (!buf.empty()) {
+//        // parse save if not restarting
+//        if (this->menu->get_state() != Managers::restart) {
+//            if(this->menu->get_state() == Managers::loading) {
+//                this->parse_save(buf);
+//
+//            }
+//        } else if (this->menu->get_state() == Managers::restart) {
+//                // restart at beginning of level
+//                if (this->jaime->get_state() == Entities::dead) {
+//                    this->jaime->restart(
+//                            this->start_location.get_x(),
+//                            this->start_location.get_y(),
+//                            this->jaime->get_coins(),
+//                            this->jaime->get_life_number(),
+//                            Entities::idle);
+//
+//                    std::string map_name = this->level->get_name();
+//                    // restart level
+//                    this->init_level(map_name);
+//                    // restart time
+//                    this->total_time = TIME;
+//                }
+//        }
+//    } else {
+//        if (this->jaime->get_state() == Entities::dead) {
+//            this->jaime->restart(
+//                    this->start_location.get_x(),
+//                    this->start_location.get_y(),
+//                    this->jaime->get_coins(),
+//                    this->jaime->get_life_number(),
+//                    Entities::idle);
+//
+//            std::string map_name = this->level->get_name();
+//            // restart level
+//            this->init_level(map_name);
+//            // restart time
+//            this->total_time = TIME;
+//        }
+//    }
+//}
 
 void Game::update() {
     this->handle_events();
     this->count_down();
     this->jaime->update();
+    this->level->update();
     this->handle_resets();
     this->handle_collision();
 }
@@ -429,7 +401,6 @@ void Game::render() {
     // render level first
     this->level->render();
     this->graphic_manager->reset_view();
-
     // render objects to display information about score, time etc...
     this->coin_number->render();
     this->graphic_manager->reset_view();
@@ -440,7 +411,7 @@ void Game::render() {
     this->life_text->render();
     this->graphic_manager->reset_view();
     this->life_image->render();
-
+    this->graphic_manager->reset_view();
     // render jaime sprite, but he needs a different view size
     this->update_player_view();
     this->jaime->render();
@@ -448,13 +419,13 @@ void Game::render() {
     // finally, display everything
     this->graphic_manager->display();
 }
-
-void Game::next_map() {
-    this->init_level(PLATFORM2);
-    this->jaime->restart(
-            this->start_location.get_x(),
-            this->start_location.get_y(),
-            this->jaime->get_coins(),
-            this->jaime->get_life_number(),
-            Entities::idle);
-}
+//
+//void Game::next_map() {
+//    this->init_level(PLATFORM2);
+//    this->jaime->restart(
+//            this->start_location.get_x(),
+//            this->start_location.get_y(),
+//            this->jaime->get_coins(),
+//            this->jaime->get_life_number(),
+//            Entities::idle);
+//}

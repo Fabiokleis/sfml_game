@@ -32,7 +32,7 @@ void MainMenu::init_title() {
 }
 
 void MainMenu::init_background(double x, double y) {
-    this->menu_image = new Entities::Image(this->get_render(), 0, 0, WINDOW_X, WINDOW_Y, sf::Color::Black);
+    this->menu_image = new Entities::Obstacle(this->get_render(), 0, 0, WINDOW_X, WINDOW_Y, sf::Color::Black);
     this->menu_image->set_position(x, y);
 }
 
@@ -132,45 +132,11 @@ void MainMenu::init_entries() {
 
 }
 
-void MainMenu::init_score() {
-    if (saved_file) {
-        std::string path = RESOURCE_PATH;
-        path += SAVE_PATH;
-        std::string buf = Levels::Level::read_file(path);
-        rapidjson::Document saved_file;
-        saved_file.Parse(buf.c_str());
-
-        std::string map_name = saved_file["map_name"].GetString();
-        int coin = saved_file["coin"].GetInt();
-        int life = saved_file["life"].GetInt();
-
-        std::string life_number_text("life: ");
-        life_number_text += std::to_string(life) + '\n';
-        std::string coin_text("coins: ");
-        coin_text += std::to_string(coin);
-        map_name += '\n' + life_number_text + coin_text;
-
-
-        this->score_text = new Entities::Text(this->get_render(),
-                                              FONT_PATH,
-                                              32,
-                                              WINDOW_X / 2.0f + 128.0f,
-                                              WINDOW_Y / 2.0f + 128.0f,
-                                              sf::Color(192, 192, 192),
-                                              0,
-                                              sf::Color::Transparent,
-                                              0.0f, map_name);
-
-        this->score_text->set_attr(sf::Color(192, 192, 192), sf::Color(95, 0, 160), 1.0f, 0);
-    } else {
-        this->score_text = new Entities::Text();
-    }
-}
-
+void MainMenu::init_score() {}
 
 bool MainMenu::verify_save() {
     std::string path = RESOURCE_PATH;
-    std::string buf = Levels::Level::read_file(path + "jaime/save_state.json");
+    std::string buf = Levels::Level::read_file(path + "jaime/save_state");
     if (!buf.empty()) {
         return true;
     }
@@ -192,7 +158,6 @@ MenuStates MainMenu::get_state() {
 bool MainMenu::get_load() const {
     return this->load_save;
 }
-
 
 void MainMenu::update(bool from_game, bool from_player_dead) {
     // limit menu_counter to be in range of [0-max_options-1]
@@ -329,6 +294,7 @@ void MainMenu::handle_events(GraphicManager &window_server) {
 }
 
 void MainMenu::render() {
+    this->get_render()->reset_view();
     this->menu_image->render();
     this->title->render();
     if (state == Managers::credits) {
@@ -342,4 +308,5 @@ void MainMenu::render() {
             this->score_text->render();
         }
     }
+    this->get_render()->display();
 }

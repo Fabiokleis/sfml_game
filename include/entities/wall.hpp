@@ -4,13 +4,15 @@
 
 namespace Entities {
 
-class Wall : public Obstacle {
+    class Wall : public Obstacle {
+
         private:
 
         public:
             Wall();
-            Wall();
+            Wall(Managers::GraphicManager *graphic_manager, double x, double y, double width, double height, sf::Color color);
             ~Wall();
+            void update();
 
     };
 }

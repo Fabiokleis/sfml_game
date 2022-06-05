@@ -4,7 +4,7 @@
 #include <iostream>
 #include <vector>
 #include "graphic_manager.hpp"
-#include "image.hpp"
+#include "obstacle.hpp"
 #include "text.hpp"
 #include "character.hpp"
 
@@ -17,7 +17,7 @@ namespace Managers {
 
         protected:
             Entities::Text *title;
-            Entities::Image *menu_image;
+            Entities::Obstacle *menu_image;
             Entities::Text *score_text;
             std::vector<Entities::Text*> text_options;
             int max_options;
@@ -40,8 +40,8 @@ namespace Managers {
             bool get_on_submenu() const;
             std::vector<Entities::Text*> get_options();
             Entities::Text get_title();
+            void update();
             virtual void render() = 0;
-            virtual void update();
             virtual void update(bool from_game, bool from_player_dead) = 0;
             virtual void events(GraphicManager &window_server) = 0;
             virtual void handle_events(GraphicManager &window_server) = 0;

@@ -5,11 +5,11 @@
 #include "graphic_manager.hpp"
 #include "player.hpp"
 #include "config.h"
-#include "level.hpp"
-#include "object.hpp"
-#include "image.hpp"
+#include "obstacle.hpp"
 #include "main_menu.hpp"
 #include "sub_menu.hpp"
+#include "obstacle.hpp"
+#include "level1.hpp"
 
 class Game {
     private:
@@ -19,12 +19,14 @@ class Game {
         Managers::MainMenu *menu;
         Managers::SubMenu *settings;
 
-        Levels::Level* level;
+        Levels::Level1* level;
 
-        Entities::Image *life_image;
+        Entities::Obstacle *life_image;
+        sf::Texture *life_tex;
         Entities::Text *life_text;
+        sf::Texture *coin_tex;
         Entities::Text *coin_number;
-        Entities::Image *coin_image;
+        Entities::Obstacle *coin_image;
         Entities::Text *time_text;
 
         sf::Clock clock;
@@ -39,11 +41,10 @@ class Game {
         void init_entities();
         void init_score();
         void parse_save(const std::string& buf);
-        void init_level(std::string map_name);
+        void init_level(const std::string& map_name);
         void set_time();
         void set_score(int coin, int life_number);
         void count_down();
-        void save_game(const Levels::Object& current_check_point);
         void restart_player();
         void game_loop(sf::Clock timer);
         void menu_loop(bool from_game = false, bool from_player_dead = false);
@@ -51,12 +52,8 @@ class Game {
         void update_player_view();
         void handle_events();
         void update();
-        void next_map();
-        void render_menu();
-        void render_settings();
         void render();
         void handle_collision();
-        void handle_player_collision();
 
     public:
         Game();

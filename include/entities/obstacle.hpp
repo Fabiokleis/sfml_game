@@ -8,14 +8,17 @@
 namespace Entities {
 
     class Obstacle : public Entity {
-        private:
-            sf::Texture *texture;
+        protected:
+            std::string type;
+
 
         public:
             Obstacle();
-            Obstacle(Managers::GraphicManager *graphic_manager, const std::string& path_name);
+            Obstacle(sf::Texture *texture, Managers::GraphicManager *graphic_manager, const std::string& path_name);
             Obstacle(Managers::GraphicManager *graphic_manager, double x, double y, double width, double height, sf::Color color=sf::Color::Black);
-            void load_texture(const std::string& path_name);
+            void load_texture(sf::Texture *texture, const std::string& path_name);
+            std::string get_type() const;
+            void move(float dir_x, float dir_y);
             ~Obstacle();
             virtual void update();
     };

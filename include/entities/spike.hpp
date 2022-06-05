@@ -4,15 +4,15 @@
 
 namespace Entities {
 
-class Spike : public Obstacle {
-    private:
+    class Spike : public Obstacle {
+        private:
 
-    public:
-        Spike();
-        Spike(Managers::GraphicManager *graphic_manager, double x, double y, double width, double height,  const std::string &path_name);
 
-        void update();
-        ~Spike();
+        public:
+            Spike();
+            Spike(Managers::GraphicManager *graphic_manager, sf::Texture *texture, double x, double y, double width, double height,  const std::string &path_name);
+            void update();
+            ~Spike();
     };
 }
 
