@@ -146,8 +146,8 @@ void Game::init_entities() {
         // create a new jaime without save
         this->jaime = new Entities::Player(
                 this->graphic_manager,
-                100,
-                200,
+                16,
+                500,
                 45, 80, 0, 0, 0, 5, sf::Vector2u(3, 6), 0.1f,
                 Entities::idle,
                 PLAYER_SPRITE_PATH);

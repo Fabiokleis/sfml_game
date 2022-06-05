@@ -93,18 +93,18 @@ void Level::collision_manager(Entities::Player *other) {
             other->on_collision(spike.get_type());
         }
     }
-    // coins and other collision
-    if (!this->coins.empty()) {
-        for (auto &coin: this->coins) {
-            if (coin.get_collider().check_collision(other->get_collider(), other->get_velocity(), false)) {
-                other->on_collision(coin.get_type());
-                this->coins.erase(std::remove_if(this->coins.begin(), this->coins.end(),
-                        [&coin](const Entities::Coin& coin_aux) {
-                            return coin.get_id() == coin_aux.get_id();
-                        }), this->coins.end());
-            }
-        }
-    }
+//    // coins and other collision
+//    if (!this->coins.empty()) {
+//        for (auto &coin: this->coins) {
+//            if (coin.get_collider().check_collision(other->get_collider(), other->get_velocity(), false)) {
+//                other->on_collision(coin.get_type());
+//                this->coins.erase(std::remove_if(this->coins.begin(), this->coins.end(),
+//                        [&coin](const Entities::Coin& coin_aux) {
+//                            return coin.get_id() == coin_aux.get_id();
+//                        }), this->coins.end());
+//            }
+//        }
+//    }
 }
 
 void Level::load_texture() {

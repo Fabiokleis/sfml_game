@@ -23,29 +23,34 @@ void Level1::build_level() {
 }
 
 void Level1::update() {
-    if (this->platforms[0].get_position().y + this->platforms[0].get_size().y < this->height) {
-        for (auto &wall : this->walls) {
-            wall.move(0, this->gravity + 200.0f);
-            if (wall.get_position().y >= this->height - wall.get_size().y) {
-                wall.set_position(wall.get_position().x + (wall.get_size().x/2.0f), wall.get_position().y);
-                wall.set_origin(wall.get_size().x/2, wall.get_size().y/2);
-            }
-        }
-        for (auto &spike : this->spikes) {
-            spike.move(0, this->gravity + 200.0f);
-            if (spike.get_position().y >= this->height - spike.get_size().y) {
-                spike.set_position(spike.get_position().x + (spike.get_size().x/2.0f), spike.get_position().y);
-                spike.set_origin(spike.get_size().x/2, this->height - spike.get_size().y);
-            }
-        }
+    if ((this->platforms[0].get_position().y + this->platforms[0].get_size().y) < this->height) {
         for (auto &plat: this->platforms) {
             plat.move(0, this->gravity + 200.0f);
-            if (plat.get_position().y >= this->height - plat.get_size().y) {
-                plat.set_position(plat.get_position().x + (plat.get_size().x/2.0f), this->height);
-                plat.set_origin(plat.get_size().x/2, plat.get_size().y/2);
+            if (plat.get_position().y >= (this->height - plat.get_size().y)) {
+                plat.set_position(plat.get_position().x + (plat.get_size().x/2.0f),plat.get_position().y);
+                plat.set_origin(plat.get_size().x / 2.0f, plat.get_size().y / 2.0f);
             }
         }
+    }
+    if ((this->walls[0].get_position().y + this->walls[0].get_size().y) < this->height) {
+        for (auto &wall: this->walls) {
+            wall.move(0, this->gravity + 50.0f);
+            if (wall.get_position().y >= (this->height - wall.get_size().y)) {
+                wall.set_position(wall.get_position().x + (wall.get_size().x / 2.0f), wall.get_position().y);
+                wall.set_origin(wall.get_size().x / 2.0f, wall.get_size().y / 2.0f);
+            }
+        }
+    }
 
+    if ((this->spikes[0].get_position().y + this->spikes[0].get_size().y) <= (this->platforms[0].get_position().y - this->platforms[0].get_size().y)) {
+        std::cout << "no loop\n";
+        for (int s = 0; s <= this->spikes_number; s++) {
+            this->spikes[s].move(0, this->gravity + 50.0f);
+            if (this->spikes[s].get_position().y >= (this->platforms[s].get_position().y - this->platforms[s].get_size().y)) {
+                this->spikes[s].set_position(this->spikes[s].get_position().x + 16, this->platforms[s].get_position().y - (this->platforms[s].get_size().y/2 + 16));
+                this->spikes[s].set_origin(this->spikes[s].get_size().x / 2.0f, this->spikes[s].get_size().y / 2.0f);
+            }
+        }
     }
 }
 
@@ -59,7 +64,7 @@ void Level1::generate_instances() {
     // populate the platforms vector with a random number of instances 10-20
     for (int i = 0; i < this->platforms_number; i++) {
         this->platforms.emplace_back(Entities::Platform());
-        this->platforms[i].set_color(sf::Color::Green);
+        this->platforms[i].set_color(sf::Color::Blue);
         this->platforms[i].set_out_color(sf::Color::Yellow);
     }
 
@@ -68,14 +73,14 @@ void Level1::generate_instances() {
     // populate the walls vector with a random number of instances 5-10
     for (int i = 0; i < this->walls_number; i++) {
         this->walls.emplace_back(Entities::Wall());
-        this->walls[i].set_color(sf::Color::Blue);
-        this->walls[i].set_out_color(sf::Color::Magenta);
+        this->walls[i].set_color(sf::Color::Black);
+        this->walls[i].set_out_color(sf::Color::White);
     }
-    // populate the spike vector with a space between each platform
-    std::uniform_int_distribution<> distrS(30, 60); // define the range
+
+    std::uniform_int_distribution<> distrS(10, 15); // define the range
     this->spikes_number = distrS(gen);
     for (int i = 0; i < this->spikes_number; i++) {
-//        this->spikes.emplace_back(this->get_render(), this->spike_tex, 0, 0, 32, 32, SPIKE_PATH);
+        this->spikes.emplace_back(this->get_render(), this->spike_tex, 0, 0, 32, 32, SPIKE_PATH);
     }
 //
 //    std::uniform_int_distribution<> distrC(40, 60); // define the range
@@ -92,8 +97,8 @@ void Level1::generate_sizes() {
     std::random_device rd; // get random number from hardware
     std::mt19937 gen(rd()); // seed generator
     std::uniform_int_distribution<> distrSX(192, 512);
-    std::uniform_int_distribution<> distrSY(64, 128);
-    std::uniform_int_distribution<> distrWSY(192, 256);
+    std::uniform_int_distribution<> distrSY(72, 128);
+    std::uniform_int_distribution<> distrWSY(128, 160);
 
     for (auto &plat : this->platforms) {
         plat.set_size(distrSX(gen), distrSY(gen));
@@ -120,12 +125,19 @@ void Level1::arbritary_positions() {
     }
 
     // generate a position to wall
-
     for (int u = 0; u < this->walls_number; u++) {
         float plat_sx = this->platforms[u].get_size().x;
         std::uniform_int_distribution<> distrSpaceW(128, (plat_sx - 64)); // the local of wall
         float space = (distrSpaceW(gen) + this->platforms[u].get_position().x);
-        this->walls[u].set_position(space, this->walls[u].get_position().y);
+        this->walls[u].set_position(space, this->walls[u].get_position().y - this->platforms[u].get_size().y);
+    }
+
+    // generate a position to spikes
+    for (int s = 0; s < this->spikes_number; s++) {
+        float plat_sx = this->platforms[s].get_size().x;
+        std::uniform_int_distribution<> distrSpaceW(0, 128); // the local of wall
+        float space = (distrSpaceW(gen) + this->platforms[s].get_position().x);
+        this->spikes[s].set_position(space, this->spikes[s].get_position().y - this->platforms[s].get_size().y);
     }
 
     // generate a position to spikes between every platform
