@@ -2,7 +2,6 @@
 #define LEVEL1_HPP_CAQV1QSO
 #include "level.hpp"
 
-
 namespace Levels {
 
     class Level1 : public Level {
@@ -10,6 +9,8 @@ namespace Levels {
         private:
             sf::Texture *coin_tex;
             sf::Texture *spike_tex;
+
+
 
         public:
             Level1();

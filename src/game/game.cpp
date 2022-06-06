@@ -5,7 +5,7 @@
 
 Game::Game() :
         jaime(), level(), menu(), settings(), delta_time(), coin_image(), coin_number(),
-        time_text(), total_time(TIME), life_image(), life_text(), on_menu()
+        time_text(), total_time(TIME), life_image(), life_text(), on_menu(), level1(), level2()
 {
     this->graphic_manager = new Managers::GraphicManager("c++ game");
 
@@ -18,9 +18,14 @@ void Game::exec() {
     this->menu_loop();
 
     if (this->graphic_manager->is_open() && !this->on_menu) {
+        if (this->menu->get_state() == Managers::level1) {
+            this->init_level(BACKGROUN_1);
+        } else if (this->menu->get_state() == Managers::level2) {
+            this->init_level(BACKGROUN_2);
+        } else {
+            this->init_level(BACKGROUN_1);
+        }
 
-
-        this->init_level(BACKGROUN_1);
         this->init_entities();
         // to init timer after load level and any other entity
         sf::Clock timer;
@@ -30,7 +35,8 @@ void Game::exec() {
 
 Game::~Game() {
     delete jaime;
-    delete level;
+    delete level1;
+    delete level2;
     delete settings;
     delete menu;
     delete graphic_manager;
@@ -123,8 +129,8 @@ void Game::init_entities() {
         // create a new jaime without save
         this->jaime = new Entities::Player(
                 this->graphic_manager,
-                0,
-                500,
+                16,
+                800,
                 45, 80, 0, 0, 0, 5, sf::Vector2u(3, 6), 0.1f,
                 Entities::idle,
                 PLAYER_SPRITE_PATH);
@@ -176,7 +182,15 @@ void Game::init_entities() {
 }
 
 void Game::init_level(const std::string& map_name) {
-    this->level = new Levels::Level1(this->graphic_manager, map_name);
+    if (map_name == BACKGROUN_1) {
+        this->level1 = new Levels::Level1(this->graphic_manager, map_name);
+        this->level2 = nullptr;
+        this->level = static_cast<Levels::Level*>(this->level1);
+    } else {
+        this->level2 = new Levels::Level2(this->graphic_manager, map_name);
+        this->level1 = nullptr;
+        this->level = static_cast<Levels::Level*>(this->level2);
+    }
 }
 
 void Game::set_score(int coin, int life_number) {
@@ -212,9 +226,8 @@ void Game::handle_resets() {
         this->on_menu = this->menu->get_on_menu();
         this->menu_loop(false, true); // create a specific flag to restart game
         // out of the menu, after select a restart option
-        //this->restart_player();
+//        this->restart_player();
         this->on_menu = this->menu->get_on_menu();
-
     }
 }
 
@@ -229,7 +242,6 @@ void Game::handle_events() {
         if (this->jaime->get_state() != Entities::dead) {
             this->jaime->handle_events(this->graphic_manager->get_event());
         }
-
 
         switch (this->graphic_manager->get_event().type) {
 
@@ -249,7 +261,7 @@ void Game::handle_events() {
                     this->on_menu = this->menu->get_on_menu();
                     this->menu_loop(true);
                     this->on_menu = this->menu->get_on_menu();
-                    //this->restart_player();
+//                    this->restart_player();
                 }
                 break;
             default:
@@ -291,78 +303,6 @@ void Game::update_player_view() {
     }
 }
 
-//
-//void Game::parse_save(const std::string& buf) {
-//    // parse json saved file to be a new instance of jaime and level
-//
-//
-//
-//    int coin = saved_file["coin"].GetInt();
-//    int life = saved_file["life"].GetInt();
-//    double x = saved_file["x"].GetDouble();
-//    double y = saved_file["y"].GetDouble();
-//    int time = saved_file["time"].GetInt();
-//    this->total_time = time;
-//    std::string map_name = saved_file["map_name"].GetString();
-//
-//    if (this->jaime) {
-//        this->jaime->restart(x, y, coin, life, Entities::idle);
-//    } else {
-//        this->jaime = new Entities::Player(this->graphic_manager,
-//                x, y, 45, 80,  0, 0, coin,life,
-//                sf::Vector2u(3, 6), 0.1f, Entities::idle, PLAYER_SPRITE_PATH);
-//    }
-//    this->init_level(map_name);
-//}
-//
-//void Game::restart_player() {
-//    // load save
-//    std::cout << "restart" << std::endl;
-//    std::string path = RESOURCE_PATH;
-//    std::string buf = Levels::Level::read_file(path + SAVE_PATH);
-//
-//    if (!buf.empty()) {
-//        // parse save if not restarting
-//        if (this->menu->get_state() != Managers::restart) {
-//            if(this->menu->get_state() == Managers::loading) {
-//                this->parse_save(buf);
-//
-//            }
-//        } else if (this->menu->get_state() == Managers::restart) {
-//                // restart at beginning of level
-//                if (this->jaime->get_state() == Entities::dead) {
-//                    this->jaime->restart(
-//                            this->start_location.get_x(),
-//                            this->start_location.get_y(),
-//                            this->jaime->get_coins(),
-//                            this->jaime->get_life_number(),
-//                            Entities::idle);
-//
-//                    std::string map_name = this->level->get_name();
-//                    // restart level
-//                    this->init_level(map_name);
-//                    // restart time
-//                    this->total_time = TIME;
-//                }
-//        }
-//    } else {
-//        if (this->jaime->get_state() == Entities::dead) {
-//            this->jaime->restart(
-//                    this->start_location.get_x(),
-//                    this->start_location.get_y(),
-//                    this->jaime->get_coins(),
-//                    this->jaime->get_life_number(),
-//                    Entities::idle);
-//
-//            std::string map_name = this->level->get_name();
-//            // restart level
-//            this->init_level(map_name);
-//            // restart time
-//            this->total_time = TIME;
-//        }
-//    }
-//}
-
 void Game::update() {
     this->handle_events();
     this->count_down();
@@ -396,13 +336,7 @@ void Game::render() {
     // finally, display everything
     this->graphic_manager->display();
 }
-//
-//void Game::next_map() {
-//    this->init_level(PLATFORM2);
-//    this->jaime->restart(
-//            this->start_location.get_x(),
-//            this->start_location.get_y(),
-//            this->jaime->get_coins(),
-//            this->jaime->get_life_number(),
-//            Entities::idle);
-//}
+
+void Game::restart_player() {
+    this->jaime->restart(0, 600, this->jaime->get_coins(), this->jaime->get_life_number(), Entities::idle);
+}

@@ -10,6 +10,7 @@
 #include "sub_menu.hpp"
 #include "obstacle.hpp"
 #include "level1.hpp"
+#include "level2.hpp"
 
 class Game {
     private:
@@ -19,7 +20,9 @@ class Game {
         MainMenu *menu;
         SubMenu *settings;
 
-        Levels::Level1* level;
+        Levels::Level* level;
+        Levels::Level1* level1;
+        Levels::Level2* level2;
 
         Entities::Obstacle *life_image;
         sf::Texture *life_tex;
@@ -36,11 +39,8 @@ class Game {
 
 
         bool player_out_of_window();
-        bool verify_map();
         void init_menu();
         void init_entities();
-        void init_score();
-        void parse_save(const std::string& buf);
         void init_level(const std::string& map_name);
         void set_time();
         void set_score(int coin, int life_number);

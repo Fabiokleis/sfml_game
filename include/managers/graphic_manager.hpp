@@ -14,6 +14,8 @@ namespace Managers {
         level1,
         level2,
         credits,
+        new_game,
+        resume,
     };
 
     enum SubMenuStates {

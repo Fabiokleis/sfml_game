@@ -4,7 +4,8 @@
 #include "config.h"
 using namespace Levels;
 
-
+std::random_device rd; // get random number from hardware
+std::mt19937 gen(rd()); // seed generator
 Level::Level() : x(), y(), sprite(), platforms_number(), walls_number(), spikes_number(), coins_number(), gravity() {}
 
 Level::Level(Managers::GraphicManager *graphic_manager,  std::string map_name) :
@@ -50,6 +51,12 @@ double Level::get_width() const {
 
 std::string Level::get_name() {
     return this->map_name;
+}
+
+// generate a random number between lower and higher range
+int Level::generate_random(int low, int high) {
+    std::uniform_int_distribution<int> dist(low, high);
+    return dist(gen);
 }
 
 // read a file and returns
