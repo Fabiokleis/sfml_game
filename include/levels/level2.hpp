@@ -7,7 +7,8 @@ namespace Levels {
     class Level2 : public Level {
 
         private:
-
+            sf::Texture *coin_tex;
+            sf::Texture *spike_tex;
 
         public:
             Level2();
@@ -15,8 +16,11 @@ namespace Levels {
             ~Level2();
 
             void build_level();
+            void init_textures();
+            void generate_instances();
+            void generate_sizes();
+            void arbritary_positions();
             void update();
-            void render();
     };
 }
 

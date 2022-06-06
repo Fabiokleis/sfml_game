@@ -8,6 +8,7 @@ MainMenu::MainMenu() : load_save(), state(), credit(), saved_file() {}
 
 MainMenu::MainMenu(Managers::GraphicManager *graphic_manager, double x, double y) : Menu(graphic_manager), load_save(), state(restart), credit() {
     this->saved_file = this->verify_save();
+    this->state = Managers::new_game;
     this->init_title();
     this->init_background(x, y);
     this->init_entries();
@@ -222,17 +223,19 @@ void MainMenu::events(GraphicManager &window_server) {
 
     } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter) && this->get_current_option() == 0) {
         // start
+
         if (this->state == credits) {
             this->state = restart;
         } else {
             this->set_on_menu(false);
+
+            if (this->from_game) {
+                // resume game
+                this->state = resume;
+            }
             if (this->from_player_dead) {
                 // restart game
                 std::cout << "restart opt" << std::endl;
-                this->state = restart;
-            } else {
-                // new game
-                std::cout << "new game opt" << std::endl;
                 this->state = restart;
             }
         }
@@ -258,11 +261,13 @@ void MainMenu::events(GraphicManager &window_server) {
     } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter) && this->get_current_option() == 2) {
         // level 1
         std::cout << "level 1 opt" << std::endl;
-        this->state = phase1;
+        this->state = level1;
+        this->set_on_menu(false);
     } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter) && this->get_current_option() == 3) {
         // level 2
         std::cout << "level 2 opt" << std::endl;
-        this->state = phase2;
+        this->state = level2;
+        this->set_on_menu(false);
     } else {
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
             this->state = none;
