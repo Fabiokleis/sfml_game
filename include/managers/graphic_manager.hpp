@@ -7,6 +7,21 @@
 
 namespace Managers {
 
+    enum MenuStates {
+        none = 0,
+        restart,
+        loading,
+        level1,
+        level2,
+        credits,
+    };
+
+    enum SubMenuStates {
+        nones = 0,
+        about,
+        showkb,
+    };
+
     class GraphicManager {
         private:
             sf::RenderWindow* window;

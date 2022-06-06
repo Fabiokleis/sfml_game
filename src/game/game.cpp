@@ -19,18 +19,7 @@ void Game::exec() {
 
     if (this->graphic_manager->is_open() && !this->on_menu) {
 
-//        // only load saved level if menu load save is selected
-//        if (this->menu->get_saved() && this->menu->get_state() != Managers::restart) {
-//            // verify if saved level is first or second
-//            if (this->verify_map()) {
-//                this->init_level(PLATFORM1);
-//            } else {
-//                this->init_level(PLATFORM2);
-//            }
-//        } else {
-//            // default first level when not save found and not from load
-//            this->init_level(PLATFORM1);
-//        }
+
         this->init_level(BACKGROUN_1);
         this->init_entities();
         // to init timer after load level and any other entity
@@ -72,18 +61,6 @@ void Game::menu_loop(bool from_game, bool from_player_dead) {
     }
 
 }
-//
-//bool Game::verify_map() {
-//    std::string path = RESOURCE_PATH;
-//    std::string buf = Levels::Level::read_file(path + SAVE_PATH);
-//    rapidjson::Document saved_file;
-//    saved_file.Parse(buf.c_str());
-//    std::string map_name = saved_file["map_name"].GetString();
-//    if (map_name == PLATFORM1) {
-//        return true;
-//    }
-//    return false;
-//}
 
 void Game::game_loop(sf::Clock timer) {
     this->clock.restart();
@@ -124,8 +101,8 @@ void Game::init_menu() {
     [6] Exit
     */
     this->on_menu = true;
-    this->menu = new Managers::MainMenu(this->graphic_manager, 0, 0);
-    this->settings = new Managers::SubMenu(this->graphic_manager, 0, 0);
+    this->menu = new MainMenu(this->graphic_manager, 0, 0);
+    this->settings = new SubMenu(this->graphic_manager, 0, 0);
 }
 
 void Game::init_entities() {

@@ -16,8 +16,8 @@ class Game {
         Managers::GraphicManager* graphic_manager;
         Entities::Player *jaime;
 
-        Managers::MainMenu *menu;
-        Managers::SubMenu *settings;
+        MainMenu *menu;
+        SubMenu *settings;
 
         Levels::Level1* level;
 

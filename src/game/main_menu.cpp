@@ -258,11 +258,12 @@ void MainMenu::events(GraphicManager &window_server) {
     } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter) && this->get_current_option() == 2) {
         // level 1
         std::cout << "level 1 opt" << std::endl;
-        this->state = phase1;
+        this->state = level1;
+        this->set_on_menu(false);
     } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter) && this->get_current_option() == 3) {
         // level 2
         std::cout << "level 2 opt" << std::endl;
-        this->state = phase2;
+        this->state = level2;
     } else {
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
             this->state = none;
