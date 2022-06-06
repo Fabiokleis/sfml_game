@@ -11,6 +11,7 @@
 #include "wall.hpp"
 #include "coin.hpp"
 #include "spike.hpp"
+#include "ListaEntities.h"
 
 namespace Levels {
 
@@ -37,7 +38,7 @@ class Level : public Entities::Entie {
             std::vector<Entities::Spike> spikes;
             std::vector<float> check_points;
 
-
+            Listas::ListaEntidades LEs;
     
         public:
             Level();
@@ -54,6 +55,8 @@ class Level : public Entities::Entie {
             void save();
             void render();
             virtual void update() = 0;
+
+            ListaEntidades* get_lista_entidades();
     };
 }
 

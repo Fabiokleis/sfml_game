@@ -38,6 +38,8 @@ namespace Entities {
             void render();
             virtual void update() = 0;
 
+            void set_graphic_manager(Managers::GraphicManager *gp);
+
     };
 }
 #endif /* end of include guard: ENTITY_HPP_RMVC7YT5 */

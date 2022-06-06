@@ -62,3 +62,7 @@ void Entity::set_origin(double x, double y) {
 sf::Vector2f Entity::get_size() const {
     return this->sprite.getSize();
 }
+
+void Entity::set_graphic_manager(Managers::GraphicManager *gp){
+    this->graphic_manager = gp;
+}

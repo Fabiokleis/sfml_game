@@ -7,7 +7,7 @@
 namespace Entities {
 
     class Entie {
-        private:
+        protected:
             Managers::GraphicManager *graphic_manager;
 
         public:

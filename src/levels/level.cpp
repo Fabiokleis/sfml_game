@@ -19,14 +19,33 @@ Level::Level(Managers::GraphicManager *graphic_manager,  std::string map_name) :
     this->height = this->texture.getSize().y;
 }
 
-Level::~Level() {}
+Level::~Level() {
+    for(int i = LEs.LEs.getLen(); i >= 0; i--) {
+        LEs.LEs.pop(LEs.LEs.getItem(i));
+    }
+}
 
 // render order of level
 void Level::render() {
     this->get_render()->render(this->sprite);
 
+    std::cout << "Le len " << LEs.LEs.getLen() << std::endl;
+    std::cout << "Elemento len " << platforms_number+walls_number+coins_number+spikes_number << std::endl;
+
+    std::cout << "Antes LEs" << std::endl;
+    for(int i = 0; i < LEs.LEs.getLen(); i++){
+       std::cout << "Entro no loop i = " << i << std::endl;
+       Entities::Entity *temp = LEs.LEs.getItem(i);
+        this->get_render()->render(temp->get_sprite());
+    }
+
+    //std::cout << "x da 1 " << LEs.LEs.getItem(1)->get_position().x << std::endl;
+
+
+
     for (auto &wall : this->walls) {
-        this->get_render()->render(wall.get_sprite());
+        //this->get_render()->render(wall.get_sprite());
+        wall.render();
     }
     for (auto &plat : this->platforms) {
         this->get_render()->render(plat.get_sprite());
@@ -116,7 +135,10 @@ void Level::load_texture() {
 }
 
 void Level::save() {
+}
 
+ListaEntidades* Level::get_lista_entidades() {
+    return &LEs;
 }
 
 sf::RectangleShape Level::get_sprite() const {

@@ -65,6 +65,8 @@ void Level1::generate_instances() {
         this->platforms.emplace_back(Entities::Platform());
         this->platforms[i].set_color(sf::Color::Blue);
         this->platforms[i].set_out_color(sf::Color::Yellow);
+        this->platforms[i].set_graphic_manager(get_render());
+        LEs.LEs.push(&(platforms[i]));
     }
 
     std::uniform_int_distribution<> distrW(10, 15); // define the range
@@ -74,6 +76,8 @@ void Level1::generate_instances() {
         this->walls.emplace_back(Entities::Wall());
         this->walls[i].set_color(sf::Color::Black);
         this->walls[i].set_out_color(sf::Color::White);
+        this->walls[i].set_graphic_manager(get_render());
+        LEs.LEs.push(&(walls[i]));
     }
 
     std::uniform_int_distribution<> distrS(10, 15); // define the range
@@ -81,6 +85,8 @@ void Level1::generate_instances() {
     this->spikes_number = distrS(gen);
     for (int i = 0; i < this->spikes_number; i++) {
         this->spikes.emplace_back(this->get_render(), this->spike_tex, 0, 0, 32, 32, SPIKE_PATH);
+        this->spikes[i].set_graphic_manager(get_render());
+        LEs.LEs.push(&(spikes[i]));
     }
 
     std::uniform_int_distribution<> distrC(60, 80); // define the range
@@ -88,6 +94,8 @@ void Level1::generate_instances() {
     // populate the coins vector with a random number of instances 20-40
     for (int i = 0; i < this->coins_number; i++) {
         this->coins.emplace_back(this->get_render(), this->coin_tex, COIN_PATH, i, 0, 0, 32, 32);
+        this->coins[i].set_graphic_manager(get_render());
+        LEs.LEs.push(&(coins[i]));
     }
 }
 
