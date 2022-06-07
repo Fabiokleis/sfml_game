@@ -160,7 +160,7 @@ void Level::collision_manager(Entities::Player *other) {
             auto *temp = ListaDungas.getItem(i);
             if (spike.get_collider().check_collision(temp->get_collider(), temp->get_velocity(),true))
             {
-                other->on_collision(spike.get_type());
+                temp->on_collision(spike.get_type());
             }
         }
     }
