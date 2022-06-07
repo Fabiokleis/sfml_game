@@ -1,6 +1,6 @@
 #include "characters/enemy.hpp"
 
-using namespace Entities::Characters;;
+using namespace Entities::Characters;
 
 Enemy::Enemy() {
 
@@ -19,14 +19,18 @@ Enemy::~Enemy() {
 }
 
 void Enemy::on_collision(const std::string &object_type) {
-    if(velocity.x < 0){
+    this->collide_state = colliding;
+    if (object_type == "player") {
+
+    }
+    if (velocity.x < 0.0f) {
         this->collide_state = left;
-    } else if (velocity.x > 0){
+    } else if (velocity.x > 0.0f) {
         this->collide_state = right;
     }
-    if(velocity.y < 0){
+    if (velocity.y == -1.0f) {
         this->collide_state = ground;
-    } else if(velocity.y > 0){
+    } else if (velocity.y == 1.0f) {
         this->collide_state = top;
     }
 }

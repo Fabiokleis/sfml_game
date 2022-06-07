@@ -6,7 +6,7 @@ using namespace Entities::Characters;
 Character::Character(Managers::GraphicManager *graphic_manager, double width, double height, int cordx, int cordy, int life_number,
                      sf::Vector2u image_count, float switch_time, States state,
                      const std::string &path_name, float* delta_time) :
-        Entity(graphic_manager), collide_state(not_colliding), image_count(image_count), path_name(path_name),
+        Entity(graphic_manager), collide_state(not_colliding), image_count(image_count), path_name(path_name), texture(),
         state(state), last_state(idle), jump_height(0), delta_time(0), switch_time(switch_time), acceleration(0), life_number(life_number)
 
 {
@@ -21,7 +21,7 @@ Character::Character(Managers::GraphicManager *graphic_manager, double width, do
     this->delta_time = delta_time;
 }
 
-Character::Character() : state(), last_state(), jump_height(), delta_time(), switch_time(), acceleration(), life_number(), collide_state(), animation() {}
+Character::Character() : state(), last_state(), jump_height(), delta_time(), switch_time(), acceleration(), life_number(), collide_state(), animation(), texture() {}
 
 Character::~Character() {
     delete animation;

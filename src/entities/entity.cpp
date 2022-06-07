@@ -1,5 +1,4 @@
 #include "entity.hpp"
-#include "collider.hpp"
 using namespace Entities;
 
 Entity::Entity(Managers::GraphicManager *graphic_manager) :
@@ -7,6 +6,7 @@ Entity::Entity(Managers::GraphicManager *graphic_manager) :
         Entie(graphic_manager)
 {
     this->sprite = sf::RectangleShape();
+    this->type = "entity";
 }
 
 Entity::Entity() : gravity() {}
@@ -23,10 +23,6 @@ sf::Vector2f Entity::get_position() const {
 
 sf::Vector2f& Entity::get_velocity() {
     return this->velocity;
-}
-
-Managers::Collider Entity::get_collider() {
-    return Managers::Collider{this->sprite};
 }
 
 void Entity::render() {
@@ -65,4 +61,12 @@ sf::Vector2f Entity::get_size() const {
 
 void Entity::set_graphic_manager(Managers::GraphicManager *gp){
     this->graphic_manager = gp;
+}
+
+sf::Vector2f Entity::get_half_size() const {
+    return this->get_size()/2.0f;
+}
+
+std::string Entity::get_type() const {
+    return this->type;
 }

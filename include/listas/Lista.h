@@ -2,8 +2,6 @@
 #define GAME_LISTA_H
 #include "Elemento.h"
 
-using namespace Listas;
-
 namespace Listas {
 
     template <class TL> class Lista

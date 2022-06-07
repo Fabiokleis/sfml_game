@@ -15,12 +15,12 @@
 #include "ListaEntities.h"
 #include "characters/enemy.hpp"
 #include "characters/dunga.hpp"
-
+#include "collision_manager.hpp";
 
 namespace Levels {
 
 
-    class Level : public Entities::Entie {
+    class Level : public Entie {
 
             protected:
                 double x;
@@ -38,13 +38,17 @@ namespace Levels {
                 int spikes_number;
                 int dungas_number;
 
-                Lista<Entities::Obstacles::Platform> platforms;
-                Lista<Entities::Obstacles::Wall> walls;
-                Lista<Entities::Obstacles::Coin> coins;
-                Lista<Entities::Obstacles::Spike> spikes;
-                Lista<Entities::Characters::Dunga> dungas;
+                Managers::CollisionManager collision_manager;
 
-                ListaEntidades ListaEnti;
+                Listas::Lista<Entities::Obstacles::Platform> platforms;
+                Listas::Lista<Entities::Obstacles::Wall> walls;
+                Listas::Lista<Entities::Obstacles::Coin> coins;
+                Listas::Lista<Entities::Obstacles::Spike> spikes;
+                Listas::Lista<Entities::Characters::Dunga> dungas;
+
+                std::vector<Entities::Characters::Enemy> enemies;
+                Listas::Lista<Entities::Obstacles::Obstacle> obstacles;
+                Listas::ListaEntidades ListaEnti;
 
                 float* pDeltaT;
 
@@ -59,14 +63,16 @@ namespace Levels {
                 double get_width() const;
                 std::string get_name();
                 sf::RectangleShape get_sprite() const;
-                void collision_manager(Entities::Characters::Player* other);
+                void handle_collision(Entities::Characters::Player* other);
                 static int generate_random(int low, int high);
                 static std::string read_file(const std::string& filename);
                 void save();
                 void render();
                 virtual void update() = 0;
+                virtual void populate_obstacles() = 0;
+                virtual void populate_enemies() = 0;
 
-                ListaEntidades* get_lista_entidades();
+                Listas::ListaEntidades* get_lista_entidades();
         };
 }
 

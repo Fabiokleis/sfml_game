@@ -18,11 +18,14 @@ Level::Level(Managers::GraphicManager *graphic_manager,  std::string map_name, f
     this->sprite.setSize(sf::Vector2f(this->texture.getSize().x, this->texture.getSize().y));
     this->width = this->texture.getSize().x;
     this->height = this->texture.getSize().y;
+
+   this->collision_manager = Managers::CollisionManager(this->obstacles);
 }
 
 Level::~Level() {
-    for(int i = this->dungas.getLen()-1; i >= 0; i--) {
-        this->dungas.pop(this->dungas.getItem(i));
+
+    for(int i = this->obstacles.getLen()-1; i >= 0; i--) {
+        this->obstacles.pop(this->obstacles.getItem(i));
     }
     for(int i = ListaEnti.LEs.getLen()-1; i >= 0; i--) {
         ListaEnti.LEs.pop(ListaEnti.LEs.getItem(i));
@@ -68,83 +71,10 @@ std::string Level::read_file(const std::string& filename) {
     return buf.str();
 }
 
-void Level::collision_manager(Entities::Characters::Player *other) {
-
+void Level::handle_collision(Entities::Characters::Player *other) {
+    this->collision_manager.collision_control(other);
     if (other->get_position().x == this->width) {
         // verify if other collide with the end of level, to load next level
-    }
-
-    if (this->dungas.getLen() > 0) {
-        for (int i = 0; i < this->dungas.getLen(); i++) {
-            Entities::Characters::Dunga *temp = this->dungas.getItem(i);
-            if(temp->get_collider().check_collision(other->get_collider(), other->get_velocity(), true)){
-                temp->on_collision("player");
-                other->on_collision(temp->get_type(), temp->get_collide_state());
-                if(temp->get_collide_state() == Entities::Characters::top){
-                    temp->set_state(Entities::Characters::dead);
-                    temp->update_life_number();
-                    this->dungas.pop(temp);
-                    this->ListaEnti.LEs.pop(temp);
-                }
-            }
-        }
-    }
-
-    // platforms and other collision
-
-    for (int i = 0; i < this->platforms.getLen(); i++) {
-        Entities::Obstacles::Platform *platform = this->platforms.getItem(i);
-        if (platform->get_collider().check_collision(other->get_collider(), other->get_velocity(),true))
-        {
-            other->on_collision(platform->get_type());
-        }
-        for(int i = 0; i < this->dungas.getLen(); i++){
-            auto *temp = this->dungas.getItem(i);
-            if (platform->get_collider().check_collision(temp->get_collider(), temp->get_velocity(),true))
-            {
-                other->on_collision(platform->get_type());
-            }
-        }
-    }
-    // walls and other collision
-    for (int i = 0; i < this->walls.getLen(); i++) {
-        Entities::Obstacles::Wall *wall = this->walls.getItem(i);
-        if (wall->get_collider().check_collision(other->get_collider(), other->get_velocity(), true)) {
-            other->on_collision(wall->get_type());
-        }
-        for(int i = 0; i < this->dungas.getLen(); i++){
-            auto *temp = this->dungas.getItem(i);
-            if (wall->get_collider().check_collision(temp->get_collider(), temp->get_velocity(),true))
-            {
-                other->on_collision(wall->get_type());
-            }
-        }
-    }
-    // spikes and other collision
-    for (int i = 0; i < this->spikes.getLen(); i++) {
-        Entities::Obstacles::Spike *spike = this->spikes.getItem(i);
-        if (spike->get_collider().check_collision(other->get_collider(), other->get_velocity(), true)) {
-            other->on_collision(spike->get_type());
-        }
-        for(int i = 0; i < this->dungas.getLen(); i++){
-            auto *temp = this->dungas.getItem(i);
-            if (spike->get_collider().check_collision(temp->get_collider(), temp->get_velocity(),true))
-            {
-                temp->on_collision(spike->get_type());
-            }
-        }
-    }
-    // coins and other collision
-    if (this->coins.getLen() > 0) {
-        for (int i = 0; i < this->coins.getLen(); i++) {
-            Entities::Obstacles::Coin *coin = this->coins.getItem(i);
-            if (coin->get_collider().check_collision(other->get_collider(), other->get_velocity(), false)) {
-                other->on_collision(coin->get_type());
-
-                this->coins.pop(coin);
-                this->ListaEnti.LEs.pop(coin);
-            }
-        }
     }
 }
 
@@ -159,7 +89,7 @@ void Level::load_texture() {
 void Level::save() {
 }
 
-ListaEntidades* Level::get_lista_entidades() {
+Listas::ListaEntidades* Level::get_lista_entidades() {
     return &ListaEnti;
 }
 

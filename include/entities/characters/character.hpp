@@ -5,32 +5,33 @@
 #include <ostream>
 #include "graphic_manager.hpp"
 #include "config.h"
-#include "entity.hpp"
 #include "animation.hpp"
+#include "entity.hpp"
 
 namespace Entities::Characters {
-        enum CollideStates {
-            top = 0,
-            right,
-            left,
-            ground,
-            colliding,
-            not_colliding,
-        };
+    enum CollideStates {
+        top = 0,
+        right,
+        left,
+        ground,
+        colliding,
+        not_colliding,
+    };
 
-        enum States {
-            idle = 0,
-            walking_right,
-            walking_left,
-            down,
-            jumping,
-            falling,
-            falling_right,
-            falling_left,
-            dead,
-        };
+    enum States {
+        idle = 0,
+        walking_right,
+        walking_left,
+        down,
+        jumping,
+        falling,
+        falling_right,
+        falling_left,
+        dead,
+    };
 
-        class Character : public Entity {
+
+    class Character : public Entities::Entity {
         private:
             Managers::Animation *animation;
             sf::Texture *texture;
@@ -46,6 +47,7 @@ namespace Entities::Characters {
             float *delta_time;
             float switch_time;
             int life_number;
+
 
         public:
             Character();
@@ -84,7 +86,7 @@ namespace Entities::Characters {
             virtual void move(float dir_x, float dir_y) = 0;
 
             virtual void update() = 0;
-        };
-    }
+    };
+}
 
 #endif /* end of include guard: CHARACTER_HPP_WHBHED8U */

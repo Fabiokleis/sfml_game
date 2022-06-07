@@ -15,6 +15,7 @@ Dunga::Dunga(int id, Managers::GraphicManager *graphic_manager, double width, do
     this->acceleration = 100.0f;
     this->velocity = sf::Vector2f(0,0);
     this->type = "dunga";
+    this->state = idle;
 }
 
 Dunga::~Dunga(){
@@ -36,7 +37,7 @@ void Dunga::update_animation() {
 
 void Dunga::move(float dir_x, float dir_y) {
     // accelerate
-    this->velocity.x += dir_x * this->acceleration;
+//    this->velocity.x += dir_x * this->acceleration;
 }
 
 void Dunga::update() {
@@ -50,9 +51,9 @@ void Enemy::update_animation() {
 }
 
 void Dunga::update_move() {
-    if(velocity.x < 0){
+    if(velocity.x == -1.0f){
         this->state = walking_left;
-    }else if(velocity.x > 0){
+    }else if(velocity.x == 1.0f){
         this->state = walking_right;
     } else if(velocity.x == 0){
         this->state = idle;

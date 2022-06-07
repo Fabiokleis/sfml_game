@@ -14,6 +14,7 @@ Player::Player(Managers::GraphicManager *graphic_manager, double x, double y, do
     this->init_physics();
     this->set_origin(width/2, height/2);
     this->score = 0;
+    this->type = "player";
 }
 
 Player::~Player() {}
@@ -63,7 +64,6 @@ void Player::handle_events(sf::Event &event) {
             break;
 
         default:
-
             break;
     }
 
@@ -82,10 +82,10 @@ void Player::on_collision(const std::string& object_type) {
             // collision on the right
             collide_state = right;
         }
-        if (this->velocity.y < 0.0f) {
+        if (this->velocity.y == -1.0f) {
             // collision on the bottom
             collide_state = ground;
-        } else if (this->velocity.y > 0.0f) {
+        } else if (this->velocity.y == 1.0f) {
             // collision on top
             collide_state = top;
         }
@@ -100,7 +100,7 @@ void Player::move(const float dir_x, const float dir_y) {
     this->velocity.x += dir_x * this->acceleration;
 
     // jump
-    if (state == jumping) {
+    if (state == jumping && this->collide_state == ground) {
         float jump = (2 * this->gravity * this->jump_height);
         this->velocity.y = -(static_cast<float>(jump));
         this->collide_state = not_colliding;
@@ -141,9 +141,13 @@ void Player::handle_character_input(sf::Keyboard::Key key, bool is_pressed) {
         } else {
             if (key == sf::Keyboard::A) {
                 state = falling_left;
+
             } else if (key == sf::Keyboard::D) {
                 state = falling_right;
+            } else {
+                state = falling;
             }
+
         }
     } else {
         state = idle;
@@ -224,40 +228,33 @@ void Player::update() {
     this->update_input();
     this->update_physics();
     this->update_animation();
+
+//    std::cout << "state: " << state << " collide: " << collide_state << std::endl;
 }
 
 void Player::on_collision(const std::string &object_type, CollideStates cs) {
-    this->collide_state = colliding;
-    if (this->velocity.x < 0.0f) {
-        // collision on the left
-        collide_state = left;
-    } else if (this->velocity.x > 0.0f) {
-        // collision on the right
-        collide_state = right;
+    if(object_type == "dunga") {
+        this->collide_state = colliding;
+        if (cs == top) {
+            score++;
+            collide_state = ground;
+        } else {
+            if (this->velocity.x < 0.0f) {
+                // collision on the left
+                collide_state = left;
+            } else if (this->velocity.x > 0.0f) {
+                // collision on the right
+                collide_state = right;
+            }
+            if (this->velocity.y == 1.0f) {
+                // collision on top
+                collide_state = top;
+            }
+
+            state = dead;
+        }
     }
-    if (this->velocity.y < 0.0f) {
-        // collision on the bottom
-        collide_state = ground;
-    } else if (this->velocity.y > 0.0f) {
-        // collision on top
-        collide_state = top;
-    }
-    if(object_type == "dunga"){
-       if(cs == top){
-           score++;
-           collide_state = ground;
-       } else if(cs == ground){
-           collide_state = top;
-           state = dead;
-       }
-       if(cs == right){
-           collide_state = left;
-           state = dead;
-       } else if(cs == left){
-           collide_state = right;
-           state = dead;
-       }
-    }
+
     this->update_life_number();
 }
 

@@ -29,10 +29,6 @@ void Obstacle::load_texture(sf::Texture *texture, const std::string &path_name) 
 
 void Obstacle::update() {}
 
-std::string Obstacle::get_type() const {
-    return this->type;
-}
-
 void Obstacle::move(float dir_x, float dir_y) {
     this->sprite.move(dir_x, dir_y);
 }

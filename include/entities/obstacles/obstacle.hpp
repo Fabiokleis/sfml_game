@@ -21,15 +21,13 @@ namespace Entities::Obstacles {
 
             void load_texture(sf::Texture *texture, const std::string &path_name);
 
-            std::string get_type() const;
-
             void move(float dir_x, float dir_y);
 
             ~Obstacle();
 
             virtual void update();
         };
-    }
+}
 
 
 #endif /* end of include guard: OBSTACLE_HPP_V2MLPPAW */

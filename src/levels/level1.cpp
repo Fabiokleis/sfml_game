@@ -19,6 +19,8 @@ void Level1::build_level() {
     this->generate_instances();
     this->generate_sizes();
     this->arbritary_positions();
+    this->populate_obstacles();
+    this->populate_enemies();
 }
 
 void Level1::update() {

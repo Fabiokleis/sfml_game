@@ -4,20 +4,19 @@
 #include <SFML/Graphics.hpp>
 #include "graphic_manager.hpp"
 
-namespace Entities {
 
-    class Entie {
-        protected:
-            Managers::GraphicManager *graphic_manager;
+class Entie {
+    protected:
+        Managers::GraphicManager *graphic_manager;
 
-        public:
-            Entie();
-            Entie(Managers::GraphicManager *graphicManager);
-            ~Entie();
+    public:
+        Entie();
+        Entie(Managers::GraphicManager *graphicManager);
+        ~Entie();
 
-            Managers::GraphicManager* get_render();
-            virtual void render() = 0;
-            virtual void update() = 0;
-    };
-}
+        Managers::GraphicManager* get_render();
+        virtual void render() = 0;
+        virtual void update() = 0;
+};
+
 #endif /* end of include guard: ENTIE_HPP_NUO0WDEY */

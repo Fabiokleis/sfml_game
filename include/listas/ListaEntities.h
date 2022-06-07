@@ -1,11 +1,9 @@
 #ifndef GAME_LISTAENTITIES_H
 #define GAME_LISTAENTITIES_H
-
 #include "Lista.h"
 #include "entity.hpp"
 
-using namespace Listas;
-namespace Listas{
+namespace Listas {
     class ListaEntidades
     {
     private:
