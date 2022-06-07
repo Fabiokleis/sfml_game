@@ -26,7 +26,6 @@ namespace Listas {
                 }
                 for (int i = 0; i < posicao; i++) {
                     temp = temp->getPProx();
-                    std::cout << "temp->getPProx OK" << std::endl;
                 }
                 return temp->getItem();
             }

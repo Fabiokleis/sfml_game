@@ -78,7 +78,6 @@ void Game::game_loop(sf::Clock timer) {
         }
 
         this->delta_time = this->clock.restart().asSeconds();
-        this->jaime->reset_clock(delta_time);
         this->set_score(this->jaime->get_coins(), this->jaime->get_life_number());
 
         this->update();
@@ -133,7 +132,8 @@ void Game::init_entities() {
                 800,
                 45, 80, 0, 0, 0, 5, sf::Vector2u(3, 6), 0.1f,
                 Entities::idle,
-                PLAYER_SPRITE_PATH);
+                PLAYER_SPRITE_PATH,
+                &this->delta_time);
     }
 
     // life
@@ -183,11 +183,11 @@ void Game::init_entities() {
 
 void Game::init_level(const std::string& map_name) {
     if (map_name == BACKGROUN_1) {
-        this->level1 = new Levels::Level1(this->graphic_manager, map_name);
+        this->level1 = new Levels::Level1(this->graphic_manager, map_name, &delta_time);
         this->level2 = nullptr;
         this->level = static_cast<Levels::Level*>(this->level1);
     } else {
-        this->level2 = new Levels::Level2(this->graphic_manager, map_name);
+        this->level2 = new Levels::Level2(this->graphic_manager, map_name, &delta_time);
         this->level1 = nullptr;
         this->level = static_cast<Levels::Level*>(this->level2);
     }

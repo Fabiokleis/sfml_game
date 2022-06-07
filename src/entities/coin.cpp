@@ -1,4 +1,4 @@
-#include "coin.hpp"
+#include "Obstacles/coin.hpp"
 using namespace Entities;
 
 Coin::Coin(Managers::GraphicManager *graphic_manager, sf::Texture *texture, const std::string &coin_path, int id,

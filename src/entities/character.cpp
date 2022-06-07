@@ -1,11 +1,11 @@
 #include <iostream>
 #include "entity.hpp"
-#include "character.hpp"
+#include "characters/character.hpp"
 using namespace Entities;
 
 Character::Character(Managers::GraphicManager *graphic_manager, double width, double height, int cordx, int cordy, int life_number,
                      sf::Vector2u image_count, float switch_time, States state,
-                     const std::string &path_name) :
+                     const std::string &path_name, float* delta_time) :
         Entity(graphic_manager), collide_state(not_colliding), image_count(image_count), path_name(path_name),
         state(state), last_state(idle), jump_height(0), delta_time(0), switch_time(switch_time), acceleration(0), life_number(life_number)
 
@@ -18,6 +18,7 @@ Character::Character(Managers::GraphicManager *graphic_manager, double width, do
     this->sprite.setOutlineThickness(1.0f);
     this->sprite.setOutlineColor(sf::Color::Green);
     this->animation = new Managers::Animation(this->texture->getSize(), this->image_count, this->switch_time);
+    this->delta_time = delta_time;
 }
 
 Character::Character() : state(), last_state(), jump_height(), delta_time(), switch_time(), acceleration(), life_number(), collide_state(), animation() {}
@@ -42,10 +43,6 @@ void Character::set_state(const States s) {
 
 void Character::set_collide_state(CollideStates s) {
     this->collide_state = s;
-}
-
-void Character::reset_clock(float dt) {
-    this->delta_time = dt;
 }
 
 int Character::get_life_number() const {

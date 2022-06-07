@@ -1,6 +1,6 @@
 #include "main_menu.hpp"
 #include "level.hpp"
-#include "character.hpp"
+#include "characters/character.hpp"
 
 using namespace Managers;
 

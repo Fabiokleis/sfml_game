@@ -3,8 +3,8 @@ using namespace Levels;
 
 Level1::Level1() : Level(), coin_tex(), spike_tex() {}
 
-Level1::Level1(Managers::GraphicManager *graphic_manager, const std::string &map_name)
-        : Level(graphic_manager, map_name), coin_tex(), spike_tex()
+Level1::Level1(Managers::GraphicManager *graphic_manager, const std::string &map_name, float* pDeltaT)
+        : Level(graphic_manager, map_name, pDeltaT), coin_tex(), spike_tex()
 {
     this->build_level();
 }
@@ -50,41 +50,65 @@ void Level1::update() {
             }
         }
     }
+
+    //for(auto &dunga: this->dungas){
+    //    dunga.update();
+    //}
+    for(int i = 0; i < ListaDungas.getLen(); i++){
+        ListaDungas.getItem(i)->update();
+    }
 }
 
 void Level1::generate_instances() {
 
-    this->platforms_number = generate_random(15, 20);
+    this->platforms_number = generate_random(5, 10);
     for (int i = 0; i < this->platforms_number; i++) {
         this->platforms.emplace_back(Entities::Platform());
         this->platforms[i].set_color(sf::Color::Blue);
         this->platforms[i].set_out_color(sf::Color::Yellow);
         this->platforms[i].set_graphic_manager(get_render());
-        LEs.LEs.push(&(platforms[i]));
+        ListaEnti.LEs.push(&(platforms[i]));
     }
 
-    this->walls_number = generate_random(7, 15); // define the range
+    this->walls_number = generate_random(2, 5); // define the range
     for (int i = 0; i < this->walls_number; i++) {
         this->walls.emplace_back(Entities::Wall());
         this->walls[i].set_color(sf::Color::Black);
         this->walls[i].set_out_color(sf::Color::White);
         this->walls[i].set_graphic_manager(get_render());
-        LEs.LEs.push(&(walls[i]));
+        ListaEnti.LEs.push(&(walls[i]));
     }
 
-    this->spikes_number = generate_random(7, 15);
+    this->spikes_number = generate_random(2, 5);
     for (int i = 0; i < this->spikes_number; i++) {
         this->spikes.emplace_back(this->get_render(), this->spike_tex, 0, 0, 32, 32, SPIKE_PATH);
         this->spikes[i].set_graphic_manager(get_render());
-        LEs.LEs.push(&(spikes[i]));
+        ListaEnti.LEs.push(&(spikes[i]));
     }
 
-    this->coins_number = generate_random(45, 60);
+    this->coins_number = generate_random(5, 20);
     for (int i = 0; i < this->coins_number; i++) {
         this->coins.emplace_back(this->get_render(), this->coin_tex, COIN_PATH, i, 0, 0, 32, 32);
         this->coins[i].set_graphic_manager(get_render());
-        LEs.LEs.push(&(coins[i]));
+        ListaEnti.LEs.push(&(coins[i]));
     }
+
+    this->dungas_number = generate_random(1, 5);
+    for (int i = 0; i < this->dungas_number; i++) {
+        std::cout << "Entro no for com dungas_number = " << dungas_number << std::endl;
+        /*this->dungas.emplace_back(i, this->get_render(), 45, 45, 0, 0,
+                1, sf::Vector2u (2,1), 0.2, Entities::idle,
+            DUNGA_PATH, this->pDeltaT);
+        this->dungas[i].set_graphic_manager(get_render());*/
+        auto *temp = new Entities::Characters::Dunga(i, this->get_render(), 45, 45, 0, 0,
+                                                                            1, sf::Vector2u (2,1), 0.2, Entities::idle,
+                                                                            DUNGA_PATH, this->pDeltaT);
+        temp->set_graphic_manager(get_render());
+        ListaDungas.push(temp);
+
+        //ListaEnti.LEs.push(&(dungas[i]));
+    }
+    std::cout << "Generate Dungas OK" << std::endl;
 }
 
 void Level1::generate_sizes() {
@@ -138,6 +162,13 @@ void Level1::arbritary_positions() {
             aux_c = this->coins[c_];
             c_++;
         }
+    }
+
+    //generate a position to dungas
+    for (int s = 0, p = 2; s < this->dungas_number; s++, p++) {
+        int distrSpaceS = generate_random(0, 128);
+        float space = (distrSpaceS + this->platforms[p].get_position().x);
+        ListaDungas.getItem(s)->set_position(space, -1000);
     }
 }
 

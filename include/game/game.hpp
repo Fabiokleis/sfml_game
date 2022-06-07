@@ -3,12 +3,12 @@
 #include <SFML/Graphics.hpp>
 #include <vector>
 #include "graphic_manager.hpp"
-#include "player.hpp"
+#include "characters/player.hpp"
 #include "config.h"
-#include "obstacle.hpp"
+#include "Obstacles/obstacle.hpp"
 #include "main_menu.hpp"
 #include "sub_menu.hpp"
-#include "obstacle.hpp"
+#include "Obstacles/obstacle.hpp"
 #include "level1.hpp"
 #include "level2.hpp"
 

@@ -44,7 +44,7 @@ namespace Entities {
             sf::Vector2u image_count;
             float jump_height;
             float acceleration;
-            float delta_time;
+            float* delta_time;
             float switch_time;
             int life_number;
 
@@ -52,10 +52,9 @@ namespace Entities {
             Character();
             Character(Managers::GraphicManager *graphic_manager, double width, double height, int cordx, int cordy, int life_number,
                       sf::Vector2u image_count, float switch_time, States state,
-                      const std::string &path_name);
+                      const std::string &path_name, float* delta_time);
 
             virtual ~Character();
-            void reset_clock(float dt);
             int get_life_number() const;
             States get_state();
             CollideStates get_collide_state();
@@ -67,10 +66,7 @@ namespace Entities {
             virtual void on_collision(const std::string& object_type) = 0;
             virtual void update_animation() = 0;
             virtual void update_life_number() = 0;
-            virtual void handle_events(sf::Event& event) = 0;
             virtual void update_physics() = 0;
-            virtual void handle_character_input(sf::Keyboard::Key key, bool is_pressed) = 0;
-            virtual void update_input() = 0;
             virtual void move(float dir_x, float dir_y) = 0;
             virtual void update() = 0;
     };

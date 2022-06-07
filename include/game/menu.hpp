@@ -4,9 +4,9 @@
 #include <iostream>
 #include <vector>
 #include "graphic_manager.hpp"
-#include "obstacle.hpp"
+#include "Obstacles/obstacle.hpp"
 #include "text.hpp"
-#include "character.hpp"
+#include "characters/character.hpp"
 
 class Menu : public Entities::Entie {
     private:

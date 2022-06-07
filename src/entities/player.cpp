@@ -1,18 +1,19 @@
-#include "player.hpp"
+#include "characters/player.hpp"
 using namespace Entities;
 
 Player::Player() : Character(), coin() {}
 
 Player::Player(Managers::GraphicManager *graphic_manager, double x, double y, double width, double height, int cordx, int cordy,
                int coin, int life_number, sf::Vector2u image_count, float switch_time, States state,
-               const std::string &path_name) :
-    Character(graphic_manager, width, height, cordx, cordy, life_number, image_count, switch_time, state, path_name),
+               const std::string &path_name, float* delta_time) :
+    Character(graphic_manager, width, height, cordx, cordy, life_number, image_count, switch_time, state, path_name, delta_time),
     coin(coin)
 {
     this->set_position(x, y);
     this->set_velocity(0.0f, 0.0f);
     this->init_physics();
     this->set_origin(width/2, height/2);
+    this->score = 0;
 }
 
 Player::~Player() {}
@@ -24,7 +25,6 @@ int Player::get_coins() const {
 void Player::init_physics() {
     this->jump_height = 20.0f;
     this->acceleration = 200.0f;
-    this->delta_time = 0.01f;
 }
 
 void Player::restart(double x, double y, int _coin, int life, States _state) {
@@ -109,7 +109,7 @@ void Player::move(const float dir_x, const float dir_y) {
 
 void Player::update_physics() {
     this->velocity.y += this->gravity;
-    this->sprite.move(this->velocity * this->delta_time);
+    this->sprite.move(this->velocity * (*this->delta_time));
 }
 
 void Player::update_input() {
@@ -169,47 +169,47 @@ void Player::update_animation() {
     switch (this->state) {
         case 0: // idle
             if (this->last_state == walking_right || this->last_state == idle) {
-                this->get_animation().update(0, this->delta_time, true);
+                this->get_animation().update(0, (*this->delta_time), true);
             } else if (this->last_state == walking_left) {
-                this->get_animation().update(0, this->delta_time, false);
+                this->get_animation().update(0, (*this->delta_time), false);
             }
             break;
         case 1: // walking_right
-            this->get_animation().update(1, this->delta_time, true);
+            this->get_animation().update(1, (*this->delta_time), true);
             break;
         case 2: // walking_left
-            this->get_animation().update(1, this->delta_time, false);
+            this->get_animation().update(1, (*this->delta_time), false);
             break;
         case 3: // down
-            this->get_animation().update(4, this->delta_time, true);
+            this->get_animation().update(4, (*this->delta_time), true);
             break;
         case 4: // jumping
             if (this->last_state == walking_right) {
-                this->get_animation().update(2, this->delta_time, true);
+                this->get_animation().update(2, (*this->delta_time), true);
             } else if (this->last_state == walking_left) {
-                this->get_animation().update(2, this->delta_time, false);
+                this->get_animation().update(2, (*this->delta_time), false);
             } else {
-                this->get_animation().update(0, this->delta_time, true);
+                this->get_animation().update(0, (*this->delta_time), true);
             }
             break;
         case 5: // falling
             if (this->velocity.x > 0.0f) {
-                this->get_animation().update(3, this->delta_time, true);
+                this->get_animation().update(3, (*this->delta_time), true);
             } else if (this->velocity.x < 0.0f) {
-                this->get_animation().update(3, this->delta_time, false);
+                this->get_animation().update(3, (*this->delta_time), false);
             }
             break;
         case 6: // falling_right
-            this->get_animation().update(3, this->delta_time, true);
+            this->get_animation().update(3, (*this->delta_time), true);
             break;
         case 7: // falling_left
-            this->get_animation().update(3, this->delta_time, false);
+            this->get_animation().update(3, (*this->delta_time), false);
             break;
         case 8: // dead
             if (this->last_state == falling_right || this->last_state == walking_right || this->last_state == idle) {
-                this->get_animation().update(5, this->delta_time, true);
+                this->get_animation().update(5, (*this->delta_time), true);
             } else if (this->last_state == falling_left || this->last_state == walking_left) {
-                this->get_animation().update(5, this->delta_time, false);
+                this->get_animation().update(5, (*this->delta_time), false);
             }
             break;
         default:
@@ -224,4 +224,36 @@ void Player::update() {
     this->update_input();
     this->update_physics();
     this->update_animation();
+}
+
+void Player::on_collision(const std::string &object_type, CollideStates cs) {
+    this->collide_state = colliding;
+    if (this->velocity.x < 0.0f) {
+        // collision on the left
+        collide_state = left;
+    } else if (this->velocity.x > 0.0f) {
+        // collision on the right
+        collide_state = right;
+    }
+    if(object_type == "dunga"){
+       if(cs == top){
+           score++;
+           collide_state = ground;
+       } else if(cs == ground){
+           collide_state = top;
+           state = dead;
+       }
+       if(cs == right){
+           collide_state = left;
+           state = dead;
+       } else if(cs == left){
+           collide_state = right;
+           state = dead;
+       }
+    }
+    this->update_life_number();
+}
+
+int Player::get_score() const {
+    return score;
 }

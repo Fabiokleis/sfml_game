@@ -7,11 +7,14 @@
 #include <random>
 #include "config.h"
 #include "entie.hpp"
-#include "player.hpp"
-#include "platform.hpp"
-#include "wall.hpp"
-#include "coin.hpp"
-#include "spike.hpp"
+#include "characters/player.hpp"
+#include "Obstacles/platform.hpp"
+#include "Obstacles/wall.hpp"
+#include "Obstacles/coin.hpp"
+#include "Obstacles/spike.hpp"
+#include "ListaEntities.h"
+#include "characters/enemy.hpp"
+#include "characters/dunga.hpp"
 
 
 namespace Levels {
@@ -33,6 +36,7 @@ namespace Levels {
                 int walls_number;
                 int coins_number;
                 int spikes_number;
+                int dungas_number;
 
                 std::vector<Entities::Platform> platforms;
                 std::vector<Entities::Wall> walls;
@@ -40,11 +44,17 @@ namespace Levels {
                 std::vector<Entities::Spike> spikes;
                 std::vector<float> check_points;
 
+                std::vector<Entities::Characters::Dunga> dungas;
+                Lista<Entities::Characters::Dunga> ListaDungas;
+
+                ListaEntidades ListaEnti;
+
+                float* pDeltaT;
 
 
             public:
                 Level();
-                Level(Managers::GraphicManager *graphic_manager, std::string map_name);
+                Level(Managers::GraphicManager *graphic_manager, std::string map_name, float* pDeltaT);
                 ~Level();
 
                 void load_texture();
@@ -52,12 +62,14 @@ namespace Levels {
                 double get_width() const;
                 std::string get_name();
                 sf::RectangleShape get_sprite() const;
-                void collision_manager(Entities::Player *other);
+                void collision_manager(Entities::Player* other);
                 static int generate_random(int low, int high);
                 static std::string read_file(const std::string& filename);
                 void save();
                 void render();
                 virtual void update() = 0;
+
+                ListaEntidades* get_lista_entidades();
         };
 }
 

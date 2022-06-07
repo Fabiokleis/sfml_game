@@ -6,11 +6,11 @@ using namespace Levels;
 
 std::random_device rd; // get random number from hardware
 std::mt19937 gen(rd()); // seed generator
-Level::Level() : x(), y(), sprite(), platforms_number(), walls_number(), spikes_number(), coins_number(), gravity() {}
+Level::Level() : x(), y(), sprite(), platforms_number(), walls_number(), spikes_number(), coins_number(), dungas_number(), gravity() {}
 
-Level::Level(Managers::GraphicManager *graphic_manager,  std::string map_name) :
+Level::Level(Managers::GraphicManager *graphic_manager,  std::string map_name, float* pDeltaT) :
     Entie(graphic_manager), height(height), width(width), x(0), y(0), platforms_number(0), walls_number(0),
-    coins_number(0), spikes_number(0), map_name(map_name), gravity(9.81f)
+    coins_number(0), spikes_number(0), dungas_number(0), map_name(map_name), gravity(9.81f), pDeltaT(pDeltaT)
 {
     this->sprite.setPosition(static_cast<float>(x), static_cast<float>(y)); // default top 0 and left 0 cords
     this->load_texture();
@@ -21,8 +21,11 @@ Level::Level(Managers::GraphicManager *graphic_manager,  std::string map_name) :
 }
 
 Level::~Level() {
-    for(int i = LEs.LEs.getLen(); i >= 0; i--) {
-        LEs.LEs.pop(LEs.LEs.getItem(i));
+    for(int i = ListaDungas.getLen()-1; i >= 0; i--) {
+        ListaDungas.pop(ListaDungas.getItem(i));
+    }
+    for(int i = ListaEnti.LEs.getLen()-1; i >= 0; i--) {
+        ListaEnti.LEs.pop(ListaEnti.LEs.getItem(i));
     }
 }
 
@@ -30,33 +33,26 @@ Level::~Level() {
 void Level::render() {
     this->get_render()->render(this->sprite);
 
-    std::cout << "Le len " << LEs.LEs.getLen() << std::endl;
-    std::cout << "Elemento len " << platforms_number+walls_number+coins_number+spikes_number << std::endl;
-
-    std::cout << "Antes LEs" << std::endl;
-    for(int i = 0; i < LEs.LEs.getLen(); i++){
-       std::cout << "Entro no loop i = " << i << std::endl;
-       Entities::Entity *temp = LEs.LEs.getItem(i);
-        this->get_render()->render(temp->get_sprite());
-    }
-
-    //std::cout << "x da 1 " << LEs.LEs.getItem(1)->get_position().x << std::endl;
-
-
-
     for (auto &wall : this->walls) {
         //this->get_render()->render(wall.get_sprite());
         wall.render();
     }
     for (auto &plat : this->platforms) {
-        this->get_render()->render(plat.get_sprite());
+        plat.render();
     }
 
     for (auto &spike : this->spikes) {
-        this->get_render()->render(spike.get_sprite());
+        spike.render();
     }
     for (auto &coin : this->coins) {
-        this->get_render()->render(coin.get_sprite());
+        coin.render();
+    }
+    //for(auto &dunga: this->dungas){
+    //    dunga.render();
+    //}
+    for(int i = 0; i < ListaDungas.getLen(); i++){
+        ListaDungas.getItem(i)->render();
+        std::cout << ListaDungas.getItem(i)->get_position().x << std::endl;
     }
 }
 
@@ -100,11 +96,46 @@ void Level::collision_manager(Entities::Player *other) {
         }
     }
 
+    if (ListaDungas.getLen() > 0) {
+        for (int i = 0; i < ListaDungas.getLen(); i++) {
+            Entities::Characters::Dunga *temp = ListaDungas.getItem(i);
+            if(temp->get_collider().check_collision(other->get_collider(), other->get_velocity(), true)){
+                other->on_collision(temp->get_type(), temp->get_collide_state());
+                if(temp->get_collide_state() == Entities::top){
+                    temp->set_state(Entities::dead);
+                    temp->update_life_number();
+                    ListaDungas.pop(temp);
+                }
+            }
+        }
+    }
+    /*if (!this->dungas.empty()) {
+        for (auto &dunga: this->dungas) {
+            if (dunga.get_collider().check_collision(other->get_collider(), other->get_velocity(), true)) {
+                other->on_collision(dunga.get_type(), dunga.get_collide_state());
+                if(dunga.get_collide_state() == Entities::top){
+                    dunga.set_state(Entities::dead);
+                    dunga.update_life_number();
+                    this->dungas.erase(std::remove_if(this->dungas.begin(), this->dungas.end(), [&dunga](const Entities::Characters::Dunga& dunga_aux) {
+                                                          return dunga.get_id() == dunga_aux.get_id();}), this->dungas.end());
+                }
+            }
+        }
+    }*/
+
+
     // platforms and other collision
     for (auto &platform: this->platforms) {
         if (platform.get_collider().check_collision(other->get_collider(), other->get_velocity(),true))
         {
             other->on_collision(platform.get_type());
+        }
+        for(int i = 0; i < ListaDungas.getLen(); i++){
+            auto *temp = ListaDungas.getItem(i);
+            if (platform.get_collider().check_collision(temp->get_collider(), temp->get_velocity(),true))
+            {
+                other->on_collision(platform.get_type());
+            }
         }
     }
     // walls and other collision
@@ -112,11 +143,25 @@ void Level::collision_manager(Entities::Player *other) {
         if (wall.get_collider().check_collision(other->get_collider(), other->get_velocity(), true)) {
             other->on_collision(wall.get_type());
         }
+        for(int i = 0; i < ListaDungas.getLen(); i++){
+            auto *temp = ListaDungas.getItem(i);
+            if (wall.get_collider().check_collision(temp->get_collider(), temp->get_velocity(),true))
+            {
+                other->on_collision(wall.get_type());
+            }
+        }
     }
     // spikes and other collision
     for (auto &spike: this->spikes) {
         if (spike.get_collider().check_collision(other->get_collider(), other->get_velocity(), true)) {
             other->on_collision(spike.get_type());
+        }
+        for(int i = 0; i < ListaDungas.getLen(); i++){
+            auto *temp = ListaDungas.getItem(i);
+            if (spike.get_collider().check_collision(temp->get_collider(), temp->get_velocity(),true))
+            {
+                other->on_collision(spike.get_type());
+            }
         }
     }
     // coins and other collision
@@ -145,7 +190,7 @@ void Level::save() {
 }
 
 ListaEntidades* Level::get_lista_entidades() {
-    return &LEs;
+    return &ListaEnti;
 }
 
 sf::RectangleShape Level::get_sprite() const {

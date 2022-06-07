@@ -1,4 +1,4 @@
-#include "wall.hpp"
+#include "Obstacles/wall.hpp"
 using namespace Entities;
 
 Wall::Wall() : Obstacle() {}

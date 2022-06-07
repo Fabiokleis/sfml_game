@@ -1,4 +1,4 @@
-#include "platform.hpp"
+#include "Obstacles/platform.hpp"
 using namespace Entities;
 
 Platform::Platform() : Obstacle(){}
