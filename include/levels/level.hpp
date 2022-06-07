@@ -42,8 +42,6 @@ namespace Levels {
                 std::vector<Entities::Wall> walls;
                 std::vector<Entities::Coin> coins;
                 std::vector<Entities::Spike> spikes;
-                std::vector<float> check_points;
-
                 std::vector<Entities::Characters::Dunga> dungas;
                 Lista<Entities::Characters::Dunga> ListaDungas;
 

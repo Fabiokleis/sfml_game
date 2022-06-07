@@ -89,18 +89,13 @@ void Level::collision_manager(Entities::Player *other) {
     if (other->get_position().x == this->width) {
         // verify if other collide with the end of level, to load next level
     }
-    for (auto &check_point : this->check_points) {
-        // verify if other collide with check point to save the game
-        if (other->get_position().x == check_point) {
-            this->save();
-        }
-    }
 
     if (ListaDungas.getLen() > 0) {
         for (int i = 0; i < ListaDungas.getLen(); i++) {
             Entities::Characters::Dunga *temp = ListaDungas.getItem(i);
             if(temp->get_collider().check_collision(other->get_collider(), other->get_velocity(), true)){
                 other->on_collision(temp->get_type(), temp->get_collide_state());
+                temp->on_collision("player");
                 if(temp->get_collide_state() == Entities::top){
                     temp->set_state(Entities::dead);
                     temp->update_life_number();
