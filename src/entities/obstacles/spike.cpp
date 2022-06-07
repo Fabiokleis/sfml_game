@@ -1,4 +1,4 @@
-#include "Obstacles/spike.hpp"
+#include "obstacles/spike.hpp"
 using namespace Entities;
 
 Spike::Spike() : Obstacle() {}

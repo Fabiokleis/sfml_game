@@ -67,6 +67,7 @@ void Level2::generate_instances() {
         this->platforms.emplace_back(Entities::Platform());
         this->platforms[i].set_color(sf::Color::Blue);
         this->platforms[i].set_out_color(sf::Color::Yellow);
+        this->platforms[i].set_graphic_manager(get_render());
     }
 
     this->walls_number = generate_random(10, 15);
@@ -74,16 +75,19 @@ void Level2::generate_instances() {
         this->walls.emplace_back(Entities::Wall());
         this->walls[i].set_color(sf::Color::Black);
         this->walls[i].set_out_color(sf::Color::White);
+        this->walls[i].set_graphic_manager(get_render());
     }
 
     this->spikes_number = generate_random(10, 15);
     for (int i = 0; i < this->spikes_number; i++) {
         this->spikes.emplace_back(this->get_render(), this->spike_tex, 0, 0, 32, 32, SPIKE_PATH);
+        this->spikes[i].set_graphic_manager(get_render());
     }
 
     this->coins_number = generate_random(20, 30);
     for (int i = 0; i < this->coins_number; i++) {
         this->coins.emplace_back(this->get_render(), this->coin_tex, COIN_PATH, i, 0, 0, 32, 32);
+        this->coins[i].set_graphic_manager(get_render());
     }
 }
 
@@ -100,12 +104,13 @@ void Level2::generate_sizes() {
 }
 
 void Level2::arbritary_positions() {
+    int distrSpaceP = generate_random(4, 7); // space between two platforms
     Entities::Platform aux_p;
     int i = 0;
     float p = 0;
     for (auto &plat: this->platforms) {
         plat.set_position((aux_p.get_position().x + aux_p.get_size().x + (i * 32)) * p, plat.get_position().y);
-        i = generate_random(4, 7);
+        i = distrSpaceP;
         p = 1;
         aux_p = plat;
     }

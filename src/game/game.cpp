@@ -1,11 +1,10 @@
 #include <iostream>
 #include "game.hpp"
 #include "level1.hpp"
-#include <fstream>
 
 Game::Game() :
-        jaime(), level(), menu(), settings(), delta_time(), coin_image(), coin_number(),
-        time_text(), total_time(TIME), life_image(), life_text(), on_menu(), level1(), level2()
+        jaime(), level(), menu(), settings(), delta_time(), coin_image(), coin_number(), life_tex(),
+        time_text(), total_time(TIME), life_image(), life_text(), on_menu(), level1(), level2(), coin_tex()
 {
     this->graphic_manager = new Managers::GraphicManager("c++ game");
 
@@ -57,7 +56,7 @@ void Game::menu_loop(bool from_game, bool from_player_dead) {
             this->settings->update(from_game, from_player_dead);
             this->settings->render();
         } else {
-            std::cout << "state: " << this->menu->get_state() << std::endl;
+//            std::cout << "state: " << this->menu->get_state() << std::endl;
             this->on_menu = this->menu->get_on_menu();
             this->menu->handle_events(*this->graphic_manager);
             this->settings->set_on_menu(this->menu->get_on_submenu());

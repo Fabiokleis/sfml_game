@@ -4,7 +4,7 @@
 #include <iostream>
 #include <vector>
 #include "graphic_manager.hpp"
-#include "Obstacles/obstacle.hpp"
+#include "obstacles/obstacle.hpp"
 #include "text.hpp"
 #include "characters/character.hpp"
 

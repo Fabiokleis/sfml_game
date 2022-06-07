@@ -5,10 +5,9 @@
 #include "graphic_manager.hpp"
 #include "characters/player.hpp"
 #include "config.h"
-#include "Obstacles/obstacle.hpp"
+#include "obstacles/obstacle.hpp"
 #include "main_menu.hpp"
 #include "sub_menu.hpp"
-#include "Obstacles/obstacle.hpp"
 #include "level1.hpp"
 #include "level2.hpp"
 

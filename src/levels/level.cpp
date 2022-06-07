@@ -6,10 +6,10 @@ using namespace Levels;
 
 std::random_device rd; // get random number from hardware
 std::mt19937 gen(rd()); // seed generator
-Level::Level() : x(), y(), sprite(), platforms_number(), walls_number(), spikes_number(), coins_number(), dungas_number(), gravity() {}
+Level::Level() : x(), y(), sprite(), platforms_number(), walls_number(), spikes_number(), coins_number(), dungas_number(), gravity(), width(), height(), pDeltaT() {}
 
 Level::Level(Managers::GraphicManager *graphic_manager,  std::string map_name, float* pDeltaT) :
-    Entie(graphic_manager), height(height), width(width), x(0), y(0), platforms_number(0), walls_number(0),
+    Entie(graphic_manager), x(0), y(0), platforms_number(0), walls_number(0),
     coins_number(0), spikes_number(0), dungas_number(0), map_name(map_name), gravity(9.81f), pDeltaT(pDeltaT)
 {
     this->sprite.setPosition(static_cast<float>(x), static_cast<float>(y)); // default top 0 and left 0 cords
@@ -34,7 +34,7 @@ void Level::render() {
     this->get_render()->render(this->sprite);
 
     for (auto &wall : this->walls) {
-        //this->get_render()->render(wall.get_sprite());
+//        this->get_render()->render(wall.get_sprite());
         wall.render();
     }
     for (auto &plat : this->platforms) {
