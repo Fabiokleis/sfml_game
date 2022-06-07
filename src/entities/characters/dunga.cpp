@@ -1,7 +1,6 @@
 #include "characters/dunga.hpp"
 
-using namespace Entities;
-using namespace Characters;
+using namespace Entities::Characters;
 
 Dunga::Dunga(){
 
@@ -41,21 +40,21 @@ void Dunga::move(float dir_x, float dir_y) {
 }
 
 void Dunga::update() {
+    this->update_move();
     this->update_physics();
     this->update_animation();
-    this->update_move();
+}
+
+void Enemy::update_animation() {
+    this->sprite.setTextureRect(this->get_animation().rect);
+}
+
+void Dunga::update_move() {
     if(velocity.x < 0){
         this->state = walking_left;
     }else if(velocity.x > 0){
         this->state = walking_right;
-    }
-    if(velocity.x == 0){
+    } else if(velocity.x == 0){
         this->state = idle;
     }
-
-
-}
-
-void Dunga::update_move() {
-
 }

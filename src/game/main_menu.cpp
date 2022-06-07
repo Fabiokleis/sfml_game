@@ -33,7 +33,7 @@ void MainMenu::init_title() {
 }
 
 void MainMenu::init_background(double x, double y) {
-    this->menu_image = new Entities::Obstacle(this->get_render(), 0, 0, WINDOW_X, WINDOW_Y, sf::Color::Black);
+    this->menu_image = new Entities::Obstacles::Obstacle(this->get_render(), 0, 0, WINDOW_X, WINDOW_Y, sf::Color::Black);
     this->menu_image->set_position(x, y);
 }
 

@@ -1,5 +1,5 @@
 #include "obstacles/coin.hpp"
-using namespace Entities;
+using namespace Entities::Obstacles;
 
 Coin::Coin(Managers::GraphicManager *graphic_manager, sf::Texture *texture, const std::string &coin_path, int id,
            double x, double y, double width, double height) :

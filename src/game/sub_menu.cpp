@@ -33,7 +33,7 @@ void SubMenu::init_title() {
 }
 
 void SubMenu::init_background(double x, double y) {
-    this->menu_image = new Entities::Obstacle(this->get_render(), 0.0f, 0.0f, WINDOW_X, WINDOW_Y, sf::Color::Black);
+    this->menu_image = new Entities::Obstacles::Obstacle(this->get_render(), 0.0f, 0.0f, WINDOW_X, WINDOW_Y, sf::Color::Black);
     this->menu_image->set_position(x, y);
 }
 
@@ -68,7 +68,7 @@ void SubMenu::init_entries() {
             0.0f, "Show Controls"));
 
     this->kb_tex = new sf::Texture();
-    this->keyboard_image = new Entities::Obstacle(this->kb_tex, this->get_render(), KEYBOARD);
+    this->keyboard_image = new Entities::Obstacles::Obstacle(this->kb_tex, this->get_render(), KEYBOARD);
     this->about_text = new Entities::Text(this->get_render(),
             FONT_PATH,
             24,
@@ -94,7 +94,7 @@ SubMenuStates SubMenu::get_state() {
     return state;
 }
 
-Entities::Obstacle &SubMenu::show_kb() {
+Entities::Obstacles::Obstacle &SubMenu::show_kb() {
     return *this->keyboard_image;
 }
 

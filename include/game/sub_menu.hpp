@@ -7,7 +7,7 @@ class SubMenu : public Menu {
     private:
         Managers::SubMenuStates state;
         Entities::Text *about_text;
-        Entities::Obstacle *keyboard_image;
+        Entities::Obstacles::Obstacle *keyboard_image;
         sf::Texture *kb_tex;
 
 
@@ -16,7 +16,7 @@ public:
         SubMenu(Managers::GraphicManager *graphic_manager, double x, double y);
         ~SubMenu();
 
-        Entities::Obstacle& show_kb();
+        Entities::Obstacles::Obstacle& show_kb();
         Entities::Text& show_about();
         Managers::SubMenuStates get_state();
         void init_background(double x, double y);

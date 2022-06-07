@@ -1,5 +1,5 @@
 #include "obstacles/spike.hpp"
-using namespace Entities;
+using namespace Entities::Obstacles;
 
 Spike::Spike() : Obstacle() {}
 

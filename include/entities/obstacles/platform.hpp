@@ -3,20 +3,22 @@
 #include "obstacle.hpp"
 #include "config.h"
 
-namespace Entities {
+namespace Entities::Obstacles {
+        class Platform : public Obstacle {
 
-    class Platform : public Obstacle {
-        
         private:
 
 
         public:
             Platform();
-            Platform(Managers::GraphicManager *graphic_manager, double x, double y, double width, double height, sf::Color color);
+
+            Platform(Managers::GraphicManager *graphic_manager, double x, double y, double width, double height,
+                     sf::Color color);
+
             ~Platform();
 
             void update();
-    };
-}
+        };
+    }
 
 #endif /* end of include guard: PLATFORM_HPP_KWHTQICM */

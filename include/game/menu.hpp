@@ -15,7 +15,7 @@ class Menu : public Entities::Entie {
 
     protected:
         Entities::Text *title;
-        Entities::Obstacle *menu_image;
+        Entities::Obstacles::Obstacle *menu_image;
         Entities::Text *score_text;
         std::vector<Entities::Text*> text_options;
         int max_options;

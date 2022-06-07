@@ -1,5 +1,5 @@
 #include "obstacles/wall.hpp"
-using namespace Entities;
+using namespace Entities::Obstacles;
 
 Wall::Wall() : Obstacle() {}
 Wall::Wall(Managers::GraphicManager *graphic_manager, double x, double y, double width, double height, sf::Color color) :

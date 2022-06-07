@@ -1,5 +1,5 @@
 #include "characters/player.hpp"
-using namespace Entities;
+using namespace Entities::Characters;
 
 Player::Player() : Character(), coin() {}
 
@@ -128,7 +128,7 @@ void Player::update_input() {
 
 void Player::handle_character_input(sf::Keyboard::Key key, bool is_pressed) {
     if (is_pressed) {
-        if (this->collide_state == Entities::ground) {
+        if (this->collide_state == ground) {
             if (key == sf::Keyboard::Space) {
                 state = jumping;
             } else if (key == sf::Keyboard::S) {
@@ -234,6 +234,13 @@ void Player::on_collision(const std::string &object_type, CollideStates cs) {
     } else if (this->velocity.x > 0.0f) {
         // collision on the right
         collide_state = right;
+    }
+    if (this->velocity.y < 0.0f) {
+        // collision on the bottom
+        collide_state = ground;
+    } else if (this->velocity.y > 0.0f) {
+        // collision on top
+        collide_state = top;
     }
     if(object_type == "dunga"){
        if(cs == top){

@@ -86,7 +86,7 @@ void Game::game_loop(sf::Clock timer) {
 
 void Game::count_down() {
     if (this->total_time == -1) {
-        this->jaime->set_state(Entities::dead);
+        this->jaime->set_state(Entities::Characters::dead);
     }
 }
 
@@ -125,19 +125,19 @@ void Game::init_entities() {
     } else {
 
         // create a new jaime without save
-        this->jaime = new Entities::Player(
+        this->jaime = new Entities::Characters::Player(
                 this->graphic_manager,
                 16,
                 800,
                 45, 80, 0, 0, 0, 5, sf::Vector2u(3, 6), 0.1f,
-                Entities::idle,
+                Entities::Characters::idle,
                 PLAYER_SPRITE_PATH,
                 &this->delta_time);
     }
 
     // life
     this->life_tex = new sf::Texture();
-    this->life_image = new Entities::Obstacle(this->life_tex, this->graphic_manager, HEAD_SPRITE);
+    this->life_image = new Entities::Obstacles::Obstacle(this->life_tex, this->graphic_manager, HEAD_SPRITE);
     this->life_image->set_position(32.0f, 32.0f);
     this->life_text = new Entities::Text(this->graphic_manager,
             FONT_PATH,
@@ -153,7 +153,7 @@ void Game::init_entities() {
 
     // coins
     this->coin_tex = new sf::Texture();
-    this->coin_image = new Entities::Obstacle(this->coin_tex, this->graphic_manager, COIN_PATH);
+    this->coin_image = new Entities::Obstacles::Obstacle(this->coin_tex, this->graphic_manager, COIN_PATH);
     this->coin_image->set_position(WINDOW_X - 64, 32.0f);
     this->coin_number = new Entities::Text(this->graphic_manager,
             FONT_PATH,
@@ -215,12 +215,12 @@ void Game::set_time() {
 
 void Game::handle_resets() {
     if (this->player_out_of_window()) {
-        this->jaime->set_state(Entities::dead);
+        this->jaime->set_state(Entities::Characters::dead);
         this->jaime->update_life_number();
     }
 
     // verify if jaime dead and restart
-    if (this->jaime->get_state() == Entities::dead) {
+    if (this->jaime->get_state() == Entities::Characters::dead) {
         this->menu->set_on_menu(true);
         this->on_menu = this->menu->get_on_menu();
         this->menu_loop(false, true); // create a specific flag to restart game
@@ -238,7 +238,7 @@ void Game::handle_collision() {
 void Game::handle_events() {
     while (this->graphic_manager->poll_event()) {
 
-        if (this->jaime->get_state() != Entities::dead) {
+        if (this->jaime->get_state() != Entities::Characters::dead) {
             this->jaime->handle_events(this->graphic_manager->get_event());
         }
 
@@ -337,5 +337,5 @@ void Game::render() {
 }
 
 void Game::restart_player() {
-    this->jaime->restart(0, 600, this->jaime->get_coins(), this->jaime->get_life_number(), Entities::idle);
+    this->jaime->restart(0, 600, this->jaime->get_coins(), this->jaime->get_life_number(), Entities::Characters::idle);
 }

@@ -2,8 +2,7 @@
 #define GAME_ENEMY_H
 #include "character.hpp"
 
-namespace Entities{
-    namespace Characters {
+namespace Entities::Characters {
         class Enemy : public Character {
         protected:
 
@@ -30,5 +29,4 @@ namespace Entities{
             virtual void update() = 0;
         };
     }
-}
 #endif //GAME_ENEMY_H

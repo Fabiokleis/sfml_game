@@ -14,7 +14,7 @@
 class Game {
     private:
         Managers::GraphicManager* graphic_manager;
-        Entities::Player *jaime;
+        Entities::Characters::Player *jaime;
 
         MainMenu *menu;
         SubMenu *settings;
@@ -23,12 +23,12 @@ class Game {
         Levels::Level1* level1;
         Levels::Level2* level2;
 
-        Entities::Obstacle *life_image;
+        Entities::Obstacles::Obstacle *life_image;
         sf::Texture *life_tex;
         Entities::Text *life_text;
         sf::Texture *coin_tex;
         Entities::Text *coin_number;
-        Entities::Obstacle *coin_image;
+        Entities::Obstacles::Obstacle *coin_image;
         Entities::Text *time_text;
 
         sf::Clock clock;

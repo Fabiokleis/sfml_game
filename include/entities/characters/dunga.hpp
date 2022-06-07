@@ -2,8 +2,7 @@
 #define GAME_DUNGA_H
 #include "characters/enemy.hpp"
 
-namespace Entities{
-    namespace Characters {
+namespace Entities::Characters {
         class Dunga : public Characters::Enemy {
         private:
             std::string type;
@@ -26,7 +25,6 @@ namespace Entities{
             void update_move();
         };
     }
-}
 
 
 #endif //GAME_DUNGA_H

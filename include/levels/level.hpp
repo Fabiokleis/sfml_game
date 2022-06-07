@@ -38,12 +38,11 @@ namespace Levels {
                 int spikes_number;
                 int dungas_number;
 
-                std::vector<Entities::Platform> platforms;
-                std::vector<Entities::Wall> walls;
-                std::vector<Entities::Coin> coins;
-                std::vector<Entities::Spike> spikes;
-                std::vector<Entities::Characters::Dunga> dungas;
-                Lista<Entities::Characters::Dunga> ListaDungas;
+                Lista<Entities::Obstacles::Platform> platforms;
+                Lista<Entities::Obstacles::Wall> walls;
+                Lista<Entities::Obstacles::Coin> coins;
+                Lista<Entities::Obstacles::Spike> spikes;
+                Lista<Entities::Characters::Dunga> dungas;
 
                 ListaEntidades ListaEnti;
 
@@ -60,7 +59,7 @@ namespace Levels {
                 double get_width() const;
                 std::string get_name();
                 sf::RectangleShape get_sprite() const;
-                void collision_manager(Entities::Player* other);
+                void collision_manager(Entities::Characters::Player* other);
                 static int generate_random(int low, int high);
                 static std::string read_file(const std::string& filename);
                 void save();

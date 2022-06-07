@@ -1,7 +1,7 @@
 #include "obstacles/platform.hpp"
-using namespace Entities;
+using namespace Entities::Obstacles;
 
-Platform::Platform() : Obstacle(){}
+Platform::Platform() : Obstacle() {}
 
 Platform::Platform(Managers::GraphicManager *graphic_manager, double x, double y, double width, double height, sf::Color color) :
     Obstacle(graphic_manager, x, y, width, height, color)

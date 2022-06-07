@@ -1,5 +1,5 @@
 #include "obstacles/obstacle.hpp"
-using namespace Entities;
+using namespace Entities::Obstacles;
 
 Obstacle::Obstacle( sf::Texture *texture, Managers::GraphicManager *graphic_manager, const std::string& path_name) :
     Entity(graphic_manager)

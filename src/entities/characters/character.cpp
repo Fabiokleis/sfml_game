@@ -1,7 +1,7 @@
 #include <iostream>
 #include "entity.hpp"
 #include "characters/character.hpp"
-using namespace Entities;
+using namespace Entities::Characters;
 
 Character::Character(Managers::GraphicManager *graphic_manager, double width, double height, int cordx, int cordy, int life_number,
                      sf::Vector2u image_count, float switch_time, States state,
