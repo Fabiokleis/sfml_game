@@ -215,8 +215,6 @@ void Player::update() {
     this->update_input();
     this->update_physics();
     this->update_animation();
-
-//    std::cout << "state: " << state << " collide: " << collide_state << std::endl;
 }
 
 void Player::on_collision(const std::string &object_type, CollideStates cs) {
@@ -225,7 +223,6 @@ void Player::on_collision(const std::string &object_type, CollideStates cs) {
             score++;
             collide_state = ground;
         } else {
-
             state = dead;
         }
     }

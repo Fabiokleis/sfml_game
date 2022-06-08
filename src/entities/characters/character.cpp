@@ -31,7 +31,6 @@ Character::~Character() {
 void Character::init_texture() {
     this->texture = new sf::Texture();
     std::string assets_path = RESOURCE_PATH;
-//    std::cout << std::endl << assets_path + this->path_name << std::endl;
     if (!this->texture->loadFromFile(assets_path+this->path_name)) {
         std::cout << "ERROR::ENTITIE_TEXTURE:: COULD NOT LOAD TEXTURE FILE." << std::endl;
     }

@@ -5,7 +5,7 @@
 namespace Entities::Characters {
         class Enemy : public Character {
         protected:
-
+            int id;
         public:
             Enemy();
 
@@ -16,6 +16,7 @@ namespace Entities::Characters {
 
             ~Enemy();
 
+            int get_id() const;
             void on_collision(const std::string &object_type);
 
             void update_life_number();

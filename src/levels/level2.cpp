@@ -37,7 +37,7 @@ void Level2::update() {
     }
     if ((this->walls.getItem(0)->get_position().y + this->walls.getItem(0)->get_size().y) < this->height) {
         for (int i = 0; i < this->walls.getLen(); i++) {
-            auto wall = this->platforms.getItem(i);
+            auto wall = this->walls.getItem(i);
             wall->move(0, this->gravity + 50.0f);
             if (wall->get_position().y >= (this->height - wall->get_size().y)) {
                 wall->set_position(wall->get_position().x + (wall->get_size().x / 2.0f), wall->get_position().y);
@@ -61,42 +61,41 @@ void Level2::update() {
 
 
 void Level2::generate_instances() {
-
-    this->platforms_number = generate_random(15, 20);
-    for (int i = 0; i < this->platforms_number; i++) {
-        this->platforms.push(new Entities::Obstacles::Platform());
-        auto plat = this->platforms.getItem(i);
-        plat->set_color(sf::Color::Blue);
-        plat->set_out_color(sf::Color::Yellow);
-        plat->set_graphic_manager(get_render());
-        ListaEnti.LEs.push(plat);
-    }
-
     this->walls_number = generate_random(10, 15);
     for (int i = 0; i < this->walls_number; i++) {
-        this->walls.push(new Entities::Obstacles::Wall());
-        auto wall = this->walls.getItem(i);
-        wall->set_color(sf::Color::Black);
+        std::cout << "Entro no for com walls_number = " << walls_number << std::endl;
+        auto wall = new Entities::Obstacles::Wall(this->get_render(), 0, 0, 0, 0, sf::Color::Black);
         wall->set_out_color(sf::Color::White);
-        wall->set_graphic_manager(get_render());
+        this->walls.push(wall);
+        this->obstacles.push(static_cast<Entities::Obstacles::Obstacle*>(wall));
         ListaEnti.LEs.push(wall);
     }
 
+    this->platforms_number = generate_random(15, 20);
+    for (int i = 0; i < this->platforms_number; i++) {
+        std::cout << "Entro no for com platforms_number = " << platforms_number << std::endl;
+        auto t_plat = new Entities::Obstacles::Platform(this->get_render(), 0, 0, 0, 0, sf::Color::Blue);
+        t_plat->set_out_color(sf::Color::Yellow);
+        this->platforms.push(t_plat);
+        this->obstacles.push(static_cast<Entities::Obstacles::Obstacle*>(t_plat));
+        ListaEnti.LEs.push(t_plat);
+    }
 
     this->spikes_number = generate_random(10, 15);
     for (int i = 0; i < this->spikes_number; i++) {
-        this->spikes.push(new Entities::Obstacles::Spike(this->get_render(), this->spike_tex, 0, 0, 32, 32, SPIKE_PATH));
-        auto spike = this->spikes.getItem(i);
-        spike->set_graphic_manager(get_render());
+        std::cout << "Entro no for com spikes_number = " << spikes_number << std::endl;
+        auto spike = new Entities::Obstacles::Spike(this->get_render(), this->spike_tex, 0, 0, 32, 32, SPIKE_PATH);
+        this->spikes.push(spike);
+        this->obstacles.push(static_cast<Entities::Obstacles::Obstacle*>(spike));
         ListaEnti.LEs.push(spike);
     }
 
-
     this->coins_number = generate_random(20, 30);
     for (int i = 0; i < this->coins_number; i++) {
-        this->coins.push(new Entities::Obstacles::Coin(this->get_render(), this->coin_tex, COIN_PATH, i, 0, 0, 32, 32));
-        auto coin = this->coins.getItem(i);
-        coin->set_graphic_manager(get_render());
+        std::cout << "Entro no for com coins_number = " << coins_number << std::endl;
+        auto coin = new Entities::Obstacles::Coin(this->get_render(), this->coin_tex, COIN_PATH, i, 0, 0, 32, 32);
+        this->coins.push(coin);
+        this->obstacles.push(static_cast<Entities::Obstacles::Obstacle*>(coin));
         ListaEnti.LEs.push(coin);
     }
 }

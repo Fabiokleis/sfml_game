@@ -26,13 +26,6 @@ namespace Managers {
             void update_intersects_characters(Entities::Characters::Character *one, Entities::Characters::Character *other, sf::Vector2f &dir_one,
                                  sf::Vector2f &dir_other);
             void update_intersects_obstacle_character(Entities::Obstacles::Obstacle *one, Entities::Characters::Character *other, sf::Vector2f &dir, bool needs_move);
-            friend std::ostream& operator<< (std::ostream &out, CollisionManager const& c) {
-                out << "delta_x: " << c.delta_x << std::endl;
-                out << "delta_y: " << c.delta_y << std::endl;
-                out << "intersect_x: " << c.intersect_x << std::endl;
-                out << "intersect_y: " << c.intersect_y << std::endl;
-
-            }
     };
 
 }

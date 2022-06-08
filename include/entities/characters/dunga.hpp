@@ -5,7 +5,7 @@
 namespace Entities::Characters {
         class Dunga : public Characters::Enemy {
         private:
-            int id;
+
 
         public:
             Dunga();
@@ -15,8 +15,6 @@ namespace Entities::Characters {
                   const std::string &path_name, float *delta_time);
             ~Dunga();
 
-
-            int get_id() const;
 
             void update_animation();
             void move(float dir_x, float dir_y);

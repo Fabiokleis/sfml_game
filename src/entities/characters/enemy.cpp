@@ -9,7 +9,7 @@ Enemy::Enemy() {
 Enemy::Enemy(Managers::GraphicManager *graphic_manager, double width, double height, int cordx, int cordy,
                          int life_number, sf::Vector2u image_count, float switch_time, States state,
                          const std::string &path_name, float* delta_time) :
-                         Character(graphic_manager, width, height, cordx, cordy, life_number, image_count, switch_time, state, path_name, delta_time)
+                         Character(graphic_manager, width, height, cordx, cordy, life_number, image_count, switch_time, state, path_name, delta_time), id()
 {
     this->set_origin(width/2, height/2);
 }
@@ -34,4 +34,8 @@ void Enemy::update_life_number() {
 void Enemy::update_physics() {
     this->velocity.y += this->gravity;
     this->sprite.move(this->velocity * (*this->delta_time));
+}
+
+int Enemy::get_id() const {
+    return this->id;
 }

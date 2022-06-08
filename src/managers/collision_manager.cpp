@@ -110,10 +110,9 @@ void CollisionManager::update_intersects_characters(Entities::Characters::Charac
 }
 
 
-
 void CollisionManager::collision_control(Entities::Characters::Player *other) {
-    // verify collision with all objects
 
+    // verify collision with all objects
     for (int i = 0; i < this->obstacles.getLen(); i++) {
         auto obstacle = this->obstacles.getItem(i);
         // player collision with obstacles
@@ -121,7 +120,7 @@ void CollisionManager::collision_control(Entities::Characters::Player *other) {
             if (obstacle->get_type() != "coin") {
                 this->update_intersects_obstacle_character(obstacle, other, other->get_velocity(), true);
             } else if(obstacle->get_type() == "coin") {
-                obstacles.pop(obstacle);
+                obstacles.pop(obstacle); // remove if other collects her
             }
             other->on_collision(obstacle->get_type());
         }
@@ -141,8 +140,16 @@ void CollisionManager::collision_control(Entities::Characters::Player *other) {
     for (auto &enemy : this->enemies) {
         if (this->check_collision(*enemy, *other)) {
             this->update_intersects_characters(enemy, other, other->get_velocity(), enemy->get_velocity());
-            other->on_collision(enemy->get_type());
+            other->on_collision(enemy->get_type(), enemy->get_collide_state());
             enemy->on_collision(other->get_type());
+            // if enemy state is dead, we can erase him from vector
+            if (enemy->get_state() == Entities::Characters::dead) {
+                for (auto aux_enemy = this->enemies.cbegin(); aux_enemy < this->enemies.cend(); aux_enemy++) {
+                    if ((*aux_enemy)->get_id() == enemy->get_id()) {
+                        this->enemies.erase(aux_enemy);
+                    }
+                }
+            }
         }
     }
 }

@@ -56,7 +56,6 @@ void Game::menu_loop(bool from_game, bool from_player_dead) {
             this->settings->update(from_game, from_player_dead);
             this->settings->render();
         } else {
-//            std::cout << "state: " << this->menu->get_state() << std::endl;
             this->on_menu = this->menu->get_on_menu();
             this->menu->handle_events(*this->graphic_manager);
             this->settings->set_on_menu(this->menu->get_on_submenu());
@@ -71,9 +70,9 @@ void Game::game_loop(sf::Clock timer) {
     this->clock.restart();
     while (this->graphic_manager->is_open() && !this->on_menu) {
         float aux_time = timer.getElapsedTime().asSeconds();
-        if (aux_time > 1 && this->total_time >= 0) {
-            this->set_time();
+        if (aux_time >= 1 && this->total_time > -1) {
             timer.restart();
+            this->set_time();
         }
 
         this->delta_time = this->clock.restart().asSeconds();
@@ -94,7 +93,7 @@ void Game::init_menu() {
     // game menu
     /*
     [0] New Game
-    [1] Load save
+    [1] save
     [2] Level 1
     [3] Level 2
     [4] Settings
@@ -224,9 +223,22 @@ void Game::handle_resets() {
         this->menu->set_on_menu(true);
         this->on_menu = this->menu->get_on_menu();
         this->menu_loop(false, true); // create a specific flag to restart game
-        // out of the menu, after select a restart option
-        this->restart_player();
         this->on_menu = this->menu->get_on_menu();
+        if (this->menu->get_state() == Managers::restart) {
+            if (this->level->get_name() == BACKGROUN_1) {
+                this->init_level(BACKGROUN_1);
+            } else {
+                this->init_level(BACKGROUN_2);
+            }
+
+        } else if (this->menu->get_state() == Managers::level1) {
+            this->init_level(BACKGROUN_1);
+
+        } else if (this->menu->get_state() == Managers::level2) {
+            this->init_level(BACKGROUN_2);
+
+        }
+        this->restart_player();
     }
 }
 
@@ -260,7 +272,12 @@ void Game::handle_events() {
                     this->on_menu = this->menu->get_on_menu();
                     this->menu_loop(true);
                     this->on_menu = this->menu->get_on_menu();
-                    if (this->menu->get_state() == Managers::restart) {
+
+                    if (this->menu->get_state() == Managers::level1) {
+                        this->init_level(BACKGROUN_1);
+                        this->restart_player();
+                    } else if (this->menu->get_state() == Managers::level2) {
+                        this->init_level(BACKGROUN_2);
                         this->restart_player();
                     }
                 }
@@ -307,10 +324,10 @@ void Game::update_player_view() {
 void Game::update() {
     this->level->update();
     this->handle_events();
-    this->count_down();
     this->jaime->update();
-    this->handle_resets();
+    this->count_down();
     this->handle_collision();
+    this->handle_resets();
 }
 
 void Game::render() {
@@ -340,4 +357,5 @@ void Game::render() {
 
 void Game::restart_player() {
     this->jaime->restart(16, 900, this->jaime->get_coins(), this->jaime->get_life_number(), Entities::Characters::idle);
+    this->total_time = TIME;
 }
