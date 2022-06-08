@@ -15,7 +15,7 @@ namespace Entities::Characters {
                   const std::string &path_name, float *delta_time);
             ~Dunga();
 
-            std::string get_type();
+
             int get_id() const;
 
             void update_animation();

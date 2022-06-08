@@ -68,6 +68,8 @@ namespace Entities::Characters {
 
             Managers::Animation &get_animation();
 
+            std::string get_type() const;
+
             void set_last_state(States s);
 
             void set_state(States s);

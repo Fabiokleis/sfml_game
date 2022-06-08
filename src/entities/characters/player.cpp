@@ -221,22 +221,10 @@ void Player::update() {
 
 void Player::on_collision(const std::string &object_type, CollideStates cs) {
     if(object_type == "dunga") {
-        this->collide_state = colliding;
         if (cs == top) {
             score++;
             collide_state = ground;
         } else {
-            if (this->velocity.x < 0.0f) {
-                // collision on the left
-                collide_state = left;
-            } else if (this->velocity.x > 0.0f) {
-                // collision on the right
-                collide_state = right;
-            }
-            if (this->velocity.y == 1.0f) {
-                // collision on top
-                collide_state = top;
-            }
 
             state = dead;
         }

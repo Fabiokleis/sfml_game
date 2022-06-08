@@ -48,22 +48,23 @@ void CollisionManager::update_intersects_obstacle_character(Entities::Obstacles:
     if (needs_move) {
         if (this->intersect_x > this->intersect_y) {
             if (this->delta_x > 0.0f) {
-                other->move(-this->intersect_x, 0.0f);
+                other->set_position(other->get_position().x - (intersect_x), other->get_position().y);
                 other->set_collide_state(Entities::Characters::right);
-                dir.x = 1.0f;
-
+                dir.x = 0.0f;
             } else {
-                other->move(this->intersect_x, 0.0f);
+                other->set_position(other->get_position().x + (intersect_x), other->get_position().y);
                 other->set_collide_state(Entities::Characters::left);
-                dir.x = -1.0f;
+                dir.x = 0.0f;
             }
         } else {
             if (this->delta_y > 0.0f) {
-                other->set_position(other->get_position().x,  one->get_position().y - other->get_position().y);
+                other->set_position(other->get_position().x, other->get_position().y - (intersect_y));
                 other->set_collide_state(Entities::Characters::top);
+                dir.y = 0.0f;
             } else {
-                other->set_position(other->get_position().x, one->get_position().y - one->get_size().y + 22);
+                other->set_position(other->get_position().x, other->get_position().y + (intersect_y));
                 other->set_collide_state(Entities::Characters::ground);
+                dir.y = 0.0f;
             }
         }
     }
@@ -75,28 +76,35 @@ void CollisionManager::update_intersects_characters(Entities::Characters::Charac
                                                     sf::Vector2f &dir_other) {
     if (this->intersect_x > this->intersect_y) {
         if (this->delta_x > 0.0f) {
-            one->move(-this->intersect_x, 0.0f);
-            other->move(this->intersect_x, 0.0f);
-            dir_other.x = -1.0f;
-            dir_one.x = 1.0f;
-
+            other->set_position(other->get_position().x - (intersect_x), other->get_position().y);
+            one->set_position(one->get_position().x + (intersect_x), one->get_position().y);
+            other->set_collide_state(Entities::Characters::right);
+            one->set_collide_state(Entities::Characters::left);
+            dir_other.x = 0.0f;
+            dir_one.x = 0.0f;
         } else {
-            one->move(this->intersect_x, 0.0f);
-            other->move(-this->intersect_x, 0.0f);
-            dir_one.x = -1.0f;
-            dir_other.x = 1.0f;
+            other->set_collide_state(Entities::Characters::left);
+            one->set_collide_state(Entities::Characters::right);
+            other->set_position(other->get_position().x + (intersect_x), other->get_position().y);
+            one->set_position(one->get_position().x - (intersect_x), one->get_position().y);
+            dir_other.x = 0.0f;
+            dir_one.x = 0.0f;
         }
     } else {
         if (this->delta_y > 0.0f) {
-            one->move(0.0f, -this->intersect_y);
-            other->move(0.0f, this->intersect_y);
-            dir_one.y = 1.0f;
-            dir_other.y = -1.0f;
+            other->set_collide_state(Entities::Characters::top);
+            one->set_collide_state(Entities::Characters::ground);
+            other->set_position(other->get_position().x, other->get_position().y - (intersect_y));
+            one->set_position(one->get_position().x, one->get_position().y + (intersect_y));
+            dir_one.y = 0.0f;
+            dir_other.y = 0.0f;
         } else {
-            one->move(0.0f, this->intersect_y);
-            other->move(0.0f, -this->intersect_y);
-            dir_one.y = -1.0f;
-            dir_one.y = 1.0f;
+            other->set_collide_state(Entities::Characters::ground);
+            one->set_collide_state(Entities::Characters::top);
+            other->set_position(other->get_position().x, other->get_position().y + (intersect_y));
+            one->set_position(one->get_position().x, one->get_position().y - (intersect_y));
+            dir_one.y = 0.0f;
+            dir_other.y = 0.0f;
         }
     }
 }
@@ -108,30 +116,34 @@ void CollisionManager::collision_control(Entities::Characters::Player *other) {
 
     for (int i = 0; i < this->obstacles.getLen(); i++) {
         auto obstacle = this->obstacles.getItem(i);
-        // player collision
+        // player collision with obstacles
         if (this->check_collision(*obstacle, *other)) {
-            std::cout << "obs_type: " << obstacle->get_type() << std::endl;
-            std::cout << "colidiu" << std::endl;
-            this->update_intersects_obstacle_character(obstacle, other, other->get_velocity(), true);
+            if (obstacle->get_type() != "coin") {
+                this->update_intersects_obstacle_character(obstacle, other, other->get_velocity(), true);
+            } else if(obstacle->get_type() == "coin") {
+                obstacles.pop(obstacle);
+            }
             other->on_collision(obstacle->get_type());
         }
 
-//        // enemies collision
-//        for (auto &enemy : this->enemies) {
-//            if (obstacle->get_type() != "coin") { // remove coin from obstacle types that enemy can collide
-//                if (this->check_collision(*obstacle, *enemy)) {
-//                    this->update_intersects_obstacle_character(*obstacle, *enemy, enemy->get_velocity(), true);
-//                    enemy->on_collision(obstacle->get_type());
-//                }
-//            }
-//        }
+        // enemies collision with obstacles
+        for (auto &enemy : this->enemies) {
+            if (obstacle->get_type() != "coin") { // remove coin from obstacle types that enemy can collide
+                if (this->check_collision(*obstacle, *enemy)) {
+                    this->update_intersects_obstacle_character(obstacle, enemy, enemy->get_velocity(), true);
+                    enemy->on_collision(obstacle->get_type());
+                }
+            }
+        }
     }
-//
-//    // verify collision between characters
-//    for (auto &enemy : this->enemies) {
-//        if (this->check_collision(*other, *enemy)) {
-//            this->update_intersects_characters(*other, *enemy, other->get_velocity(), enemy->get_velocity());
-//        }
-//    }
+
+    // verify collision between characters, enemies vs player
+    for (auto &enemy : this->enemies) {
+        if (this->check_collision(*enemy, *other)) {
+            this->update_intersects_characters(enemy, other, other->get_velocity(), enemy->get_velocity());
+            other->on_collision(enemy->get_type());
+            enemy->on_collision(other->get_type());
+        }
+    }
 }
 

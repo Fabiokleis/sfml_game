@@ -45,7 +45,7 @@ void Level1::update() {
         for (int i = 0; i < this->spikes.getLen(); i++) {
             auto spike = this->spikes.getItem(i);
             auto plat = this->platforms.getItem(i);
-            spike->move(0, this->gravity + 1.0f);
+            spike->move(0, this->gravity + 50.0f);
             if (spike->get_position().y >= (plat->get_position().y - plat->get_size().y)) {
                 spike->set_position(spike->get_position().x + 16, plat->get_position().y - (plat->get_size().y/2 + 16));
                 spike->set_origin(spike->get_size().x / 2.0f, spike->get_size().y / 2.0f);
@@ -56,6 +56,7 @@ void Level1::update() {
     for(int i = 0; i < this->dungas.getLen(); i++){
         this->dungas.getItem(i)->update();
     }
+
 }
 
 void Level1::generate_instances() {
@@ -99,7 +100,6 @@ void Level1::generate_instances() {
 
     this->dungas_number = generate_random(5, 10);
     for (int i = 0; i < this->dungas_number; i++) {
-        std::cout << "Entro no for com dungas_number = " << dungas_number << std::endl;
         auto *temp = new Entities::Characters::Dunga(i, this->get_render(), 45, 45, 0, 0,
                                                                             1, sf::Vector2u (2,1), 0.2, Entities::Characters::idle,
                                                                             DUNGA_PATH, this->pDeltaT);
@@ -171,7 +171,7 @@ void Level1::arbritary_positions() {
 
     //generate a position to dungas
     for (int s = 0, p = 2; s < this->dungas_number; s++, p++) {
-        int distrSpaceS = generate_random(0, 128);
+        int distrSpaceS = generate_random(64, 128);
         auto plat = this->platforms.getItem(s);
         float space = (distrSpaceS + plat->get_position().x);
         this->dungas.getItem(s)->set_position(space, -1000);

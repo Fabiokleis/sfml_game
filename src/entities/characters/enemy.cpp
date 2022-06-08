@@ -14,25 +14,15 @@ Enemy::Enemy(Managers::GraphicManager *graphic_manager, double width, double hei
     this->set_origin(width/2, height/2);
 }
 
-Enemy::~Enemy() {
-
-}
+Enemy::~Enemy() {}
 
 void Enemy::on_collision(const std::string &object_type) {
-    this->collide_state = colliding;
     if (object_type == "player") {
-
+        if (collide_state == top) {
+            state = dead;
+        }
     }
-    if (velocity.x < 0.0f) {
-        this->collide_state = left;
-    } else if (velocity.x > 0.0f) {
-        this->collide_state = right;
-    }
-    if (velocity.y == -1.0f) {
-        this->collide_state = ground;
-    } else if (velocity.y == 1.0f) {
-        this->collide_state = top;
-    }
+    this->update_life_number();
 }
 
 void Enemy::update_life_number() {

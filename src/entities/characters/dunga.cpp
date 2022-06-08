@@ -22,10 +22,6 @@ Dunga::~Dunga(){
 
 }
 
-std::string Dunga::get_type() {
-    return this->type;
-}
-
 int Dunga::get_id() const{
     return this->id;
 }
@@ -51,11 +47,5 @@ void Enemy::update_animation() {
 }
 
 void Dunga::update_move() {
-    if(velocity.x == -1.0f){
-        this->state = walking_left;
-    }else if(velocity.x == 1.0f){
-        this->state = walking_right;
-    } else if(velocity.x == 0){
-        this->state = idle;
-    }
+
 }

@@ -64,3 +64,7 @@ void Character::set_last_state(States s) {
 States Character::get_state() {
     return this->state;
 }
+
+std::string Character::get_type() const {
+    return this->type;
+}

@@ -225,7 +225,7 @@ void Game::handle_resets() {
         this->on_menu = this->menu->get_on_menu();
         this->menu_loop(false, true); // create a specific flag to restart game
         // out of the menu, after select a restart option
-//        this->restart_player();
+        this->restart_player();
         this->on_menu = this->menu->get_on_menu();
     }
 }
@@ -260,7 +260,9 @@ void Game::handle_events() {
                     this->on_menu = this->menu->get_on_menu();
                     this->menu_loop(true);
                     this->on_menu = this->menu->get_on_menu();
-//                    this->restart_player();
+                    if (this->menu->get_state() == Managers::restart) {
+                        this->restart_player();
+                    }
                 }
                 break;
             default:
@@ -337,5 +339,5 @@ void Game::render() {
 }
 
 void Game::restart_player() {
-    this->jaime->restart(0, 600, this->jaime->get_coins(), this->jaime->get_life_number(), Entities::Characters::idle);
+    this->jaime->restart(16, 900, this->jaime->get_coins(), this->jaime->get_life_number(), Entities::Characters::idle);
 }
