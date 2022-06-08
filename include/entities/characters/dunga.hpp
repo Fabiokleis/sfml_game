@@ -5,7 +5,6 @@
 namespace Entities::Characters {
         class Dunga : public Characters::Enemy {
         private:
-            std::string type;
             int id;
 
         public:

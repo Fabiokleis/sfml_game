@@ -1,8 +1,6 @@
 #include "level1.hpp"
 using namespace Levels;
 
-Level1::Level1() : Level(), coin_tex(), spike_tex() {}
-
 Level1::Level1(Managers::GraphicManager *graphic_manager, const std::string &map_name, float* pDeltaT)
         : Level(graphic_manager, map_name, pDeltaT), coin_tex(), spike_tex()
 {
@@ -19,8 +17,6 @@ void Level1::build_level() {
     this->generate_instances();
     this->generate_sizes();
     this->arbritary_positions();
-    this->populate_obstacles();
-    this->populate_enemies();
 }
 
 void Level1::update() {
@@ -49,7 +45,7 @@ void Level1::update() {
         for (int i = 0; i < this->spikes.getLen(); i++) {
             auto spike = this->spikes.getItem(i);
             auto plat = this->platforms.getItem(i);
-            spike->move(0, this->gravity + 50.0f);
+            spike->move(0, this->gravity + 1.0f);
             if (spike->get_position().y >= (plat->get_position().y - plat->get_size().y)) {
                 spike->set_position(spike->get_position().x + 16, plat->get_position().y - (plat->get_size().y/2 + 16));
                 spike->set_origin(spike->get_size().x / 2.0f, spike->get_size().y / 2.0f);
@@ -69,6 +65,7 @@ void Level1::generate_instances() {
         auto wall = new Entities::Obstacles::Wall(this->get_render(), 0, 0, 0, 0, sf::Color::Black);
         wall->set_out_color(sf::Color::White);
         this->walls.push(wall);
+        this->obstacles.push(static_cast<Entities::Obstacles::Obstacle*>(wall));
         ListaEnti.LEs.push(wall);
     }
 
@@ -78,6 +75,7 @@ void Level1::generate_instances() {
         auto t_plat = new Entities::Obstacles::Platform(this->get_render(), 0, 0, 0, 0, sf::Color::Blue);
         t_plat->set_out_color(sf::Color::Yellow);
         this->platforms.push(t_plat);
+        this->obstacles.push(static_cast<Entities::Obstacles::Obstacle*>(t_plat));
         ListaEnti.LEs.push(t_plat);
     }
 
@@ -86,6 +84,7 @@ void Level1::generate_instances() {
         std::cout << "Entro no for com spikes_number = " << spikes_number << std::endl;
         auto spike = new Entities::Obstacles::Spike(this->get_render(), this->spike_tex, 0, 0, 32, 32, SPIKE_PATH);
         this->spikes.push(spike);
+        this->obstacles.push(static_cast<Entities::Obstacles::Obstacle*>(spike));
         ListaEnti.LEs.push(spike);
     }
 
@@ -94,6 +93,7 @@ void Level1::generate_instances() {
         std::cout << "Entro no for com coins_number = " << coins_number << std::endl;
         auto coin = new Entities::Obstacles::Coin(this->get_render(), this->coin_tex, COIN_PATH, i, 0, 0, 32, 32);
         this->coins.push(coin);
+        this->obstacles.push(static_cast<Entities::Obstacles::Obstacle*>(coin));
         ListaEnti.LEs.push(coin);
     }
 
@@ -104,6 +104,7 @@ void Level1::generate_instances() {
                                                                             1, sf::Vector2u (2,1), 0.2, Entities::Characters::idle,
                                                                             DUNGA_PATH, this->pDeltaT);
         this->dungas.push(temp);
+        this->enemies.push_back(temp);
         ListaEnti.LEs.push(temp);
     }
 }

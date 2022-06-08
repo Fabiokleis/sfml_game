@@ -1,5 +1,4 @@
 #include "entie.hpp"
-using namespace Entities;
 
 Entie::Entie(Managers::GraphicManager *graphicManager) : graphic_manager(graphicManager) {}
 

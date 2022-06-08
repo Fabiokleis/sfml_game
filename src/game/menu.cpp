@@ -1,7 +1,7 @@
 #include "menu.hpp"
 using namespace Managers;
 
-Menu::Menu(Managers::GraphicManager *graphic_manager) : menu_image(), text_options(), title(), score_text(), Entities::Entie(graphic_manager) {
+Menu::Menu(Managers::GraphicManager *graphic_manager) : menu_image(), text_options(), title(), score_text(), Entie(graphic_manager) {
     this->menu_counter = 0;
     this->max_options = 0;
     this->on_menu = true;

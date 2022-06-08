@@ -71,24 +71,11 @@ void Player::handle_events(sf::Event &event) {
 
 void Player::on_collision(const std::string& object_type) {
     if (object_type != "coin") {
-        this->collide_state = colliding;
+
         if (object_type == "spike") {
             this->state = dead;
         }
-        if (this->velocity.x < 0.0f) {
-            // collision on the left
-            collide_state = left;
-        } else if (this->velocity.x > 0.0f) {
-            // collision on the right
-            collide_state = right;
-        }
-        if (this->velocity.y == -1.0f) {
-            // collision on the bottom
-            collide_state = ground;
-        } else if (this->velocity.y == 1.0f) {
-            // collision on top
-            collide_state = top;
-        }
+
     } else {
         this->coin++;
     }

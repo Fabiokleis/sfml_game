@@ -128,7 +128,7 @@ void Game::init_entities() {
         this->jaime = new Entities::Characters::Player(
                 this->graphic_manager,
                 16,
-                800,
+                700,
                 45, 80, 0, 0, 0, 5, sf::Vector2u(3, 6), 0.1f,
                 Entities::Characters::idle,
                 PLAYER_SPRITE_PATH,
@@ -232,7 +232,7 @@ void Game::handle_resets() {
 
 void Game::handle_collision() {
     // all collisions are triggered here
-    this->level->collision_manager(this->jaime);
+    this->level->handle_collision(this->jaime);
 }
 
 void Game::handle_events() {
@@ -303,9 +303,9 @@ void Game::update_player_view() {
 }
 
 void Game::update() {
+    this->level->update();
     this->handle_events();
     this->count_down();
-    this->level->update();
     this->jaime->update();
     this->handle_resets();
     this->handle_collision();

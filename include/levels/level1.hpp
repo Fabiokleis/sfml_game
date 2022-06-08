@@ -13,7 +13,6 @@ namespace Levels {
 
 
         public:
-            Level1();
             Level1(Managers::GraphicManager *graphic_manager, const std::string& map_name, float* pDeltaT);
             ~Level1();
 
@@ -22,8 +21,6 @@ namespace Levels {
             void generate_instances();
             void generate_sizes();
             void arbritary_positions();
-            void populate_obstacles();
-            void populate_enemies();
             void update();
 
     };

@@ -15,7 +15,7 @@
 #include "ListaEntities.h"
 #include "characters/enemy.hpp"
 #include "characters/dunga.hpp"
-#include "collision_manager.hpp";
+#include "collision_manager.hpp"
 
 namespace Levels {
 
@@ -46,7 +46,7 @@ namespace Levels {
                 Listas::Lista<Entities::Obstacles::Spike> spikes;
                 Listas::Lista<Entities::Characters::Dunga> dungas;
 
-                std::vector<Entities::Characters::Enemy> enemies;
+                std::vector<Entities::Characters::Enemy*> enemies;
                 Listas::Lista<Entities::Obstacles::Obstacle> obstacles;
                 Listas::ListaEntidades ListaEnti;
 
@@ -54,7 +54,6 @@ namespace Levels {
 
 
             public:
-                Level();
                 Level(Managers::GraphicManager *graphic_manager, std::string map_name, float* pDeltaT);
                 ~Level();
 
@@ -69,8 +68,6 @@ namespace Levels {
                 void save();
                 void render();
                 virtual void update() = 0;
-                virtual void populate_obstacles() = 0;
-                virtual void populate_enemies() = 0;
 
                 Listas::ListaEntidades* get_lista_entidades();
         };

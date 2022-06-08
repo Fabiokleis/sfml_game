@@ -15,7 +15,6 @@ namespace Entities {
             sf::IntRect shape;
             sf::Vector2f velocity;
             float gravity;
-            std::string type;
 
         public:
             Entity();
@@ -27,7 +26,7 @@ namespace Entities {
             sf::Vector2f get_position() const;
             sf::Vector2f get_size() const;
             sf::Vector2f get_half_size() const;
-            std::string get_type() const;
+
             void set_graphic_manager(Managers::GraphicManager *gp);
             void set_position(double x, double y);
             void set_size(double width, double height);

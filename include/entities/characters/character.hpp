@@ -47,6 +47,7 @@ namespace Entities::Characters {
             float *delta_time;
             float switch_time;
             int life_number;
+            std::string type;
 
 
         public:

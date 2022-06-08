@@ -8,7 +8,7 @@
 #include "text.hpp"
 #include "characters/character.hpp"
 
-class Menu : public Entities::Entie {
+class Menu : public Entie {
     private:
         bool on_menu;
         bool on_submenu;

@@ -6,11 +6,11 @@ using namespace Levels;
 
 std::random_device rd; // get random number from hardware
 std::mt19937 gen(rd()); // seed generator
-Level::Level() : x(), y(), sprite(), platforms_number(), walls_number(), spikes_number(), coins_number(), dungas_number(), gravity(), width(), height(), pDeltaT() {}
 
 Level::Level(Managers::GraphicManager *graphic_manager,  std::string map_name, float* pDeltaT) :
     Entie(graphic_manager), x(0), y(0), platforms_number(0), walls_number(0),
-    coins_number(0), spikes_number(0), dungas_number(0), map_name(map_name), gravity(9.81f), pDeltaT(pDeltaT)
+    coins_number(0), spikes_number(0), dungas_number(0), map_name(map_name), gravity(9.81f), pDeltaT(pDeltaT),
+    collision_manager(this->obstacles, this->enemies)
 {
     this->sprite.setPosition(static_cast<float>(x), static_cast<float>(y)); // default top 0 and left 0 cords
     this->load_texture();
@@ -18,8 +18,6 @@ Level::Level(Managers::GraphicManager *graphic_manager,  std::string map_name, f
     this->sprite.setSize(sf::Vector2f(this->texture.getSize().x, this->texture.getSize().y));
     this->width = this->texture.getSize().x;
     this->height = this->texture.getSize().y;
-
-   this->collision_manager = Managers::CollisionManager(this->obstacles);
 }
 
 Level::~Level() {
@@ -27,6 +25,7 @@ Level::~Level() {
     for(int i = this->obstacles.getLen()-1; i >= 0; i--) {
         this->obstacles.pop(this->obstacles.getItem(i));
     }
+
     for(int i = ListaEnti.LEs.getLen()-1; i >= 0; i--) {
         ListaEnti.LEs.pop(ListaEnti.LEs.getItem(i));
     }
@@ -73,6 +72,7 @@ std::string Level::read_file(const std::string& filename) {
 
 void Level::handle_collision(Entities::Characters::Player *other) {
     this->collision_manager.collision_control(other);
+
     if (other->get_position().x == this->width) {
         // verify if other collide with the end of level, to load next level
     }

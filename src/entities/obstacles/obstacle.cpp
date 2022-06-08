@@ -4,7 +4,6 @@ using namespace Entities::Obstacles;
 Obstacle::Obstacle( sf::Texture *texture, Managers::GraphicManager *graphic_manager, const std::string& path_name) :
     Entity(graphic_manager)
 {
-    this->type = "obstacle";
     this->load_texture(texture, path_name);
 }
 Obstacle::Obstacle() {}
@@ -31,4 +30,8 @@ void Obstacle::update() {}
 
 void Obstacle::move(float dir_x, float dir_y) {
     this->sprite.move(dir_x, dir_y);
+}
+
+std::string Obstacle::get_type() const {
+    return this->type;
 }

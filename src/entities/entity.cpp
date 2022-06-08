@@ -6,7 +6,6 @@ Entity::Entity(Managers::GraphicManager *graphic_manager) :
         Entie(graphic_manager)
 {
     this->sprite = sf::RectangleShape();
-    this->type = "entity";
 }
 
 Entity::Entity() : gravity() {}
@@ -64,9 +63,5 @@ void Entity::set_graphic_manager(Managers::GraphicManager *gp){
 }
 
 sf::Vector2f Entity::get_half_size() const {
-    return this->get_size()/2.0f;
-}
-
-std::string Entity::get_type() const {
-    return this->type;
+    return (this->get_size()/2.0f);
 }

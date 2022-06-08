@@ -20,7 +20,7 @@ namespace Entities::Obstacles {
                      sf::Color color = sf::Color::Black);
 
             void load_texture(sf::Texture *texture, const std::string &path_name);
-
+            std::string get_type() const;
             void move(float dir_x, float dir_y);
 
             ~Obstacle();
