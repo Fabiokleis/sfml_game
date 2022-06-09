@@ -9,13 +9,15 @@ Rammus::Rammus(int id, Managers::GraphicManager *graphic_manager, double width, 
                int life_number, sf::Vector2u image_count, float switch_time, States state,
                const std::string &path_name, float *delta_time):
         Enemy(graphic_manager, width, height, cordx, cordy, life_number, image_count, switch_time, state, path_name, delta_time),
-        id(id), cdr(150), moveMax(200)
+        id(id), cdr(150), moveMax(170)
 {
+    this->state = idle;
     this->acceleration = 150.0f;
     this->velocity = sf::Vector2f(0,0);
     this->type = "rammus";
     this->attackTimer = 0;
     this->canAttack = 0;
+    this->moveleft = 0;
     this->fireB = new FireBall(graphic_manager, delta_time);
 }
 
@@ -49,13 +51,18 @@ void Rammus::update_animation() {
 }
 
 void Rammus::update_move() {
-    if(moveTimer >= moveMax && !moveleft){
-        moveleft = true;
-        this->move(1.0f, 0.0f);
-        moveTimer = -moveMax;
-    } else if (moveTimer > 0){
-        this->move(-1.0f, 0.0f);
-        moveleft = false;
+    if(state == 1){
+        this->move(0.01f, 0.0f);
+        if(moveTimer >= moveMax) {
+            state = walking_left;
+            moveTimer = 0;
+        }
+    } else{
+        this->move(-0.01f, 0.0f);
+        if(moveTimer >= moveMax){
+            state = walking_right;
+            moveTimer = 0;
+        }
     }
     moveTimer++;
 }
@@ -84,20 +91,11 @@ void Rammus::attack() {
 }
 
 void Rammus::update() {
-    //this->update_physics();
+    this->update_physics();
     this->update_animation();
     this->update_move();
     this->update_attack();
     this->fireB->update();
-
-    if(velocity.x < 0){
-        this->state = walking_left;
-    }else if(velocity.x > 0){
-        this->state = walking_right;
-    }
-    if(velocity.x == 0){
-        this->state = idle;
-    }
 }
 
 

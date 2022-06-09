@@ -73,7 +73,7 @@ void Level1::generate_instances() {
         ListaEnti.LEs.push(wall);
     }
 
-    this->platforms_number = generate_random(10, 15);
+    this->platforms_number = generate_random(15, 20);
     for (int i = 0; i < this->platforms_number; i++) {
         std::cout << "Entro no for com platforms_number = " << platforms_number << std::endl;
         auto t_plat = new Entities::Obstacles::Platform(this->get_render(), 0, 0, 0, 0, sf::Color::Blue);
@@ -112,11 +112,10 @@ void Level1::generate_instances() {
     }
 
     this->zezinho_number = generate_random(5, 7);
-    for (int i = 0, p = 2; i < this->dungas_number; i++, p++) {
-        auto *temp = new Entities::Characters::Zezinho(i, this->get_render(), 23, 31, 0, 0,
-                                                     1, sf::Vector2u (8,1), 0.1, Entities::Characters::idle,
+    for (int i = 0, p = 2; i < this->zezinho_number; i++, p++) {
+        auto *temp = new Entities::Characters::Zezinho(i, this->get_render(), 46, 62, 0, 0,
+                                                     1, sf::Vector2u (8,1), 0.07, Entities::Characters::idle,
                                                      ZE_PATH, this->pDeltaT);
-        temp->set_size(46, 62);
         this->listaZe.push(temp);
         this->enemies.push_back(temp);
         ListaEnti.LEs.push(temp);
@@ -184,7 +183,7 @@ void Level1::arbritary_positions() {
     }
 
     //generate a position to dungas
-    for (int s = 0, p = 2; s < this->dungas_number; s++, p++) {
+    for (int s = 0, p = 4; s < this->dungas_number; s++, p++) {
         int distrSpaceS = generate_random(64, 128);
         auto plat = this->platforms.getItem(p);
         float space = (distrSpaceS + plat->get_position().x);
@@ -192,11 +191,11 @@ void Level1::arbritary_positions() {
     }
 
     //generate a position to zes
-    for (int s = 0, p = 2; s < this->zezinho_number; s++, p++) {
+    for (int s = 0, p = 1; s < this->zezinho_number; s++, p++) {
         int distrSpaceS = generate_random(64, 128);
-        auto plat = this->platforms.getItem(s);
+        auto plat = this->platforms.getItem(p);
         float space = (distrSpaceS + plat->get_position().x);
-        this->listaZe.getItem(s)->set_position(space, 750);
+        this->listaZe.getItem(s)->set_position(space, 400);
     }
 }
 

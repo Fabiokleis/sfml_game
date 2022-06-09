@@ -38,8 +38,4 @@ void Dunga::update() {
     this->update_animation();
 }
 
-void Enemy::update_animation() {
-    this->sprite.setTextureRect(this->get_animation().rect);
-}
-
 void Dunga::update_move() {}

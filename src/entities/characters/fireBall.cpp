@@ -3,7 +3,7 @@
 using namespace Entities;
 
 FireBall::FireBall(Managers::GraphicManager *graphic_manager, float *delta_time):
-                Entity(graphic_manager), isActive(false), maxTimeActive(250), timeActive(0), delta_time(delta_time)
+                Entity(graphic_manager), isActive(false), maxTimeActive(100), timeActive(0), delta_time(delta_time)
 {
     this->set_position(0, -50);
     this->init_texture();

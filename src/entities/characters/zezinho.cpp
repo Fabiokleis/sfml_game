@@ -14,6 +14,7 @@ Zezinho::Zezinho(int id, Managers::GraphicManager *graphic_manager, double width
 {
     this->acceleration = 100.0f;
     this->velocity = sf::Vector2f(0,0);
+    this->state = idle;
     this->type = "zezinho";
 }
 
@@ -43,7 +44,7 @@ void Zezinho::move(float dir_x, float dir_y) {
 }
 
 void Zezinho::update() {
-    //this->update_physics();
+    this->update_physics();
     this->update_animation();
     this->update_move();
     if(velocity.x < 0){
