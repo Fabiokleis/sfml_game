@@ -5,8 +5,7 @@ using namespace Managers;
 CollisionManager::CollisionManager(Listas::Lista<Entities::Obstacles::Obstacle> &obstacles, std::vector<Entities::Characters::Enemy*> &enemies) :
     obstacles(obstacles), enemies(enemies), intersect_y(0), intersect_x(0), delta_x(0), delta_y(0)
 {
-    std::cout << "len1: " << obstacles.getLen() << std::endl;
-    std::cout << "len2: " << this->obstacles.getLen() << std::endl;
+
 }
 
 CollisionManager::~CollisionManager() {
@@ -142,8 +141,10 @@ void CollisionManager::collision_control(Entities::Characters::Player *other) {
             this->update_intersects_characters(enemy, other, other->get_velocity(), enemy->get_velocity());
             other->on_collision(enemy->get_type(), enemy->get_collide_state());
             enemy->on_collision(other->get_type());
+
             // if enemy state is dead, we can erase him from vector
             if (enemy->get_state() == Entities::Characters::dead) {
+                other++; // if enemy dies
                 for (auto aux_enemy = this->enemies.cbegin(); aux_enemy < this->enemies.cend(); aux_enemy++) {
                     if ((*aux_enemy)->get_id() == enemy->get_id()) {
                         this->enemies.erase(aux_enemy);

@@ -16,7 +16,6 @@ class Menu : public Entie {
     protected:
         Entities::Text *title;
         Entities::Obstacles::Obstacle *menu_image;
-        Entities::Text *score_text;
         std::vector<Entities::Text*> text_options;
         int max_options;
         int menu_counter;
@@ -28,7 +27,6 @@ class Menu : public Entie {
         Menu();
         Menu(Managers::GraphicManager *graphic_manager);
         virtual ~Menu();
-        sf::RectangleShape get_sprite();
         int get_current_option() const;
         void inc_option();
         void dec_option();
@@ -36,8 +34,6 @@ class Menu : public Entie {
         bool get_on_menu() const;
         void set_on_submenu(bool flag);
         bool get_on_submenu() const;
-        std::vector<Entities::Text*> get_options();
-        Entities::Text get_title();
         void update();
         virtual void render() = 0;
         virtual void update(bool from_game, bool from_player_dead) = 0;

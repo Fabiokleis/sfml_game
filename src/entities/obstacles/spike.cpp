@@ -15,6 +15,4 @@ Spike::Spike(Managers::GraphicManager *graphic_manager, sf::Texture *texture, do
 
 Spike::~Spike() {}
 
-void Spike::update() {
-
-}
+void Spike::update() {}

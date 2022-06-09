@@ -94,14 +94,6 @@ SubMenuStates SubMenu::get_state() {
     return state;
 }
 
-Entities::Obstacles::Obstacle &SubMenu::show_kb() {
-    return *this->keyboard_image;
-}
-
-Entities::Text &SubMenu::show_about() {
-    return *this->about_text;
-}
-
 void SubMenu::update(bool from_game, bool from_player_dead) {
     // limit menu_counter to be in range of [0-max_options-1]
     this->menu_counter = this->menu_counter >= this->max_options-1 ? this->max_options-1 : this->menu_counter <= 0 ? 0 : this->menu_counter;

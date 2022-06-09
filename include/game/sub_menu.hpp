@@ -16,13 +16,10 @@ public:
         SubMenu(Managers::GraphicManager *graphic_manager, double x, double y);
         ~SubMenu();
 
-        Entities::Obstacles::Obstacle& show_kb();
-        Entities::Text& show_about();
         Managers::SubMenuStates get_state();
         void init_background(double x, double y);
         void init_entries();
         void init_title();
-        void init_score();
         void render();
         void update(bool from_game, bool from_player_dead);
         void events(Managers::GraphicManager &window_server);

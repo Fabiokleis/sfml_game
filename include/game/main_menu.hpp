@@ -8,7 +8,10 @@ class MainMenu : public Menu {
         Managers::MenuStates state;
         bool saved_file;
         bool load_save;
+        sf::String current_type;
         Entities::Text *credit;
+        Entities::Text *save_options;
+        Entities::Text *current_type_show;
 
 
     public:
@@ -16,7 +19,7 @@ class MainMenu : public Menu {
         MainMenu(Managers::GraphicManager *graphic_manager, double x, double y);
         ~MainMenu();
 
-        Entities::Text& show_credit();
+        void add_save(const sf::String& new_save);
         bool get_saved() const;
         bool get_load() const;
         bool verify_save();

@@ -35,7 +35,44 @@ void Player::restart(double x, double y, int _coin, int life, States _state) {
     this->life_number = life;
     this->velocity.x = 0.0f;
     this->velocity.y = 0.0f;
+    this->score = 0;
 }
+
+void Player::on_collision(const std::string &object_type, CollideStates cs) {
+    if(object_type == "dunga") {
+        if (cs == top) {
+            score++;
+            collide_state = ground;
+        } else {
+            state = dead;
+        }
+    }
+
+    this->update_life_number();
+}
+
+void Player::on_collision(const std::string& object_type) {
+    if (object_type != "coin") {
+
+        if (object_type == "spike") {
+            this->state = dead;
+        }
+
+    } else {
+        this->coin++;
+    }
+    this->update_life_number();
+}
+
+int Player::get_score() const {
+    return score;
+}
+
+void Player::operator++() {
+    this->score++;
+}
+
+
 
 void Player::update_life_number() {
     if (state == dead) {
@@ -69,19 +106,6 @@ void Player::handle_events(sf::Event &event) {
 
 }
 
-void Player::on_collision(const std::string& object_type) {
-    if (object_type != "coin") {
-
-        if (object_type == "spike") {
-            this->state = dead;
-        }
-
-    } else {
-        this->coin++;
-    }
-    this->update_life_number();
-}
-
 void Player::move(const float dir_x, const float dir_y) {
     // accelerate
     this->velocity.x += dir_x * this->acceleration;
@@ -100,7 +124,7 @@ void Player::update_physics() {
 }
 
 void Player::update_input() {
-    this->velocity.x = 0.0f;
+    this->velocity.x = 0.0f; // reset velocity on x
     // jaime movement - kb
     if (state == walking_left || state == falling_left) {
         this->move(-1.0f, 0.0f);
@@ -207,6 +231,7 @@ void Player::update_animation() {
 
             break;
     }
+
     this->sprite.setTextureRect(this->get_animation().rect);
     this->last_state = state;
 }
@@ -215,21 +240,4 @@ void Player::update() {
     this->update_input();
     this->update_physics();
     this->update_animation();
-}
-
-void Player::on_collision(const std::string &object_type, CollideStates cs) {
-    if(object_type == "dunga") {
-        if (cs == top) {
-            score++;
-            collide_state = ground;
-        } else {
-            state = dead;
-        }
-    }
-
-    this->update_life_number();
-}
-
-int Player::get_score() const {
-    return score;
 }

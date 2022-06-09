@@ -61,11 +61,9 @@ namespace Levels {
                 double get_height() const;
                 double get_width() const;
                 std::string get_name();
-                sf::RectangleShape get_sprite() const;
                 void handle_collision(Entities::Characters::Player* other);
                 static int generate_random(int low, int high);
                 static std::string read_file(const std::string& filename);
-                void save();
                 void render();
                 virtual void update() = 0;
 

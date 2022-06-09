@@ -10,6 +10,8 @@ namespace Managers {
     enum MenuStates {
         none = 0,
         restart,
+        add_save,
+        save,
         loading,
         level1,
         level2,

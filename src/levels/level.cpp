@@ -67,7 +67,7 @@ int Level::generate_random(int low, int high) {
     return dist(gen);
 }
 
-// read a file and returns
+// read a file and returns a buffer
 std::string Level::read_file(const std::string& filename) {
     std::cout << filename << "\n";
     std::ostringstream buf;
@@ -80,9 +80,6 @@ std::string Level::read_file(const std::string& filename) {
 void Level::handle_collision(Entities::Characters::Player *other) {
     this->collision_manager.collision_control(other);
 
-    if (other->get_position().x == this->width) {
-        // verify if other collide with the end of level, to load next level
-    }
 }
 
 void Level::load_texture() {
@@ -93,13 +90,6 @@ void Level::load_texture() {
     }
 }
 
-void Level::save() {
-}
-
 Listas::ListaEntidades* Level::get_lista_entidades() {
     return &ListaEnti;
-}
-
-sf::RectangleShape Level::get_sprite() const {
-    return this->sprite;
 }

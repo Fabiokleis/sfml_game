@@ -45,6 +45,7 @@ Game::~Game() {
     delete coin_tex;
     delete life_image;
     delete life_text;
+    delete score_text;
 }
 
 
@@ -76,7 +77,7 @@ void Game::game_loop(sf::Clock timer) {
         }
 
         this->delta_time = this->clock.restart().asSeconds();
-        this->set_score(this->jaime->get_coins(), this->jaime->get_life_number());
+        this->set_score(this->jaime->get_coins(), this->jaime->get_life_number(), this->jaime->get_score());
 
         this->update();
         this->render();
@@ -165,6 +166,17 @@ void Game::init_entities() {
             2.0f,
             ""
             );
+    this->score_text = new Entities::Text(this->graphic_manager,
+                                           FONT_PATH,
+                                           32,
+                                           0.0f,
+                                           0.0f,
+                                           sf::Color(255, 251, 232),
+                                           0,
+                                           sf::Color(0, 0, 0),
+                                           2.0f,
+                                           ""
+    );
 
     // time text
     this->time_text = new Entities::Text(this->graphic_manager,
@@ -191,12 +203,17 @@ void Game::init_level(const std::string& map_name) {
     }
 }
 
-void Game::set_score(int coin, int life_number) {
+void Game::set_score(int coin, int life_number, int score_number) {
     // coin update on screen
     sf::Vector2f pos(WINDOW_X, this->coin_image->get_sprite().getSize().y + 10.0f);
     pos.x -= 16;
     this->coin_number->set_position(pos);
     this->coin_number->set_text(std::to_string(coin));
+
+    // score number
+    this->score_text->set_position(sf::Vector2f(52.0f, 80.0f));
+    std::string aux = std::to_string(score_number);
+    this->score_text->set_text("Score: " + aux);
 
     // life update on screen
     sf::Vector2f pos_(this->life_image->get_sprite().getSize().x + 52.0f, this->life_image->get_sprite().getSize().y + 10.0f);
@@ -337,6 +354,8 @@ void Game::render() {
     this->level->render();
     this->graphic_manager->reset_view();
     // render objects to display information about score, time etc...
+    this->score_text->render();
+    this->graphic_manager->reset_view();
     this->coin_number->render();
     this->graphic_manager->reset_view();
     this->coin_image->render();

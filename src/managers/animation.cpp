@@ -14,7 +14,7 @@ Animation::~Animation() {}
 
 void Animation::update(int row, float delta_time, bool face_right) {
     this->current_image.y = row;
-    this->total_time  += delta_time;
+    this->total_time += delta_time;
 
     if (this->total_time >= switch_time) {
         this->total_time -= switch_time;
@@ -35,3 +35,4 @@ void Animation::update(int row, float delta_time, bool face_right) {
         this->rect.width = -abs(this->rect.width);
     }
 }
+

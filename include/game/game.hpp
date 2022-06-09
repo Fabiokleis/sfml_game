@@ -29,6 +29,8 @@ class Game {
         sf::Texture *coin_tex;
         Entities::Text *coin_number;
         Entities::Obstacles::Obstacle *coin_image;
+
+        Entities::Text *score_text;
         Entities::Text *time_text;
 
         sf::Clock clock;
@@ -42,7 +44,7 @@ class Game {
         void init_entities();
         void init_level(const std::string& map_name);
         void set_time();
-        void set_score(int coin, int life_number);
+        void set_score(int coin, int life_number, int score_number);
         void count_down();
         void restart_player();
         void game_loop(sf::Clock timer);

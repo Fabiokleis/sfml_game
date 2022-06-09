@@ -6,17 +6,12 @@
 namespace Entities::Obstacles {
         class Coin : public Obstacle {
         private:
-            int id;
-
 
         public:
             Coin();
 
-            Coin(Managers::GraphicManager *graphic_manager, sf::Texture *texture, const std::string &coin_path, int id,
+            Coin(Managers::GraphicManager *graphic_manager, sf::Texture *texture, const std::string &coin_path,
                  double x, double y, double width, double height);
-
-            int get_id() const;
-
             void update();
 
             ~Coin();

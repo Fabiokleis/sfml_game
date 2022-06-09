@@ -18,6 +18,8 @@ namespace Entities::Characters {
 
             ~Player();
 
+            void operator++();
+
             int get_score() const;
 
             int get_coins() const;
