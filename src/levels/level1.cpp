@@ -56,11 +56,14 @@ void Level1::update() {
     for(int i = 0; i < this->dungas.getLen(); i++){
         this->dungas.getItem(i)->update();
     }
+    for(int i = 0; i < this->listaZe.getLen(); i++){
+        this->listaZe.getItem(i)->update();
+    }
 
 }
 
 void Level1::generate_instances() {
-    this->walls_number = generate_random(5, 10); // define the range
+    this->walls_number = generate_random(3, 8); // define the range
     for (int i = 0; i < this->walls_number; i++) {
         std::cout << "Entro no for com walls_number = " << walls_number << std::endl;
         auto wall = new Entities::Obstacles::Wall(this->get_render(), 0, 0, 0, 0, sf::Color::Black);
@@ -80,7 +83,7 @@ void Level1::generate_instances() {
         ListaEnti.LEs.push(t_plat);
     }
 
-    this->spikes_number = generate_random(5, 10);
+    this->spikes_number = generate_random(3, 10);
     for (int i = 0; i < this->spikes_number; i++) {
         std::cout << "Entro no for com spikes_number = " << spikes_number << std::endl;
         auto spike = new Entities::Obstacles::Spike(this->get_render(), this->spike_tex, 0, 0, 32, 32, SPIKE_PATH);
@@ -98,12 +101,23 @@ void Level1::generate_instances() {
         ListaEnti.LEs.push(coin);
     }
 
-    this->dungas_number = generate_random(5, 10);
+    this->dungas_number = generate_random(3, 8);
     for (int i = 0; i < this->dungas_number; i++) {
         auto *temp = new Entities::Characters::Dunga(i, this->get_render(), 45, 45, 0, 0,
                                                                             1, sf::Vector2u (2,1), 0.2, Entities::Characters::idle,
                                                                             DUNGA_PATH, this->pDeltaT);
         this->dungas.push(temp);
+        this->enemies.push_back(temp);
+        ListaEnti.LEs.push(temp);
+    }
+
+    this->zezinho_number = generate_random(5, 7);
+    for (int i = 0, p = 2; i < this->dungas_number; i++, p++) {
+        auto *temp = new Entities::Characters::Zezinho(i, this->get_render(), 23, 31, 0, 0,
+                                                     1, sf::Vector2u (8,1), 0.1, Entities::Characters::idle,
+                                                     ZE_PATH, this->pDeltaT);
+        temp->set_size(46, 62);
+        this->listaZe.push(temp);
         this->enemies.push_back(temp);
         ListaEnti.LEs.push(temp);
     }
@@ -172,9 +186,17 @@ void Level1::arbritary_positions() {
     //generate a position to dungas
     for (int s = 0, p = 2; s < this->dungas_number; s++, p++) {
         int distrSpaceS = generate_random(64, 128);
+        auto plat = this->platforms.getItem(p);
+        float space = (distrSpaceS + plat->get_position().x);
+        this->dungas.getItem(s)->set_position(space, 0);
+    }
+
+    //generate a position to zes
+    for (int s = 0, p = 2; s < this->zezinho_number; s++, p++) {
+        int distrSpaceS = generate_random(64, 128);
         auto plat = this->platforms.getItem(s);
         float space = (distrSpaceS + plat->get_position().x);
-        this->dungas.getItem(s)->set_position(space, -1000);
+        this->listaZe.getItem(s)->set_position(space, 750);
     }
 }
 

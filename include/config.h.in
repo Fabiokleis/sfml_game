@@ -13,6 +13,9 @@
 #define HEAD_SPRITE "level/head_sprite.png"
 #define SPIKE_PATH "level/spike.png"
 #define DUNGA_PATH "enemies/dunga.png"
+#define ZE_PATH "enemies/Zezinho.png"
+#define RAMMUS_PATH "enemies/Rammus.png"
+#define FIREBALL_PATH "enemies/FireBall.png"
 #define BACKGROUN_1 "level/backgrounds/background.png"
 #define BACKGROUN_2 "level/backgrounds/background2.png"
 
