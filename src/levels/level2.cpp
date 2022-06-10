@@ -104,7 +104,7 @@ void Level2::generate_instances() {
     this->coins_number = generate_random(20, 30);
     for (int i = 0; i < this->coins_number; i++) {
         std::cout << "Entro no for com coins_number = " << coins_number << std::endl;
-        auto coin = new Entities::Obstacles::Coin(this->get_render(), this->coin_tex, COIN_PATH, i, 0, 0, 32, 32);
+        auto coin = new Entities::Obstacles::Coin(this->get_render(), this->coin_tex, COIN_PATH, 0, 0, 32, 32);
         this->coins.push(coin);
         this->obstacles.push(static_cast<Entities::Obstacles::Obstacle*>(coin));
         ListaEnti.LEs.push(coin);

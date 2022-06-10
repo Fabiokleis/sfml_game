@@ -183,7 +183,7 @@ void Level1::arbritary_positions() {
     }
 
     //generate a position to dungas
-    for (int s = 0, p = 4; s < this->dungas_number; s++, p++) {
+    for (int s = 0, p = 1; s < this->dungas_number; s++, p++) {
         int distrSpaceS = generate_random(64, 128);
         auto plat = this->platforms.getItem(p);
         float space = (distrSpaceS + plat->get_position().x);
@@ -191,7 +191,7 @@ void Level1::arbritary_positions() {
     }
 
     //generate a position to zes
-    for (int s = 0, p = 1; s < this->zezinho_number; s++, p++) {
+    for (int s = 0, p = 3; s < this->zezinho_number; s++, p++) {
         int distrSpaceS = generate_random(64, 128);
         auto plat = this->platforms.getItem(p);
         float space = (distrSpaceS + plat->get_position().x);
