@@ -13,7 +13,7 @@ namespace Levels {
 
 
         public:
-            Level1(Managers::GraphicManager *graphic_manager, const std::string& map_name, float* pDeltaT);
+            Level1(Managers::GraphicManager *graphic_manager, const std::string& map_name);
             ~Level1();
 
             void build_level();

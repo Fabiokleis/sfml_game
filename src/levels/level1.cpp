@@ -1,8 +1,8 @@
 #include "level1.hpp"
 using namespace Levels;
 
-Level1::Level1(Managers::GraphicManager *graphic_manager, const std::string &map_name, float* pDeltaT)
-        : Level(graphic_manager, map_name, pDeltaT), coin_tex(), spike_tex()
+Level1::Level1(Managers::GraphicManager *graphic_manager, const std::string &map_name)
+        : Level(graphic_manager, map_name), coin_tex(), spike_tex()
 {
     this->build_level();
 }
@@ -102,7 +102,7 @@ void Level1::generate_instances() {
     for (int i = 0; i < this->dungas_number; i++) {
         auto *temp = new Entities::Characters::Dunga(i, this->get_render(), 45, 45, 0, 0,
                                                                             1, sf::Vector2u (2,1), 0.2, Entities::Characters::idle,
-                                                                            DUNGA_PATH, this->pDeltaT);
+                                                                            DUNGA_PATH, &Managers::GraphicManager::delta_time);
         this->dungas.push(temp);
         this->enemies.push_back(temp);
         ListaEnti.LEs.push(temp);

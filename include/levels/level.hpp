@@ -50,11 +50,9 @@ namespace Levels {
                 Listas::Lista<Entities::Obstacles::Obstacle> obstacles;
                 Listas::ListaEntidades ListaEnti;
 
-                float* pDeltaT;
-
 
             public:
-                Level(Managers::GraphicManager *graphic_manager, std::string map_name, float* pDeltaT);
+                Level(Managers::GraphicManager *graphic_manager, std::string map_name);
                 ~Level();
 
                 void load_texture();

@@ -1,8 +1,8 @@
 #include "level2.hpp"
 using namespace Levels;
 
-Level2::Level2(Managers::GraphicManager *graphic_manager, const std::string &map_name, float* pDeltaT)
-        : Level(graphic_manager, map_name, pDeltaT), coin_tex(), spike_tex()
+Level2::Level2(Managers::GraphicManager *graphic_manager, const std::string &map_name)
+        : Level(graphic_manager, map_name), coin_tex(), spike_tex()
 {
     this->build_level();
 }

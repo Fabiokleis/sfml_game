@@ -280,8 +280,9 @@ void MainMenu::events(GraphicManager &window_server) {
         }
     } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter) && this->get_current_option() == 1) {
         // load save opt
-        this->state = loading;
+
         if (this->verify_save()) {
+            this->state = loading;
             std::cout << "load save opt" << std::endl;
 //            this->select_save_option();  TODO: load a file and show options on screen
             this->set_on_menu(false);
@@ -323,14 +324,21 @@ void MainMenu::handle_events(GraphicManager &window_server) {
                 window_server.close();
                 break;
 
-//            case sf::Event::TextEntered:
-//                if (state == Managers::add_save) {
-//                    if (window_server.get_event().text.unicode < 128) {
-//                        if (window_server.get_event().text.unicode != '\b') {
-//                            this->add_save(window_server.get_event().text.unicode);
-//                        }
-//                    }
-//                }
+            case sf::Event::TextEntered:
+                if (state == Managers::add_save) {
+                    if (window_server.get_event().text.unicode < 128) {
+                        if (window_server.get_event().text.unicode != '\b') {
+                            if(window_server.get_event().text.unicode == 13) { // enter code
+                                if (this->current_type.getSize() > 7) {
+                                    this->state = save;
+                                }
+                            } else {
+                                this->add_save(window_server.get_event().text.unicode);
+                            }
+                        }
+                    }
+                }
+                break;
 
             case sf::Event::Resized:
                 window_server.resize_view(
@@ -338,15 +346,14 @@ void MainMenu::handle_events(GraphicManager &window_server) {
                 break;
             case sf::Event::KeyPressed: // any key pressed call events
                 this->events(window_server);
-//                if (sf::Keyboard::isKeyPressed(sf::Keyboard::BackSpace)) {
-//                    if (this->current_type.getSize() > 6) {
-//                        this->current_type = this->current_type.substring(0, this->current_type.getSize() - 1);
-//                        this->current_type_show->set_text(this->current_type);
-//                    }
-//                } else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Enter) && this->state == Managers::save) {
-//
-//                    this->set_on_menu(false);
-//                }
+                if (sf::Keyboard::isKeyPressed(sf::Keyboard::BackSpace) && this->state == Managers::add_save) {
+                    if (this->current_type.getSize() > 6) {
+                        this->current_type = this->current_type.substring(0, this->current_type.getSize() - 1);
+                        this->current_type_show->set_text(this->current_type);
+                    }
+                } else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Enter) && this->state == Managers::save) {
+                    this->set_on_menu(false);
+                }
                 // default esc exit from main menu and the game!
                 if (window_server.get_event().key.code == sf::Keyboard::Escape && this->state != none) {
                     window_server.close();
