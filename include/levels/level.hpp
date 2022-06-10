@@ -58,11 +58,14 @@ namespace Levels {
                 Listas::Lista<Entities::Obstacles::Obstacle> obstacles;
                 Listas::ListaEntidades ListaEnti;
 
+                Entities::Characters::Player* player;
+
 
             public:
                 Level(Managers::GraphicManager *graphic_manager, std::string map_name);
                 ~Level();
 
+                void set_player(Entities::Characters::Player* player);
                 void load_texture();
                 double get_height() const;
                 double get_width() const;

@@ -96,3 +96,13 @@ void Level::load_texture() {
 Listas::ListaEntidades* Level::get_lista_entidades() {
     return &ListaEnti;
 }
+
+void Level::set_player(Entities::Characters::Player *player) {
+    this->player = player;
+    for(int i = 0; i < listaZe.getLen(); i++){
+        listaZe.getItem(i)->set_player(player);
+    }
+    for(int i = 0; i < listaRammus.getLen(); i++){
+        listaRammus.getItem(i)->set_player(player);
+    }
+}

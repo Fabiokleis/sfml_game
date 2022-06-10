@@ -20,7 +20,6 @@ namespace Levels {
             void generate_sizes();
             void arbritary_positions();
             void update();
-
     };
 }
 

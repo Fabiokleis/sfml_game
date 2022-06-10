@@ -16,6 +16,7 @@ Dunga::Dunga(int id, Managers::GraphicManager *graphic_manager, double width, do
     this->type = "dunga";
     this->state = idle;
     this->id = id;
+    this->moveMax = 160;
 }
 
 Dunga::~Dunga(){
@@ -38,4 +39,21 @@ void Dunga::update() {
     this->update_animation();
 }
 
-void Dunga::update_move() {}
+void Dunga::update_move() {
+    if(state == 1){
+        this->move(0.01f, 0.0f);
+        if(moveTimer >= moveMax) {
+            state = walking_left;
+            moveTimer = 0;
+            velocity.x = 0;
+        }
+    } else{
+        this->move(-0.01f, 0.0f);
+        if(moveTimer >= moveMax){
+            state = walking_right;
+            moveTimer = 0;
+            velocity.x = 0;
+        }
+    }
+    moveTimer++;
+}

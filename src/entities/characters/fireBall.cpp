@@ -1,4 +1,4 @@
-#include "characters/fireBall.h"
+#include "fireBall.h"
 
 using namespace Entities;
 

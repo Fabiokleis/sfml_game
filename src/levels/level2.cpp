@@ -81,7 +81,7 @@ void Level2::generate_instances() {
         ListaEnti.LEs.push(wall);
     }
 
-    this->platforms_number = generate_random(10, 15);
+    this->platforms_number = generate_random(16, 20);
     for (int i = 0; i < this->platforms_number; i++) {
         auto t_plat = new Entities::Obstacles::Platform(this->get_render(),
                                                         0, 0,
@@ -113,17 +113,18 @@ void Level2::generate_instances() {
 
 
     this->zezinho_number = generate_random(5, 7);
-    for (int i = 0; i < (this->zezinho_number+1); i++) {
+    this->zezinho_number = 1;
+    for (int i = 0; i < this->zezinho_number; i++) {
         auto *temp = new Entities::Characters::Zezinho(i, this->get_render(), 46, 62, 0, 0,
                                                        1, sf::Vector2u (8,1), 0.1, Entities::Characters::idle,
-                                                       ZE_PATH, &Managers::GraphicManager::delta_time);
+                                                       ZE_PATH, &Managers::GraphicManager::delta_time, player);
         this->listaZe.push(temp);
         this->enemies.push_back(temp);
         ListaEnti.LEs.push(temp);
     }
 
     this->rammus_number = generate_random(3, 5);
-    for (int i = (this->zezinho_number); i < (this->rammus_number+this->zezinho_number); i++) {
+    for (int i = 0; i < this->rammus_number; i++) {
         auto *temp = new Entities::Characters::Rammus(i, this->get_render(), 51, 68, 0, 0,
                                                       1, sf::Vector2u (2,2), 0.05, Entities::Characters::idle,
                                                       RAMMUS_PATH, &Managers::GraphicManager::delta_time);
@@ -166,7 +167,7 @@ void Level2::arbritary_positions() {
     for (int u = 0; u < this->walls.getLen(); u++) {
         auto plat = this->platforms.getItem(u);
         auto wall = this->walls.getItem(u);
-        int distrSpaceW = generate_random(256, (plat->get_size().x - 32)); // the local of wall
+        int distrSpaceW = generate_random((plat->get_size().x - 156), (plat->get_size().x - 32)); // the local of wall
         float space = (distrSpaceW + plat->get_position().x);
         wall->set_position(space, wall->get_position().y - plat->get_size().y);
     }
@@ -195,15 +196,15 @@ void Level2::arbritary_positions() {
     }
 
     //generate a position to zes
-    for (int s = 0, p = 1; s < this->zezinho_number; s++, p++) {
-        int distrSpaceS = generate_random(64, 128);
+    for (int s = 0, p = 1; s < this->zezinho_number; s++, p+=2) {
+        int distrSpaceS = generate_random(256, 512);
         auto plat = this->platforms.getItem(p);
         float space = (distrSpaceS + plat->get_position().x);
-        this->listaZe.getItem(s)->set_position(space, 10);
+        this->listaZe.getItem(s)->set_position(space, 500);
     }
 
     //generate a position to rammus
-    for (int s = 0, p = 1; s < this->rammus_number; s++, p++) {
+    for (int s = 0, p = 3; s < this->rammus_number; s++, p+=2) {
         int distrSpaceS = generate_random(256, 512);
         auto plat = this->platforms.getItem(p);
         float space = (distrSpaceS + plat->get_position().x);

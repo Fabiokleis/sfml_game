@@ -6,7 +6,6 @@ namespace Entities::Characters {
         class Dunga : public Characters::Enemy {
         private:
 
-
         public:
             Dunga();
             Dunga(int id, Managers::GraphicManager *graphic_manager, double width, double height, int cordx, int cordy,
@@ -14,7 +13,6 @@ namespace Entities::Characters {
                   sf::Vector2u image_count, float switch_time, States state,
                   const std::string &path_name, float *delta_time);
             ~Dunga();
-
 
             void update_animation();
             void move(float dir_x, float dir_y);

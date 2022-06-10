@@ -2,6 +2,7 @@
 #define GAME_RAMMUS_H
 #include "enemy.hpp"
 #include "fireBall.h"
+#include "player.hpp"
 
 
 namespace Entities::Characters {
@@ -10,10 +11,8 @@ namespace Entities::Characters {
         bool canAttack;
         int attackTimer;
         int cdr;
-        bool moveleft;
-        int moveTimer;
-        int moveMax;
         FireBall* fireB;
+        Player* p1;
 
     public:
         Rammus();
@@ -30,6 +29,7 @@ namespace Entities::Characters {
         void update_move();
         void update_attack();
         void attack();
+        void set_player(Player* player);
         FireBall* getFireB() { return fireB; }
     };
 }

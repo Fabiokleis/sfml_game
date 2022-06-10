@@ -7,7 +7,6 @@ Game::Game() :
         time_text(), total_time(TIME), life_image(), life_text(), on_menu(), level1(), level2(), coin_tex()
 {
     this->graphic_manager = new Managers::GraphicManager("c++ game");
-
 }
 
 void Game::exec() {
@@ -134,6 +133,7 @@ void Game::init_entities() {
                 PLAYER_SPRITE_PATH,
                 &Managers::GraphicManager::delta_time);
     }
+    level->set_player(jaime);
 
     // life
     this->life_tex = new sf::Texture();
@@ -382,6 +382,7 @@ void Game::render() {
 
 void Game::restart_player() {
     this->jaime->restart(16, 900, this->jaime->get_coins(), this->jaime->get_life_number(), Entities::Characters::idle);
+    level->set_player(jaime);
     this->total_time = TIME;
 }
 
