@@ -9,7 +9,7 @@ Rammus::Rammus(int id, Managers::GraphicManager *graphic_manager, double width, 
                int life_number, sf::Vector2u image_count, float switch_time, States state,
                const std::string &path_name, float *delta_time):
         Enemy(graphic_manager, width, height, cordx, cordy, life_number, image_count, switch_time, state, path_name, delta_time),
-        id(id), cdr(150), moveMax(170)
+        cdr(150), moveMax(170)
 {
     this->state = idle;
     this->acceleration = 150.0f;
@@ -19,18 +19,11 @@ Rammus::Rammus(int id, Managers::GraphicManager *graphic_manager, double width, 
     this->canAttack = 0;
     this->moveleft = 0;
     this->fireB = new FireBall(graphic_manager, delta_time);
+    this->id = id;
 }
 
 Rammus::~Rammus() {
 
-}
-
-std::string Rammus::get_type() {
-    return this->type;
-}
-
-int Rammus::get_id() const {
-    return this->id;
 }
 
 void Rammus::update_animation() {
