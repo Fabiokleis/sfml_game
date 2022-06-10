@@ -115,7 +115,7 @@ void Level1::generate_instances() {
     for (int i = 0, p = 2; i < this->zezinho_number; i++, p++) {
         auto *temp = new Entities::Characters::Zezinho(i, this->get_render(), 46, 62, 0, 0,
                                                      1, sf::Vector2u (8,1), 0.07, Entities::Characters::idle,
-                                                     ZE_PATH, this->pDeltaT);
+                                                     ZE_PATH, &Managers::GraphicManager::delta_time);
         this->listaZe.push(temp);
         this->enemies.push_back(temp);
         ListaEnti.LEs.push(temp);

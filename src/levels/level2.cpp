@@ -110,22 +110,23 @@ void Level2::generate_instances() {
         ListaEnti.LEs.push(coin);
     }
 
+
+
     this->zezinho_number = generate_random(5, 7);
-    for (int i = 0; i < this->zezinho_number; i++) {
+    for (int i = 0; i < (this->zezinho_number+1); i++) {
         auto *temp = new Entities::Characters::Zezinho(i, this->get_render(), 46, 62, 0, 0,
                                                        1, sf::Vector2u (8,1), 0.1, Entities::Characters::idle,
-                                                       ZE_PATH, this->pDeltaT);
+                                                       ZE_PATH, &Managers::GraphicManager::delta_time);
         this->listaZe.push(temp);
         this->enemies.push_back(temp);
         ListaEnti.LEs.push(temp);
     }
 
     this->rammus_number = generate_random(3, 5);
-    rammus_number = 1;
-    for (int i = 0; i < this->rammus_number; i++) {
+    for (int i = (this->zezinho_number); i < (this->rammus_number+this->zezinho_number); i++) {
         auto *temp = new Entities::Characters::Rammus(i, this->get_render(), 51, 68, 0, 0,
-                                                       1, sf::Vector2u (2,2), 0.05, Entities::Characters::idle,
-                                                       RAMMUS_PATH, this->pDeltaT);
+                                                      1, sf::Vector2u (2,2), 0.05, Entities::Characters::idle,
+                                                      RAMMUS_PATH, &Managers::GraphicManager::delta_time);
         this->listaRammus.push(temp);
         this->enemies.push_back(temp);
         ListaEnti.LEs.push(temp);
@@ -143,7 +144,7 @@ void Level2::generate_sizes() {
 
     for (int i = 0; i < this->walls.getLen(); i++) {
         auto wall = this->walls.getItem(i);
-        wall->set_size(32, generate_random(128, 175));
+        wall->set_size(32, generate_random(128, 170));
     }
 }
 
