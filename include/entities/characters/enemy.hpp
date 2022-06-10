@@ -16,6 +16,8 @@ namespace Entities::Characters {
 
             ~Enemy();
 
+
+            bool operator==(Enemy &other);
             int get_id() const;
             void on_collision(const std::string &object_type);
 

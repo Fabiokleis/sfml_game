@@ -39,3 +39,7 @@ void Enemy::update_physics() {
 int Enemy::get_id() const {
     return this->id;
 }
+
+bool Enemy::operator==(Enemy &other) {
+    return this->id == other.get_id();
+}
