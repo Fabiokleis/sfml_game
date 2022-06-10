@@ -10,8 +10,6 @@ namespace Levels {
             sf::Texture *coin_tex;
             sf::Texture *spike_tex;
 
-
-
         public:
             Level1(Managers::GraphicManager *graphic_manager, const std::string& map_name);
             ~Level1();

@@ -34,6 +34,9 @@ Level::~Level() {
 // render order of level
 void Level::render() {
     this->get_render()->render(this->sprite);
+//    for (int i = 0; i < this->ListaEnti.LEs.getLen(); i++) {
+//        ListaEnti.LEs.getItem(i)->render();
+//    }
 
     // render all obstacles from levels
     for (int i = 0; i < this->obstacles.getLen(); i++) {

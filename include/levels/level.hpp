@@ -15,10 +15,12 @@
 #include "ListaEntities.h"
 #include "characters/enemy.hpp"
 #include "characters/dunga.hpp"
+#include "characters/zezinho.h"
+#include "characters/rammus.h"
 #include "collision_manager.hpp"
 
-namespace Levels {
 
+namespace Levels {
 
     class Level : public Entie {
 
@@ -37,6 +39,8 @@ namespace Levels {
                 int coins_number;
                 int spikes_number;
                 int dungas_number;
+                int zezinho_number;
+                int rammus_number;
 
                 Managers::CollisionManager collision_manager;
 
@@ -45,6 +49,10 @@ namespace Levels {
                 Listas::Lista<Entities::Obstacles::Coin> coins;
                 Listas::Lista<Entities::Obstacles::Spike> spikes;
                 Listas::Lista<Entities::Characters::Dunga> dungas;
+                Listas::Lista<Entities::Characters::Zezinho> listaZe;
+                Listas::Lista<Entities::Characters::Rammus> listaRammus;
+                Listas::Lista<Entities::FireBall> listaFB;
+
 
                 std::vector<Entities::Characters::Enemy*> enemies;
                 Listas::Lista<Entities::Obstacles::Obstacle> obstacles;
