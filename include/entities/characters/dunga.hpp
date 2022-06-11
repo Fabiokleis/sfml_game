@@ -17,9 +17,13 @@ namespace Entities::Characters {
         ~Dunga();
 
         void update_animation();
+        
         void move(float dir_x, float dir_y);
+
         void update();
+
         void update_move();
+
         void update_state();
     };
 }

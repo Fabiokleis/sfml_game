@@ -61,6 +61,7 @@ void Dunga::update_move() {
 
 void Dunga::update_state() {
     timer++;
+
     if(timer >= 345){
         this->angry = true;
         this->set_out_color(sf::Color::Green);
@@ -73,6 +74,7 @@ void Dunga::update_state() {
         this->set_size(65,65);
         this->set_origin(65/2, 65/2);
     }
+
     if(angry){
         this->acceleration = 150;
     } else {
