@@ -7,8 +7,8 @@ FireBall::FireBall(Managers::GraphicManager *graphic_manager, float *delta_time)
 {
     this->set_position(0, -50);
     this->init_texture();
-    this->shape = sf::IntRect(0, 0, 13, 13);
-    this->sprite.setSize(sf::Vector2f(13, 13));
+    this->shape = sf::IntRect(0, 0, 32, 32);
+    this->sprite.setSize(sf::Vector2f(32, 32));
     this->sprite.setTextureRect(shape);
     this->sprite.setTexture(this->texture);
     this->sprite.setOutlineThickness(1.0f);
@@ -25,7 +25,7 @@ FireBall::~FireBall() {
 
 void FireBall::shoot(sf::Vector2f pos, sf::Vector2f vel) {
     this->set_velocity(vel.x, vel.y);
-    this->set_position(pos.x, pos.y);
+    this->set_position(pos.x, pos.y-15);
     timeActive = 0.0;
     isActive = true;
 }
