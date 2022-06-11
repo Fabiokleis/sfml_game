@@ -105,8 +105,8 @@ void Game::init_menu() {
     [6] Exit
     */
     this->on_menu = true;
-    this->menu = new MainMenu(this->graphic_manager, 0, 0);
-    this->settings = new SubMenu(this->graphic_manager, 0, 0);
+    this->menu = new Menus::MainMenu(this->graphic_manager, 0, 0);
+    this->settings = new Menus::SubMenu(this->graphic_manager, 0, 0);
 }
 
 void Game::init_entities() {

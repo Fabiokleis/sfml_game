@@ -1,4 +1,5 @@
 #include "sub_menu.hpp"
+using namespace Menus;
 using namespace Managers;
 
 SubMenu::SubMenu() : state(), about_text(), keyboard_image() {}

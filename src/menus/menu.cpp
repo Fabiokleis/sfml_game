@@ -1,5 +1,5 @@
 #include "menu.hpp"
-using namespace Managers;
+using namespace Menus;
 
 Menu::Menu(Managers::GraphicManager *graphic_manager) : menu_image(), text_options(), title(), Entie(graphic_manager) {
     this->menu_counter = 0;

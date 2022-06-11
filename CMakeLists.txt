@@ -29,11 +29,11 @@ target_include_directories(game
   PRIVATE
     "${PROJECT_BINARY_DIR}"
     "${CMAKE_CURRENT_SOURCE_DIR}/include/game"
+    "${CMAKE_CURRENT_SOURCE_DIR}/include/menus"
     "${CMAKE_CURRENT_SOURCE_DIR}/include/entities"
     "${CMAKE_CURRENT_SOURCE_DIR}/include/entities/obstacles"
+    "${CMAKE_CURRENT_SOURCE_DIR}/include/entities/characters"
     "${CMAKE_CURRENT_SOURCE_DIR}/include/managers"
     "${CMAKE_CURRENT_SOURCE_DIR}/include/levels"
     "${CMAKE_CURRENT_SOURCE_DIR}/include/listas"
-
 )
-

@@ -1,41 +1,23 @@
 #include "main_menu.hpp"
 #include "level.hpp"
-#include "characters/character.hpp"
+#include "character.hpp"
 #include <fstream>
 
+using namespace Menus;
 using namespace Managers;
 
-MainMenu::MainMenu() : load_save(), state(), credit(), saved_file(), save_options(), current_type(), current_type_show() {}
+MainMenu::MainMenu() : load_save(), state(), credit(), saved_file() {}
 
-MainMenu::MainMenu(Managers::GraphicManager *graphic_manager, double x, double y) : Menu(graphic_manager), load_save(), state(restart), credit(), save_options(), current_type_show() {
+MainMenu::MainMenu(Managers::GraphicManager *graphic_manager, double x, double y) : Menu(graphic_manager), load_save(), state(restart), credit() {
     this->saved_file = this->verify_save();
     this->state = Managers::new_game;
-    this->current_type = "name: ";
     this->init_title();
     this->init_background(x, y);
     this->init_entries();
-    this->init_score();
 }
 
 MainMenu::~MainMenu() {
     delete credit;
-}
-
-void MainMenu::init_score() {
-    if (this->verify_save()) {
-        std::string path = RESOURCE_PATH;
-        std::string buf = Levels::Level::read_file(path + SAVE_PATH);
-        std::string opt;
-        int aux = 0;
-        while(!buf.empty()) {
-            for (auto c = buf[aux]; c != '\n'; c++) {
-                opt.push_back(c);
-                buf.erase(c);
-                aux++;
-            }
-            this->save_options->set_text(opt);
-        }
-    }
 }
 
 void MainMenu::init_title() {
@@ -146,8 +128,8 @@ void MainMenu::init_entries() {
             "\n"
             "Artes e Mapas\n"
             "\n"
-            "Fabio Henrique Kleis Ribas Correa, Alessandro Kleis\n"
-            "fabiohenrique@utfpr.edu.br"
+            "Fabio Henrique Kleis Ribas Correa, Francisco Luis Dunaiski Bruginski\n"
+            "fabiohenrique@utfpr.edu.br, fbruginski@utfpr.edu.br"
     );
 
     this->save_options = new Entities::Text(this->get_render(),
@@ -159,17 +141,6 @@ void MainMenu::init_entries() {
                 0,
                 sf::Color::Transparent,
                 0.0f, ""
-    );
-
-    this->current_type_show = new Entities::Text(this->get_render(),
-                 FONT_PATH,
-                 48,
-                 WINDOW_X / 2.0f - 480.0f,
-                 WINDOW_Y / 2.0f - 64.0f,
-                 sf::Color::White,
-                 0,
-                 sf::Color::Transparent,
-                 0.0f, ""
     );
 }
 
@@ -241,11 +212,6 @@ void MainMenu::update(bool from_game, bool from_player_dead) {
     }
 }
 
-void MainMenu::add_save(const sf::String& new_save) {
-    this->current_type += new_save;
-    this->current_type_show->set_text(current_type);
-}
-
 void MainMenu::events(GraphicManager &window_server) {
     // Menu input updates
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
@@ -254,7 +220,6 @@ void MainMenu::events(GraphicManager &window_server) {
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
         this->dec_option();
     }
-
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter) && this->get_current_option() == 5) {
         // credits opt
         std::cout << "credits opt" << std::endl;
@@ -283,12 +248,9 @@ void MainMenu::events(GraphicManager &window_server) {
         this->state = loading;
         if (this->verify_save()) {
             std::cout << "load save opt" << std::endl;
-//            this->select_save_option();  TODO: load a file and show options on screen
             this->set_on_menu(false);
             this->load_save = true;
-        } else {
-            state = Managers::add_save;
-        }
+        } 
     } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter) && this->get_current_option() == 4) {
         // settings
         std::cout << "settings opt" << std::endl;
@@ -323,31 +285,13 @@ void MainMenu::handle_events(GraphicManager &window_server) {
                 window_server.close();
                 break;
 
-//            case sf::Event::TextEntered:
-//                if (state == Managers::add_save) {
-//                    if (window_server.get_event().text.unicode < 128) {
-//                        if (window_server.get_event().text.unicode != '\b') {
-//                            this->add_save(window_server.get_event().text.unicode);
-//                        }
-//                    }
-//                }
-
             case sf::Event::Resized:
                 window_server.resize_view(
                         sf::Vector2f(window_server.get_event().size.width, window_server.get_event().size.height));
                 break;
             case sf::Event::KeyPressed: // any key pressed call events
                 this->events(window_server);
-//                if (sf::Keyboard::isKeyPressed(sf::Keyboard::BackSpace)) {
-//                    if (this->current_type.getSize() > 6) {
-//                        this->current_type = this->current_type.substring(0, this->current_type.getSize() - 1);
-//                        this->current_type_show->set_text(this->current_type);
-//                    }
-//                } else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Enter) && this->state == Managers::save) {
-//
-//                    this->set_on_menu(false);
-//                }
-                // default esc exit from main menu and the game!
+
                 if (window_server.get_event().key.code == sf::Keyboard::Escape && this->state != none) {
                     window_server.close();
                 }
@@ -364,9 +308,6 @@ void MainMenu::render() {
     this->title->render();
     if (state == Managers::credits) {
         this->credit->render();
-        this->get_render()->reset_view();
-    } else if (state == Managers::add_save) {
-        this->current_type_show->render();
         this->get_render()->reset_view();
     } else {
         for (auto &option : this->text_options) {
