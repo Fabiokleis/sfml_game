@@ -5,6 +5,7 @@
 #include "ListaEntities.h"
 #include "coin.hpp"
 #include "characters/player.hpp"
+#include "fireBall.h"
 
 namespace Managers {
 
@@ -12,6 +13,7 @@ namespace Managers {
         private:
             Listas::Lista<Entities::Obstacles::Obstacle> &obstacles;
             std::vector<Entities::Characters::Enemy*> &enemies;
+            Listas::Lista<Entities::FireBall> &listFBs;
 
             float intersect_x;
             float intersect_y;
@@ -19,7 +21,7 @@ namespace Managers {
             float delta_y;
 
         public:
-            CollisionManager(Listas::Lista<Entities::Obstacles::Obstacle> &obstacles, std::vector<Entities::Characters::Enemy*> &enemies);
+            CollisionManager(Listas::Lista<Entities::Obstacles::Obstacle> &obstacles, std::vector<Entities::Characters::Enemy*> &enemies, Listas::Lista<Entities::FireBall> &listFBs);
             ~CollisionManager();
             void collision_control(Entities::Characters::Player *other);
             bool check_collision(const Entities::Entity& entity, const Entities::Entity& other);

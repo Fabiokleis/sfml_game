@@ -10,7 +10,7 @@ configure_file(./include/config.h.in config.h)
 
 if (WIN32)
     set(SFML_STATIC_LIBRARIES TRUE)
-    set(SFML_DIR C:/Program Files/SFML-2.5.1) # set your path on Windows
+    set(SFML_DIR D:/SFML/SFML-2.5.1_64B/SFML-2.5.1/lib/cmake/SFML) # set your path on Windows
 endif()
 
 find_package(SFML REQUIRED graphics window)

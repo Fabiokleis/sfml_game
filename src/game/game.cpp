@@ -347,9 +347,11 @@ void Game::update() {
 void Game::render() {
     // clear window each iteration
     this->graphic_manager->clear();
+
     // render level first
     this->level->render();
     this->graphic_manager->reset_view();
+
     // render objects to display information about score, time etc...
     this->score_text->render();
     this->graphic_manager->reset_view();
@@ -363,6 +365,7 @@ void Game::render() {
     this->graphic_manager->reset_view();
     this->life_image->render();
     this->graphic_manager->reset_view();
+
     // render jaime sprite, but he needs a different view size
     this->update_player_view();
     this->jaime->render();
