@@ -107,7 +107,7 @@ void Level2::generate_instances() {
 
 
 
-    this->zezinho_number = generate_random(5, 10);
+    this->zezinho_number = generate_random(5, 8);
     for (int i = 0; i < this->zezinho_number; i++) {
         auto *temp = new Entities::Characters::Zezinho(i, this->get_render(), 46, 62, 0, 0,
                                                        1, sf::Vector2u (8,2), 0.2, Entities::Characters::idle,

@@ -94,7 +94,7 @@ void Level1::generate_instances() {
         ListaEnti.LEs.push(coin);
     }
 
-    this->dungas_number = generate_random(8, 10);
+    this->dungas_number = generate_random(5, 8);
     for (int i = 0; i < this->dungas_number; i++) {
         auto *temp = new Entities::Characters::Dunga(i, this->get_render(), 45, 45, 0, 0,
                                                                             1, sf::Vector2u (2,1), 0.2, Entities::Characters::idle,
