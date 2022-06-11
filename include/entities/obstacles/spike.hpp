@@ -4,18 +4,18 @@
 
 namespace Entities::Obstacles {
         class Spike : public Obstacle {
-        private:
+            private:
+                float scalar;
 
+            public:
+                Spike();
 
-        public:
-            Spike();
+                Spike(Managers::GraphicManager *graphic_manager, sf::Texture *texture, double x, double y, double width,
+                    double height, const std::string &path_name);
 
-            Spike(Managers::GraphicManager *graphic_manager, sf::Texture *texture, double x, double y, double width,
-                  double height, const std::string &path_name);
-
-            void update();
-
-            ~Spike();
+                void update();
+                void scale();
+                ~Spike();
         };
     }
 

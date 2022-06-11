@@ -6,18 +6,19 @@
 namespace Entities::Obstacles {
         class Platform : public Obstacle {
 
-        private:
+            private:
+                float current_width;
+                
+            public:
+                Platform();
 
+                Platform(Managers::GraphicManager *graphic_manager, double x, double y, double width, double height,
+                        sf::Color color);
 
-        public:
-            Platform();
-
-            Platform(Managers::GraphicManager *graphic_manager, double x, double y, double width, double height,
-                     sf::Color color);
-
-            ~Platform();
-
-            void update();
+                ~Platform();
+                
+                void decrease_width();
+                void update();
         };
     }
 

@@ -1,5 +1,8 @@
 #include <iostream>
 #include "collision_manager.hpp"
+#include "obstacles/platform.hpp"
+#include "obstacles/wall.hpp"
+#include "obstacles/spike.hpp""
 using namespace Managers;
 
 CollisionManager::CollisionManager(Listas::Lista<Entities::Obstacles::Obstacle> &obstacles, std::vector<Entities::Characters::Enemy*> &enemies) :
@@ -114,13 +117,21 @@ void CollisionManager::collision_control(Entities::Characters::Player *other) {
     // verify collision with all objects
     for (int i = 0; i < this->obstacles.getLen(); i++) {
         auto obstacle = this->obstacles.getItem(i);
+    
         // player collision with obstacles
         if (this->check_collision(*obstacle, *other)) {
             if (obstacle->get_type() != "coin") {
                 this->update_intersects_obstacle_character(obstacle, other, other->get_velocity(), true);
+                if (obstacle->get_type() == "platform") {
+                    auto plat = static_cast<Entities::Obstacles::Platform*>(obstacle);
+                    plat->decrease_width();
+                } else if (obstacle->get_type() == "wall") {
+                    auto wall = static_cast<Entities::Obstacles::Wall*>(obstacle);
+                    wall->increase_height();
+                }
             } else if(obstacle->get_type() == "coin") {
-                obstacles.pop(obstacle); // remove if other collects her
-            }
+                obstacles.pop(obstacle); // remove if other collects
+            } 
             other->on_collision(obstacle->get_type());
         }
 

@@ -35,12 +35,12 @@ void Level2::update() {
             }
         }
     }
-    if ((this->walls.getItem(0)->get_position().y + this->walls.getItem(0)->get_size().y) < this->height) {
+    if ((this->walls.getItem(0)->get_position().y) < this->height) {
         for (int i = 0; i < this->walls.getLen(); i++) {
             auto wall = this->walls.getItem(i);
-            wall->move(0, this->gravity + 50.0f);
+            wall->move(0, this->gravity + 100.0f);
             if (wall->get_position().y >= (this->height - wall->get_size().y)) {
-                wall->set_position(wall->get_position().x + (wall->get_size().x / 2.0f), wall->get_position().y);
+                wall->set_position(wall->get_position().x, wall->get_position().y);
                 wall->set_origin(wall->get_size().x / 2.0f, wall->get_size().y / 2.0f);
             }
         }
@@ -65,6 +65,9 @@ void Level2::update() {
     }
     for(int i = 0; i < this->listaFB.getLen(); i++){
         this->listaFB.getItem(i)->update();
+    }
+    for (int i = 0; i < this->spikes.getLen(); i++) {
+        this->spikes.getItem(i)->scale();
     }
 }
 
@@ -145,7 +148,7 @@ void Level2::generate_sizes() {
 
     for (int i = 0; i < this->walls.getLen(); i++) {
         auto wall = this->walls.getItem(i);
-        wall->set_size(32, generate_random(128, 170));
+        wall->set_size(32, generate_random(412, 448));
     }
 }
 
@@ -169,14 +172,14 @@ void Level2::arbritary_positions() {
         auto wall = this->walls.getItem(u);
         int distrSpaceW = generate_random((plat->get_size().x - 156), (plat->get_size().x - 32)); // the local of wall
         float space = (distrSpaceW + plat->get_position().x);
-        wall->set_position(space, wall->get_position().y - plat->get_size().y);
+        wall->set_position(space, 0.0f);
     }
 
     // generate a position to spikes
     for (int s = 0; s < this->spikes.getLen(); s++) {
         auto spike = this->spikes.getItem(s);
         auto plat = this->platforms.getItem(s);
-        int distrSpaceS = generate_random(64, 128);
+        int distrSpaceS = generate_random(128, 256);
         float space = (distrSpaceS + plat->get_position().x);
         spike->set_position(space, spike->get_position().y - plat->get_size().y);
     }
