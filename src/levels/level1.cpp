@@ -53,7 +53,7 @@ void Level1::update() {
             }
         }
     }
-    
+
     for(int i = 0; i < this->dungas.getLen(); i++){
         this->dungas.getItem(i)->update();
     }
@@ -117,7 +117,7 @@ void Level1::generate_instances() {
     this->zezinho_number = generate_random(5, 7);
     for (int i = 0, p = 2; i < this->zezinho_number; i++, p++) {
         auto *temp = new Entities::Characters::Zezinho(i, this->get_render(), 46, 62, 0, 0,
-                                                     1, sf::Vector2u (8,1), 0.07, Entities::Characters::idle,
+                                                     1, sf::Vector2u (8,2), 0.07, Entities::Characters::idle,
                                                      ZE_PATH, &Managers::GraphicManager::delta_time, player);
         this->listaZe.push(temp);
         this->enemies.push_back(temp);
@@ -156,7 +156,7 @@ void Level1::arbritary_positions() {
     for (int u = 0, p = 1; u < this->walls.getLen(); u++, p++) {
         auto plat = this->platforms.getItem(p);
         auto wall = this->walls.getItem(u);
-        int distrSpaceW = generate_random((plat->get_size().x - plat->get_half_size().x), (plat->get_size().x - 96)); // the local of wall
+        int distrSpaceW = generate_random((plat->get_size().x - 129), (plat->get_size().x - 96)); // the local of wall
         float space = (distrSpaceW + plat->get_position().x);
         wall->set_position(space, 0.0f);
     }
@@ -189,7 +189,7 @@ void Level1::arbritary_positions() {
         int distrSpaceS = generate_random(192, 256);
         auto plat = this->platforms.getItem(p);
         float space = (distrSpaceS + plat->get_position().x);
-        this->dungas.getItem(s)->set_position(space, 600);
+        this->dungas.getItem(s)->set_position(space, 900);
     }
 
     //generate a position to zes
@@ -197,7 +197,7 @@ void Level1::arbritary_positions() {
         int distrSpaceS = generate_random(128, 256);
         auto plat = this->platforms.getItem(p);
         float space = (distrSpaceS + plat->get_position().x);
-        this->listaZe.getItem(s)->set_position(space, 400);
+        this->listaZe.getItem(s)->set_position(space, 800);
     }
 }
 

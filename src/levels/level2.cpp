@@ -116,10 +116,9 @@ void Level2::generate_instances() {
 
 
     this->zezinho_number = generate_random(5, 7);
-    this->zezinho_number = 1;
     for (int i = 0; i < this->zezinho_number; i++) {
         auto *temp = new Entities::Characters::Zezinho(i, this->get_render(), 46, 62, 0, 0,
-                                                       1, sf::Vector2u (8,1), 0.1, Entities::Characters::idle,
+                                                       1, sf::Vector2u (8,2), 0.1, Entities::Characters::idle,
                                                        ZE_PATH, &Managers::GraphicManager::delta_time, player);
         this->listaZe.push(temp);
         this->enemies.push_back(temp);
@@ -170,7 +169,7 @@ void Level2::arbritary_positions() {
     for (int u = 0; u < this->walls.getLen(); u++) {
         auto plat = this->platforms.getItem(u);
         auto wall = this->walls.getItem(u);
-        int distrSpaceW = generate_random((plat->get_size().x - 156), (plat->get_size().x - 32)); // the local of wall
+        int distrSpaceW = generate_random((plat->get_size().x - 96), (plat->get_size().x - 32)); // the local of wall
         float space = (distrSpaceW + plat->get_position().x);
         wall->set_position(space, 0.0f);
     }
@@ -179,7 +178,7 @@ void Level2::arbritary_positions() {
     for (int s = 0; s < this->spikes.getLen(); s++) {
         auto spike = this->spikes.getItem(s);
         auto plat = this->platforms.getItem(s);
-        int distrSpaceS = generate_random(128, 256);
+        int distrSpaceS = generate_random(64, 128);
         float space = (distrSpaceS + plat->get_position().x);
         spike->set_position(space, spike->get_position().y - plat->get_size().y);
     }
@@ -203,7 +202,7 @@ void Level2::arbritary_positions() {
         int distrSpaceS = generate_random(256, 512);
         auto plat = this->platforms.getItem(p);
         float space = (distrSpaceS + plat->get_position().x);
-        this->listaZe.getItem(s)->set_position(space, 500);
+        this->listaZe.getItem(s)->set_position(space, 800);
     }
 
     //generate a position to rammus
@@ -211,6 +210,6 @@ void Level2::arbritary_positions() {
         int distrSpaceS = generate_random(256, 512);
         auto plat = this->platforms.getItem(p);
         float space = (distrSpaceS + plat->get_position().x);
-        this->listaRammus.getItem(s)->set_position(space, 500);
+        this->listaRammus.getItem(s)->set_position(space, 700);
     }
 }
