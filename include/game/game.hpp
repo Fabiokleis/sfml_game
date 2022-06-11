@@ -2,71 +2,51 @@
 #define GAME_HPP_WSHRPK2N
 #include <SFML/Graphics.hpp>
 #include <vector>
-#include "window_server.hpp"
-#include "player.hpp"
+#include "graphic_manager.hpp"
+#include "characters/player.hpp"
 #include "config.h"
-#include "map.hpp"
-#include "object.hpp"
-#include "image.hpp"
+#include "obstacles/obstacle.hpp"
 #include "main_menu.hpp"
 #include "sub_menu.hpp"
+#include "level1.hpp"
+#include "level2.hpp"
 
 class Game {
     private:
-        Controllers::WindowServer* window_server;
-        Entities::Player *player;
+        Managers::GraphicManager* graphic_manager;
+        Entities::Characters::Player *jaime;
 
-        Entities::Text *menu_title;
-        std::vector<Entities::Text> menu_options;
-        Entities::Image *menu_bg;
-        Controllers::MainMenu *menu;
+        Menus::MainMenu *menu;
+        Menus::SubMenu *settings;
 
-        std::vector<Entities::Text> settings_options;
-        Entities::Image *settings_bg;
-        Controllers::SubMenu *settings;
-        Entities::Text *about;
-        Entities::Image *showkb;
+        Levels::Level* level;
+        Levels::Level1* level1;
+        Levels::Level2* level2;
+
+        Entities::Obstacles::Obstacle *life_image;
+        sf::Texture *life_tex;
+        Entities::Text *life_text;
+        sf::Texture *coin_tex;
+        Entities::Text *coin_number;
+        Entities::Obstacles::Obstacle *coin_image;
 
         Entities::Text *score_text;
-
-
-        Maps::Map* map;
-        std::vector<Maps::TileMap> tilemap;
-        std::vector<Entities::Image> map_backgrounds;
-        Maps::Object start_location;
-        std::vector<Maps::Object> check_point_locations;
-        Maps::Object end_location;
-        Maps::Locations locations;
-        Maps::Platforms platforms;
-        Maps::Tiles tiles;
-        Maps::Walls walls;
-
-        std::vector<Entities::Coin> coins;
-        Entities::Text *fps_text;
-        Entities::Image *life_image;
-        Entities::Text *life_text;
-        Entities::Text *coin_number;
-        Entities::Image *coin_image;
         Entities::Text *time_text;
 
         sf::Clock clock;
-        float delta_time;
+
         int total_time;
         bool on_menu;
 
 
         bool player_out_of_window();
-        bool verify_map();
         void init_menu();
         void init_entities();
-        void parse_save(const std::string& buf);
-        void init_map(std::string map_name);
-        void menu_entries();
+        void init_level(const std::string& map_name);
         void set_time();
-        void set_fps(float fps);
-        void set_score(int coin, int life_number);
+        void save();
+        void set_score(int coin, int life_number, int score_number);
         void count_down();
-        void save_game(Maps::Object current_check_point);
         void restart_player();
         void game_loop(sf::Clock timer);
         void menu_loop(bool from_game = false, bool from_player_dead = false);
@@ -74,13 +54,8 @@ class Game {
         void update_player_view();
         void handle_events();
         void update();
-        void next_map();
-        void render_menu();
-        void render_settings();
-        void render_map();
         void render();
         void handle_collision();
-        void handle_player_collision();
 
     public:
         Game();

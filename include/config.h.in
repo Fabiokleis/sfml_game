@@ -1,4 +1,22 @@
 #ifndef CONFIG_H_IN_U5CSSGBG
 #define CONFIG_H_IN_U5CSSGBG
 #define RESOURCE_PATH "@RESOURCE_PATH@"
+#define WINDOW_X 1280
+#define WINDOW_Y 720
+#define FPS 60
+#define TIME 256
+#define FONT_PATH "fonts/free_pixel.ttf"
+#define COIN_PATH "level/coin.png"
+#define PLAYER_SPRITE_PATH "player/player_sprite.png"
+#define SAVE_PATH "player/save.txt"
+#define KEYBOARD "menu/keyboard.png"
+#define HEAD_SPRITE "level/head_sprite.png"
+#define SPIKE_PATH "level/spike.png"
+#define DUNGA_PATH "enemies/dunga.png"
+#define ZE_PATH "enemies/Zezinho.png"
+#define RAMMUS_PATH "enemies/Rammus.png"
+#define FIREBALL_PATH "enemies/FireBall.png"
+#define BACKGROUN_1 "level/backgrounds/background.png"
+#define BACKGROUN_2 "level/backgrounds/background2.png"
+
 #endif /* end of include guard: CONFIG_H_IN_U5CSSGBG */
