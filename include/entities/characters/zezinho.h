@@ -7,6 +7,8 @@ namespace Entities::Characters{
     class Zezinho: public Enemy{
     private:
         Player* p1;
+        bool visible;
+        int timer;
 
     public:
         Zezinho();
@@ -20,6 +22,7 @@ namespace Entities::Characters{
         void update();
         void update_move();
         void set_player(Player* player);
+        void update_visible();
     };
 }
 

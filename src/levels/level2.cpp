@@ -57,14 +57,8 @@ void Level2::update() {
             }
         }
     }
-    for(int i = 0; i < this->listaZe.getLen(); i++){
-        this->listaZe.getItem(i)->update();
-    }
-    for(int i = 0; i < this->listaRammus.getLen(); i++){
-        this->listaRammus.getItem(i)->update();
-    }
-    for(int i = 0; i < this->listaFB.getLen(); i++){
-        this->listaFB.getItem(i)->update();
+    for(int i = 0; i < this->ListaEnti.LEs.getLen(); i++){
+        this->ListaEnti.LEs.getItem(i)->update();
     }
 }
 
@@ -74,7 +68,7 @@ void Level2::generate_instances() {
     for (int i = 0; i < this->walls_number; i++) {
         auto wall = new Entities::Obstacles::Wall(this->get_render(),
                                                   0, 0,
-                                                  32, generate_random(128, 175), sf::Color(100,160,200,255));
+                                                  32, generate_random(128, 175), sf::Color(200,70,200,255));
         wall->set_out_color(sf::Color::White);
         this->walls.push(wall);
         this->obstacles.push(static_cast<Entities::Obstacles::Obstacle*>(wall));
@@ -86,7 +80,7 @@ void Level2::generate_instances() {
         auto t_plat = new Entities::Obstacles::Platform(this->get_render(),
                                                         0, 0,
                                                         generate_random(200, 720), generate_random(96, 128), sf::Color(50,50,80,255));
-        t_plat->set_out_color(sf::Color::Cyan);
+        t_plat->set_out_color(sf::Color(167,167,167,255));
         this->platforms.push(t_plat);
         this->obstacles.push(static_cast<Entities::Obstacles::Obstacle*>(t_plat));
         ListaEnti.LEs.push(t_plat);
@@ -116,7 +110,7 @@ void Level2::generate_instances() {
     this->zezinho_number = 1;
     for (int i = 0; i < this->zezinho_number; i++) {
         auto *temp = new Entities::Characters::Zezinho(i, this->get_render(), 46, 62, 0, 0,
-                                                       1, sf::Vector2u (8,1), 0.1, Entities::Characters::idle,
+                                                       1, sf::Vector2u (8,2), 0.2, Entities::Characters::idle,
                                                        ZE_PATH, &Managers::GraphicManager::delta_time, player);
         this->listaZe.push(temp);
         this->enemies.push_back(temp);

@@ -52,13 +52,15 @@ void Level1::update() {
             }
         }
     }
-
-    for(int i = 0; i < this->dungas.getLen(); i++){
-        this->dungas.getItem(i)->update();
+    for(int i = 0; i < this->ListaEnti.LEs.getLen(); i++){
+        this->ListaEnti.LEs.getItem(i)->update();
     }
-    for(int i = 0; i < this->listaZe.getLen(); i++){
-        this->listaZe.getItem(i)->update();
-    }
+//    for(int i = 0; i < this->dungas.getLen(); i++){
+//        this->dungas.getItem(i)->update();
+//    }
+//    for(int i = 0; i < this->listaZe.getLen(); i++){
+//        this->listaZe.getItem(i)->update();
+//    }
 
 }
 
@@ -114,7 +116,7 @@ void Level1::generate_instances() {
     this->zezinho_number = generate_random(5, 7);
     for (int i = 0, p = 2; i < this->zezinho_number; i++, p++) {
         auto *temp = new Entities::Characters::Zezinho(i, this->get_render(), 46, 62, 0, 0,
-                                                     1, sf::Vector2u (8,1), 0.07, Entities::Characters::idle,
+                                                     1, sf::Vector2u (8,2), 0.07, Entities::Characters::idle,
                                                      ZE_PATH, &Managers::GraphicManager::delta_time, player);
         this->listaZe.push(temp);
         this->enemies.push_back(temp);
