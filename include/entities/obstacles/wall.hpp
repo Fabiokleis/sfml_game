@@ -5,17 +5,18 @@
 namespace Entities::Obstacles {
         class Wall : public Obstacle {
 
-        private:
+            private:
+                float current_height;
 
-        public:
-            Wall();
+            public:
+                Wall();
 
-            Wall(Managers::GraphicManager *graphic_manager, double x, double y, double width, double height,
-                 sf::Color color);
+                Wall(Managers::GraphicManager *graphic_manager, double x, double y, double width, double height,
+                    sf::Color color);
 
-            ~Wall();
-
-            void update();
+                ~Wall();
+                void increase_height();
+                void update();
 
         };
     }

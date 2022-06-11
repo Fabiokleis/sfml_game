@@ -20,6 +20,7 @@ void Level1::build_level() {
 }
 
 void Level1::update() {
+
     if ((this->platforms.getItem(0)->get_position().y + this->platforms.getItem(0)->get_size().y) < this->height) {
         for (int i = 0; i < this->platforms.getLen(); i++) {
             auto plat = this->platforms.getItem(i);
@@ -30,36 +31,38 @@ void Level1::update() {
             }
         }
     }
-    if ((this->walls.getItem(0)->get_position().y + this->walls.getItem(0)->get_size().y) < this->height) {
+    if ((this->walls.getItem(0)->get_position().y) < this->height) {
         for (int i = 0; i < this->walls.getLen(); i++) {
             auto wall = this->walls.getItem(i);
-            wall->move(0, this->gravity + 50.0f);
+            wall->move(0, this->gravity + 100.0f);
             if (wall->get_position().y >= (this->height - wall->get_size().y)) {
-                wall->set_position(wall->get_position().x + (wall->get_size().x / 2.0f), wall->get_position().y);
+                wall->set_position(wall->get_position().x, wall->get_position().y);
                 wall->set_origin(wall->get_size().x / 2.0f, wall->get_size().y / 2.0f);
             }
         }
     }
 
-    if ((this->spikes.getItem(0)->get_position().y + this->spikes.getItem(0)->get_size().y) <= (this->platforms.getItem(0)->get_position().y - this->platforms.getItem(0)->get_size().y)) {
+    if ((this->spikes.getItem(0)->get_position().y) <= (this->platforms.getItem(0)->get_position().y - this->platforms.getItem(0)->get_size().y)) {
         for (int i = 0; i < this->spikes.getLen(); i++) {
             auto spike = this->spikes.getItem(i);
             auto plat = this->platforms.getItem(i);
-            spike->move(0, this->gravity + 50.0f);
+            spike->move(0, this->gravity + 100.0f);
             if (spike->get_position().y >= (plat->get_position().y - plat->get_size().y)) {
                 spike->set_position(spike->get_position().x + 16, plat->get_position().y - (plat->get_size().y/2 + 16));
                 spike->set_origin(spike->get_size().x / 2.0f, spike->get_size().y / 2.0f);
             }
         }
     }
-
+    
     for(int i = 0; i < this->dungas.getLen(); i++){
         this->dungas.getItem(i)->update();
     }
     for(int i = 0; i < this->listaZe.getLen(); i++){
         this->listaZe.getItem(i)->update();
     }
-
+    for (int i = 0; i < this->spikes.getLen(); i++) {
+        this->spikes.getItem(i)->scale();
+    }
 }
 
 void Level1::generate_instances() {
@@ -126,12 +129,12 @@ void Level1::generate_sizes() {
 
     for (int i = 0; i < this->platforms.getLen(); i++) {
         auto plat = this->platforms.getItem(i);
-        plat->set_size(generate_random(320, 512), generate_random(96, 128));
+        plat->set_size(generate_random(400, 580), generate_random(96, 128));
     }
 
     for (int i = 0; i < this->walls.getLen(); i++) {
         auto wall = this->walls.getItem(i);
-        wall->set_size(32, generate_random(128, 170));
+        wall->set_size(32, generate_random(412, 448));
     }
 }
 
@@ -153,24 +156,23 @@ void Level1::arbritary_positions() {
     for (int u = 0, p = 1; u < this->walls.getLen(); u++, p++) {
         auto plat = this->platforms.getItem(p);
         auto wall = this->walls.getItem(u);
-        int distrSpaceW = generate_random((plat->get_size().x - 96), (plat->get_size().x - 64)); // the local of wall
+        int distrSpaceW = generate_random((plat->get_size().x - plat->get_half_size().x), (plat->get_size().x - 96)); // the local of wall
         float space = (distrSpaceW + plat->get_position().x);
-        wall->set_position(space, wall->get_position().y - plat->get_size().y);
+        wall->set_position(space, 0.0f);
     }
 
     // generate a position to spikes
     for (int s = 0; s < this->spikes.getLen(); s++) {
         auto spike = this->spikes.getItem(s);
         auto plat = this->platforms.getItem(s);
-        int distrSpaceS = generate_random(64, 96);
+        int distrSpaceS = generate_random(96, 128);
         float space = (distrSpaceS + plat->get_position().x);
-        spike->set_position(space, spike->get_position().y - plat->get_size().y);
+        spike->set_position(space, 0.0f);
     }
 
     // generate a position to coins
     Entities::Obstacles::Coin aux_c;
     int prop = ceil(this->coins_number / this->platforms_number);
-    std::cout << "prop: " << prop << "tm: " << this->coins_number << std::endl;
     int c_ = 0;
     for (int pp = 0; pp < this->platforms_number; pp++) {
         for (int c = 0; c < prop; c++) {

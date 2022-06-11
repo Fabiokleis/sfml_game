@@ -33,6 +33,7 @@ namespace Levels {
                 std::string map_name;
                 sf::Texture texture;
                 sf::RectangleShape sprite;
+                bool load_positions;
 
                 int platforms_number;
                 int walls_number;

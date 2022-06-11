@@ -5,16 +5,16 @@
 
 namespace Entities::Obstacles {
         class Coin : public Obstacle {
-        private:
+            private:
+    
+            public:
+                Coin();
 
-        public:
-            Coin();
+                Coin(Managers::GraphicManager *graphic_manager, sf::Texture *texture, const std::string &coin_path,
+                    double x, double y, double width, double height);
+                void update();
 
-            Coin(Managers::GraphicManager *graphic_manager, sf::Texture *texture, const std::string &coin_path,
-                 double x, double y, double width, double height);
-            void update();
-
-            ~Coin();
+                ~Coin();
         };
     }
 

@@ -10,7 +10,7 @@ std::mt19937 gen(rd()); // seed generator
 Level::Level(Managers::GraphicManager *graphic_manager,  std::string map_name) :
     Entie(graphic_manager), x(0), y(0), platforms_number(0), walls_number(0),
     coins_number(0), spikes_number(0), dungas_number(0), map_name(map_name), gravity(9.81f),
-    collision_manager(this->obstacles, this->enemies)
+    collision_manager(this->obstacles, this->enemies), load_positions(false)
 {
     this->sprite.setPosition(static_cast<float>(x), static_cast<float>(y)); // default top 0 and left 0 cords
     this->load_texture();
