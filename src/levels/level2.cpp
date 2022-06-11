@@ -46,7 +46,7 @@ void Level2::update() {
         }
     }
 
-    if ((this->spikes.getItem(0)->get_position().y + this->spikes.getItem(0)->get_size().y) <= (this->platforms.getItem(0)->get_position().y - this->platforms.getItem(0)->get_size().y)) {
+    if ((this->spikes.getItem(0)->get_position().y) <= (this->platforms.getItem(0)->get_position().y - this->platforms.getItem(0)->get_size().y)) {
         for (int i = 0; i < this->spikes.getLen(); i++) {
             auto spike = this->spikes.getItem(i);
             auto plat = this->platforms.getItem(i);
@@ -57,14 +57,8 @@ void Level2::update() {
             }
         }
     }
-    for(int i = 0; i < this->listaZe.getLen(); i++){
-        this->listaZe.getItem(i)->update();
-    }
-    for(int i = 0; i < this->listaRammus.getLen(); i++){
-        this->listaRammus.getItem(i)->update();
-    }
-    for(int i = 0; i < this->listaFB.getLen(); i++){
-        this->listaFB.getItem(i)->update();
+    for(int i = 0; i < this->ListaEnti.LEs.getLen(); i++){
+        this->ListaEnti.LEs.getItem(i)->update();
     }
     for (int i = 0; i < this->spikes.getLen(); i++) {
         this->spikes.getItem(i)->scale();
@@ -73,31 +67,30 @@ void Level2::update() {
 
 
 void Level2::generate_instances() {
-    this->walls_number = generate_random(4, 7);
+    this->walls_number = generate_random(10, 15);
     for (int i = 0; i < this->walls_number; i++) {
         auto wall = new Entities::Obstacles::Wall(this->get_render(),
                                                   0, 0,
-                                                  32, generate_random(128, 175), sf::Color(100,160,200,255));
+                                                  32, generate_random(128, 175), sf::Color(200,70,200,255));
         wall->set_out_color(sf::Color::White);
         this->walls.push(wall);
         this->obstacles.push(static_cast<Entities::Obstacles::Obstacle*>(wall));
         ListaEnti.LEs.push(wall);
     }
 
-    this->platforms_number = generate_random(16, 20);
+    this->platforms_number = generate_random(15, 20);
     for (int i = 0; i < this->platforms_number; i++) {
         auto t_plat = new Entities::Obstacles::Platform(this->get_render(),
                                                         0, 0,
                                                         generate_random(200, 720), generate_random(96, 128), sf::Color(50,50,80,255));
-        t_plat->set_out_color(sf::Color::Cyan);
+        t_plat->set_out_color(sf::Color(167,167,167,255));
         this->platforms.push(t_plat);
         this->obstacles.push(static_cast<Entities::Obstacles::Obstacle*>(t_plat));
         ListaEnti.LEs.push(t_plat);
     }
 
-    this->spikes_number = generate_random(5, 7);
+    this->spikes_number = generate_random(10, 15);
     for (int i = 0; i < this->spikes_number; i++) {
-        std::cout << "Entro no for com spikes_number = " << spikes_number << std::endl;
         auto spike = new Entities::Obstacles::Spike(this->get_render(), this->spike_tex, 0, 0, 32, 32, SPIKE_PATH);
         this->spikes.push(spike);
         this->obstacles.push(static_cast<Entities::Obstacles::Obstacle*>(spike));
@@ -106,7 +99,6 @@ void Level2::generate_instances() {
 
     this->coins_number = generate_random(20, 30);
     for (int i = 0; i < this->coins_number; i++) {
-        std::cout << "Entro no for com coins_number = " << coins_number << std::endl;
         auto coin = new Entities::Obstacles::Coin(this->get_render(), this->coin_tex, COIN_PATH, 0, 0, 32, 32);
         this->coins.push(coin);
         this->obstacles.push(static_cast<Entities::Obstacles::Obstacle*>(coin));
@@ -115,18 +107,17 @@ void Level2::generate_instances() {
 
 
 
-    this->zezinho_number = generate_random(5, 7);
-    this->zezinho_number = 1;
+    this->zezinho_number = generate_random(5, 10);
     for (int i = 0; i < this->zezinho_number; i++) {
         auto *temp = new Entities::Characters::Zezinho(i, this->get_render(), 46, 62, 0, 0,
-                                                       1, sf::Vector2u (8,1), 0.1, Entities::Characters::idle,
+                                                       1, sf::Vector2u (8,2), 0.2, Entities::Characters::idle,
                                                        ZE_PATH, &Managers::GraphicManager::delta_time, player);
         this->listaZe.push(temp);
         this->enemies.push_back(temp);
         ListaEnti.LEs.push(temp);
     }
 
-    this->rammus_number = generate_random(3, 5);
+    this->rammus_number = generate_random(3, 7);
     for (int i = 0; i < this->rammus_number; i++) {
         auto *temp = new Entities::Characters::Rammus(i, this->get_render(), 51, 68, 0, 0,
                                                       1, sf::Vector2u (2,2), 0.05, Entities::Characters::idle,
@@ -181,12 +172,11 @@ void Level2::arbritary_positions() {
         auto plat = this->platforms.getItem(s);
         int distrSpaceS = generate_random(128, 256);
         float space = (distrSpaceS + plat->get_position().x);
-        spike->set_position(space, spike->get_position().y - plat->get_size().y);
+        spike->set_position(space, 0.0f);
     }
     // generate a position to coins
     Entities::Obstacles::Coin aux_c;
     int prop = ceil(this->coins_number / this->platforms_number);
-    std::cout << "prop: " << prop << "tm: " << this->coins_number << std::endl;
     int c_ = 0;
     for (int pp = 0; pp < this->platforms_number; pp++) {
         for (int c = 0; c < prop; c++) {
@@ -200,7 +190,7 @@ void Level2::arbritary_positions() {
 
     //generate a position to zes
     for (int s = 0, p = 1; s < this->zezinho_number; s++, p+=2) {
-        int distrSpaceS = generate_random(256, 512);
+        int distrSpaceS = generate_random(312, 400);
         auto plat = this->platforms.getItem(p);
         float space = (distrSpaceS + plat->get_position().x);
         this->listaZe.getItem(s)->set_position(space, 500);
@@ -208,7 +198,7 @@ void Level2::arbritary_positions() {
 
     //generate a position to rammus
     for (int s = 0, p = 3; s < this->rammus_number; s++, p+=2) {
-        int distrSpaceS = generate_random(256, 512);
+        int distrSpaceS = generate_random(312, 400);
         auto plat = this->platforms.getItem(p);
         float space = (distrSpaceS + plat->get_position().x);
         this->listaRammus.getItem(s)->set_position(space, 500);

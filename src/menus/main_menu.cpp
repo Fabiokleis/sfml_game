@@ -9,7 +9,7 @@ using namespace Managers;
 MainMenu::MainMenu() : load_save(), state(), credit(), saved_file() {}
 
 MainMenu::MainMenu(Managers::GraphicManager *graphic_manager, double x, double y) : Menu(graphic_manager), load_save(), state(restart), credit() {
-    this->saved_file = this->verify_save();
+    // this->saved_file = this->verify_save();
     this->state = Managers::new_game;
     this->init_title();
     this->init_background(x, y);
@@ -130,17 +130,6 @@ void MainMenu::init_entries() {
             "\n"
             "Fabio Henrique Kleis Ribas Correa, Francisco Luis Dunaiski Bruginski\n"
             "fabiohenrique@utfpr.edu.br, fbruginski@utfpr.edu.br"
-    );
-
-    this->save_options = new Entities::Text(this->get_render(),
-                FONT_PATH,
-                24,
-                WINDOW_X / 2.0f - 480.0f,
-                WINDOW_Y / 2.0f - 64.0f,
-                sf::Color::White,
-                0,
-                sf::Color::Transparent,
-                0.0f, ""
     );
 }
 
@@ -313,9 +302,6 @@ void MainMenu::render() {
     } else {
         for (auto &option : this->text_options) {
             option->render();
-        }
-        if (saved_file) {
-            this->save_options->render();
         }
     }
     this->get_render()->display();

@@ -112,14 +112,7 @@ void Game::init_entities() {
 
     // create a new jaime with save
     if (this->menu->get_load()) {
-//        std::string path = RESOURCE_PATH;
-//        std::string buf = Levels::Level::read_file(path + SAVE_PATH);
-//        this->parse_save(buf);
-//        std::string map_name = this->level->get_name();
-//        // restart level
-//        this->init_level(map_name);
-//        // restart time
-//        this->total_time = TIME;
+
 
     } else {
 
@@ -167,15 +160,15 @@ void Game::init_entities() {
             ""
             );
     this->score_text = new Entities::Text(this->graphic_manager,
-                                           FONT_PATH,
-                                           32,
-                                           0.0f,
-                                           0.0f,
-                                           sf::Color(255, 251, 232),
-                                           0,
-                                           sf::Color(0, 0, 0),
-                                           2.0f,
-                                           ""
+            FONT_PATH,
+            32,
+            0.0f,
+            0.0f,
+            sf::Color(255, 251, 232),
+            0,
+            sf::Color(0, 0, 0),
+            2.0f,
+            ""
     );
 
     // time text
@@ -296,8 +289,6 @@ void Game::handle_events() {
                     } else if (this->menu->get_state() == Managers::level2) {
                         this->init_level(BACKGROUN_2);
                         this->restart_player();
-                    } else if (this->menu->get_state() == Managers::save) {
-                        this->save();
                     }
                 }
                 break;

@@ -9,7 +9,7 @@ Dunga::Dunga(){
 Dunga::Dunga(int id, Managers::GraphicManager *graphic_manager, double width, double height, int cordx, int cordy,
              int life_number, sf::Vector2u image_count, float switch_time, States state,
              const std::string &path_name, float *delta_time):
-            Enemy(graphic_manager, width, height, cordx, cordy, life_number, image_count, switch_time, state, path_name, delta_time)
+            Enemy(graphic_manager, width, height, cordx, cordy, life_number, image_count, switch_time, state, path_name, delta_time), angry(false), timer(0)
 {
     this->acceleration = 100.0f;
     this->velocity = sf::Vector2f(0,0);
@@ -37,6 +37,7 @@ void Dunga::update() {
     this->update_move();
     this->update_physics();
     this->update_animation();
+    this->update_state();
 }
 
 void Dunga::update_move() {
@@ -56,4 +57,25 @@ void Dunga::update_move() {
         }
     }
     moveTimer++;
+}
+
+void Dunga::update_state() {
+    timer++;
+    if(timer >= 345){
+        this->angry = true;
+        this->set_out_color(sf::Color::Green);
+        this->set_size(45,45);
+        this->set_origin(45/2, 45/2);
+        timer = -200;
+    } else if( timer > 0 && angry){
+        this->angry = false;
+        this->set_out_color(sf::Color::Red);
+        this->set_size(65,65);
+        this->set_origin(65/2, 65/2);
+    }
+    if(angry){
+        this->acceleration = 150;
+    } else {
+        this->acceleration = 100;
+    }
 }

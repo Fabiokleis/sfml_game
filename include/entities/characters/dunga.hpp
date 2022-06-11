@@ -5,6 +5,8 @@
 namespace Entities::Characters {
         class Dunga : public Characters::Enemy {
         private:
+            bool angry;
+            int timer;
 
         public:
             Dunga();
@@ -18,6 +20,7 @@ namespace Entities::Characters {
             void move(float dir_x, float dir_y);
             void update();
             void update_move();
+            void update_state();
         };
     }
 

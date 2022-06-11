@@ -23,4 +23,6 @@ void Spike::scale() {
     }
 }
 
-void Spike::update() {}
+void Spike::update() {
+    this->scale();
+}

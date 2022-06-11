@@ -11,7 +11,6 @@ namespace Menus {
             bool saved_file;
             bool load_save;
             Entities::Text *credit;
-            Entities::Text *save_options;
 
 
         public:

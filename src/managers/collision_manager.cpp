@@ -2,7 +2,7 @@
 #include "collision_manager.hpp"
 #include "obstacles/platform.hpp"
 #include "obstacles/wall.hpp"
-#include "obstacles/spike.hpp""
+#include "obstacles/spike.hpp"
 using namespace Managers;
 
 CollisionManager::CollisionManager(Listas::Lista<Entities::Obstacles::Obstacle> &obstacles, std::vector<Entities::Characters::Enemy*> &enemies) :
