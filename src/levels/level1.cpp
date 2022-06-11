@@ -179,7 +179,7 @@ void Level1::arbritary_positions() {
         int distrSpaceS = generate_random(192, 256);
         auto plat = this->platforms.getItem(p);
         float space = (distrSpaceS + plat->get_position().x);
-        this->dungas.getItem(s)->set_position(space, 600);
+        this->dungas.getItem(s)->set_position(space, 900);
     }
 
     //generate a position to zes
@@ -187,7 +187,7 @@ void Level1::arbritary_positions() {
         int distrSpaceS = generate_random(192, 256);
         auto plat = this->platforms.getItem(p);
         float space = (distrSpaceS + plat->get_position().x);
-        this->listaZe.getItem(s)->set_position(space, 400);
+        this->listaZe.getItem(s)->set_position(space, 800);
     }
 }
 

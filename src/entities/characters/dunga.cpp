@@ -9,7 +9,7 @@ Dunga::Dunga(){
 Dunga::Dunga(int id, Managers::GraphicManager *graphic_manager, double width, double height, int cordx, int cordy,
              int life_number, sf::Vector2u image_count, float switch_time, States state,
              const std::string &path_name, float *delta_time):
-            Enemy(graphic_manager, width, height, cordx, cordy, life_number, image_count, switch_time, state, path_name, delta_time), angry(false), timer(0)
+        Enemy(graphic_manager, width, height, cordx, cordy, life_number, image_count, switch_time, state, path_name, delta_time), angry(false), timer(0)
 {
     this->acceleration = 100.0f;
     this->velocity = sf::Vector2f(0,0);
