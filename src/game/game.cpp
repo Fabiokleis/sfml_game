@@ -3,11 +3,10 @@
 #include "level1.hpp"
 
 Game::Game() :
-        jaime(), level(), menu(), settings(), delta_time(), coin_image(), coin_number(), life_tex(),
+        jaime(), level(), menu(), settings(), coin_image(), coin_number(), life_tex(),
         time_text(), total_time(TIME), life_image(), life_text(), on_menu(), level1(), level2(), coin_tex()
 {
     this->graphic_manager = new Managers::GraphicManager("c++ game");
-
 }
 
 void Game::exec() {
@@ -76,7 +75,7 @@ void Game::game_loop(sf::Clock timer) {
             this->set_time();
         }
 
-        this->delta_time = this->clock.restart().asSeconds();
+        Managers::GraphicManager::delta_time = this->clock.restart().asSeconds();
         this->set_score(this->jaime->get_coins(), this->jaime->get_life_number(), this->jaime->get_score());
 
         this->update();
@@ -132,8 +131,9 @@ void Game::init_entities() {
                 45, 80, 0, 0, 0, 5, sf::Vector2u(3, 6), 0.1f,
                 Entities::Characters::idle,
                 PLAYER_SPRITE_PATH,
-                &this->delta_time);
+                &Managers::GraphicManager::delta_time);
     }
+    level->set_player(jaime);
 
     // life
     this->life_tex = new sf::Texture();
@@ -193,11 +193,11 @@ void Game::init_entities() {
 
 void Game::init_level(const std::string& map_name) {
     if (map_name == BACKGROUN_1) {
-        this->level1 = new Levels::Level1(this->graphic_manager, map_name, &delta_time);
+        this->level1 = new Levels::Level1(this->graphic_manager, map_name);
         this->level2 = nullptr;
         this->level = static_cast<Levels::Level*>(this->level1);
     } else {
-        this->level2 = new Levels::Level2(this->graphic_manager, map_name, &delta_time);
+        this->level2 = new Levels::Level2(this->graphic_manager, map_name);
         this->level1 = nullptr;
         this->level = static_cast<Levels::Level*>(this->level2);
     }
@@ -296,6 +296,8 @@ void Game::handle_events() {
                     } else if (this->menu->get_state() == Managers::level2) {
                         this->init_level(BACKGROUN_2);
                         this->restart_player();
+                    } else if (this->menu->get_state() == Managers::save) {
+                        this->save();
                     }
                 }
                 break;
@@ -303,6 +305,10 @@ void Game::handle_events() {
                 break;
         }
     }
+}
+
+void Game::save() {
+    // save here
 }
 
 bool Game::player_out_of_window() {
@@ -376,5 +382,7 @@ void Game::render() {
 
 void Game::restart_player() {
     this->jaime->restart(16, 900, this->jaime->get_coins(), this->jaime->get_life_number(), Entities::Characters::idle);
+    level->set_player(jaime);
     this->total_time = TIME;
 }
+

@@ -35,6 +35,7 @@ namespace Managers {
         public:
             GraphicManager(const std::string& window_title);
             ~GraphicManager();
+            static float delta_time;
             bool is_open();
             bool poll_event();
             sf::Vector2f get_window_size();

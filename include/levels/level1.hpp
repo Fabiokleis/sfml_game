@@ -10,10 +10,8 @@ namespace Levels {
             sf::Texture *coin_tex;
             sf::Texture *spike_tex;
 
-
-
         public:
-            Level1(Managers::GraphicManager *graphic_manager, const std::string& map_name, float* pDeltaT);
+            Level1(Managers::GraphicManager *graphic_manager, const std::string& map_name);
             ~Level1();
 
             void build_level();
@@ -22,7 +20,6 @@ namespace Levels {
             void generate_sizes();
             void arbritary_positions();
             void update();
-
     };
 }
 

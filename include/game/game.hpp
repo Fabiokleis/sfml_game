@@ -34,7 +34,7 @@ class Game {
         Entities::Text *time_text;
 
         sf::Clock clock;
-        float delta_time;
+
         int total_time;
         bool on_menu;
 
@@ -44,6 +44,7 @@ class Game {
         void init_entities();
         void init_level(const std::string& map_name);
         void set_time();
+        void save();
         void set_score(int coin, int life_number, int score_number);
         void count_down();
         void restart_player();

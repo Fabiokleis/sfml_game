@@ -1,6 +1,7 @@
 #include "graphic_manager.hpp"
 using namespace Managers;
 
+float Managers::GraphicManager::delta_time(0.0f);
 GraphicManager::GraphicManager(const std::string& window_title) : event(), view() {
     this->window = new sf::RenderWindow(sf::VideoMode(WINDOW_X,  WINDOW_Y), window_title);
     this->window->setFramerateLimit(FPS);

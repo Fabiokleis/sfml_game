@@ -7,9 +7,9 @@ using namespace Levels;
 std::random_device rd; // get random number from hardware
 std::mt19937 gen(rd()); // seed generator
 
-Level::Level(Managers::GraphicManager *graphic_manager,  std::string map_name, float* pDeltaT) :
+Level::Level(Managers::GraphicManager *graphic_manager,  std::string map_name) :
     Entie(graphic_manager), x(0), y(0), platforms_number(0), walls_number(0),
-    coins_number(0), spikes_number(0), dungas_number(0), map_name(map_name), gravity(9.81f), pDeltaT(pDeltaT),
+    coins_number(0), spikes_number(0), dungas_number(0), map_name(map_name), gravity(9.81f),
     collision_manager(this->obstacles, this->enemies)
 {
     this->sprite.setPosition(static_cast<float>(x), static_cast<float>(y)); // default top 0 and left 0 cords
@@ -34,6 +34,9 @@ Level::~Level() {
 // render order of level
 void Level::render() {
     this->get_render()->render(this->sprite);
+//    for (int i = 0; i < this->ListaEnti.LEs.getLen(); i++) {
+//        ListaEnti.LEs.getItem(i)->render();
+//    }
 
     // render all obstacles from levels
     for (int i = 0; i < this->obstacles.getLen(); i++) {
@@ -92,4 +95,14 @@ void Level::load_texture() {
 
 Listas::ListaEntidades* Level::get_lista_entidades() {
     return &ListaEnti;
+}
+
+void Level::set_player(Entities::Characters::Player *player) {
+    this->player = player;
+    for(int i = 0; i < listaZe.getLen(); i++){
+        listaZe.getItem(i)->set_player(player);
+    }
+    for(int i = 0; i < listaRammus.getLen(); i++){
+        listaRammus.getItem(i)->set_player(player);
+    }
 }

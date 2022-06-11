@@ -39,7 +39,7 @@ void Player::restart(double x, double y, int _coin, int life, States _state) {
 }
 
 void Player::on_collision(const std::string &object_type, CollideStates cs) {
-    if(object_type == "dunga") {
+    if(object_type == "dunga" || object_type == "zezinho" || object_type == "rammus") {
         if (cs == top) {
             score++;
             collide_state = ground;

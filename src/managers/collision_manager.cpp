@@ -146,7 +146,7 @@ void CollisionManager::collision_control(Entities::Characters::Player *other) {
             if (enemy->get_state() == Entities::Characters::dead) {
                 other++; // if enemy dies
                 for (auto aux_enemy = this->enemies.cbegin(); aux_enemy < this->enemies.cend(); aux_enemy++) {
-                    if ((*aux_enemy)->get_id() == enemy->get_id()) {
+                    if (enemy == (*aux_enemy)) {
                         this->enemies.erase(aux_enemy);
                     }
                 }

@@ -245,8 +245,9 @@ void MainMenu::events(GraphicManager &window_server) {
         }
     } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter) && this->get_current_option() == 1) {
         // load save opt
-        this->state = loading;
+
         if (this->verify_save()) {
+            this->state = loading;
             std::cout << "load save opt" << std::endl;
             this->set_on_menu(false);
             this->load_save = true;
@@ -289,9 +290,9 @@ void MainMenu::handle_events(GraphicManager &window_server) {
                 window_server.resize_view(
                         sf::Vector2f(window_server.get_event().size.width, window_server.get_event().size.height));
                 break;
+
             case sf::Event::KeyPressed: // any key pressed call events
                 this->events(window_server);
-
                 if (window_server.get_event().key.code == sf::Keyboard::Escape && this->state != none) {
                     window_server.close();
                 }

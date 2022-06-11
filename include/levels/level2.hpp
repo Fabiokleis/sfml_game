@@ -11,7 +11,7 @@ namespace Levels {
             sf::Texture *spike_tex;
 
         public:
-            Level2(Managers::GraphicManager *graphic_manager, const std::string& map_name, float* pDeltaT);
+            Level2(Managers::GraphicManager *graphic_manager, const std::string& map_name);
             ~Level2();
 
             void build_level();
