@@ -10,6 +10,7 @@ namespace Entities{
         float timeActive;
         float maxTimeActive;
         sf::Texture *texture;
+        std::string type;
 
     public:
         bool isActive;
@@ -20,6 +21,8 @@ namespace Entities{
         void update();
         void init_texture();
         void move(float dir_x, float dir_y);
+        void on_collision();
+        std::string get_type();
     };
 
 }

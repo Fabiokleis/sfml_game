@@ -5,8 +5,8 @@
 #include "obstacles/spike.hpp"
 using namespace Managers;
 
-CollisionManager::CollisionManager(Listas::Lista<Entities::Obstacles::Obstacle> &obstacles, std::vector<Entities::Characters::Enemy*> &enemies) :
-    obstacles(obstacles), enemies(enemies), intersect_y(0), intersect_x(0), delta_x(0), delta_y(0)
+CollisionManager::CollisionManager(Listas::Lista<Entities::Obstacles::Obstacle> &obstacles, std::vector<Entities::Characters::Enemy*> &enemies, Listas::Lista<Entities::FireBall> &listFBs) :
+    obstacles(obstacles), enemies(enemies), intersect_y(0), intersect_x(0), delta_x(0), delta_y(0), listFBs(listFBs)
 {
 
 }
@@ -14,6 +14,9 @@ CollisionManager::CollisionManager(Listas::Lista<Entities::Obstacles::Obstacle> 
 CollisionManager::~CollisionManager() {
     for(int i = this->obstacles.getLen()-1; i >= 0; i--) {
         this->obstacles.pop(this->obstacles.getItem(i));
+    }
+    for(int i = this->listFBs.getLen()-1; i >= 0; i--) {
+        this->listFBs.pop(this->listFBs.getItem(i));
     }
 }
 
@@ -162,6 +165,16 @@ void CollisionManager::collision_control(Entities::Characters::Player *other) {
                     }
                 }
             }
+        }
+    }
+
+    // verify collision player vs projectiles
+    for (int i = 0; i < listFBs.getLen(); i++) {
+        auto temp = listFBs.getItem(i);
+        if (this->check_collision(*temp, *other)) {
+            std::cout << "FB Colidiu com Player" << std::endl;
+            temp->on_collision();
+            other->set_state(Entities::Characters::dead);
         }
     }
 }

@@ -3,7 +3,7 @@
 using namespace Entities;
 
 FireBall::FireBall(Managers::GraphicManager *graphic_manager, float *delta_time):
-                Entity(graphic_manager), isActive(false), maxTimeActive(100), timeActive(0), delta_time(delta_time)
+                Entity(graphic_manager), isActive(false), maxTimeActive(100), timeActive(0), delta_time(delta_time), type("fireball")
 {
     this->set_position(0, -50);
     this->init_texture();
@@ -53,6 +53,16 @@ void FireBall::init_texture() {
 }
 
 void FireBall::move(float dir_x, float dir_y) {
+}
+
+std::string FireBall::get_type() {
+    return type;
+}
+
+void FireBall::on_collision() {
+    isActive = false;
+    timeActive = 0;
+    this->set_position(0, -50);
 }
 
 

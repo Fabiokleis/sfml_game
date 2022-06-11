@@ -189,7 +189,7 @@ void Level2::arbritary_positions() {
     }
 
     //generate a position to zes
-    for (int s = 0, p = 1; s < this->zezinho_number; s++, p+=2) {
+    for (int s = 0, p = 2; s < this->zezinho_number; s++, p+=2) {
         int distrSpaceS = generate_random(312, 400);
         auto plat = this->platforms.getItem(p);
         float space = (distrSpaceS + plat->get_position().x);
@@ -197,7 +197,7 @@ void Level2::arbritary_positions() {
     }
 
     //generate a position to rammus
-    for (int s = 0, p = 3; s < this->rammus_number; s++, p+=2) {
+    for (int s = 0, p = 1; s < this->rammus_number; s++, p+=2) {
         int distrSpaceS = generate_random(312, 400);
         auto plat = this->platforms.getItem(p);
         float space = (distrSpaceS + plat->get_position().x);

@@ -42,7 +42,7 @@ void Rammus::update_animation() {
 }
 
 void Rammus::update_move() {
-    if(state == 1){
+    if(state == walking_right){
         this->move(0.01f, 0.0f);
         if(moveTimer >= moveMax) {
             state = walking_left;
@@ -76,11 +76,13 @@ void Rammus::update_attack() {
 }
 
 void Rammus::attack() {
-    if(abs(get_position().x - p1->get_position().x) <= 350){
-        if (state == walking_left) {
-            fireB->shoot(this->get_position(), sf::Vector2f(-300, 0));
+    if(abs(get_position().x - p1->get_position().x) <= 500){
+        if (get_position().x - p1->get_position().x >= 0) {
+            state = walking_left;
+            fireB->shoot(this->get_position(), sf::Vector2f(-200, 0));
         } else {
-            fireB->shoot(this->get_position(), sf::Vector2f(300, 0));
+            state = walking_right;
+            fireB->shoot(this->get_position(), sf::Vector2f(200, 0));
         }
     }
 }
