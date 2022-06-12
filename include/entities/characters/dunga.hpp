@@ -21,8 +21,8 @@ namespace Entities::Characters {
             void update();
             void update_move();
             void update_state();
-        };
-    }
+    };
+}
 
 
 #endif //GAME_DUNGA_H

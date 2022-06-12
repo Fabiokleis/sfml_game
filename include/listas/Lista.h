@@ -1,12 +1,27 @@
 #ifndef GAME_LISTA_H
 #define GAME_LISTA_H
-#include "Elemento.h"
 
 namespace Listas {
 
     template <class TL> class Lista
     {
     private:
+
+        template <class TE> class Elemento
+        {
+        private:
+            Elemento<TE>* pProx;
+            TE* item;
+
+        public:
+            Elemento() { pProx = nullptr; item = nullptr; }
+            ~Elemento() { pProx = nullptr; item = nullptr; }
+            void setPProx(Elemento<TE>* pProx) { this->pProx = pProx; }
+            void setItem(TE* item) { this->item = item; }
+            Elemento<TE>* getPProx() { return pProx; }
+            TE* getItem() { return item; }
+        };
+
         Elemento<TL>* pFirst;
         Elemento<TL>* pLast;
         int len;
