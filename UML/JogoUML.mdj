@@ -184,7 +184,7 @@
 											"top": 598,
 											"width": 535,
 											"height": 13,
-											"text": "Fases"
+											"text": "Levels"
 										},
 										{
 											"_type": "LabelView",
@@ -1639,9 +1639,9 @@
 											"font": "Arial;13;0",
 											"left": 272,
 											"top": 200,
-											"width": 73.67724609375,
+											"width": 75.84814453125,
 											"height": 13,
-											"text": "(from Fases)"
+											"text": "(from Levels)"
 										},
 										{
 											"_type": "LabelView",
@@ -2013,9 +2013,9 @@
 											"font": "Arial;13;0",
 											"left": 256,
 											"top": 112,
-											"width": 73.67724609375,
+											"width": 75.84814453125,
 											"height": 13,
-											"text": "(from Fases)"
+											"text": "(from Levels)"
 										},
 										{
 											"_type": "LabelView",
@@ -2387,9 +2387,9 @@
 											"font": "Arial;13;0",
 											"left": 96,
 											"top": 232,
-											"width": 73.67724609375,
+											"width": 75.84814453125,
 											"height": 13,
-											"text": "(from Fases)"
+											"text": "(from Levels)"
 										},
 										{
 											"_type": "LabelView",
@@ -7457,7 +7457,7 @@
 											"top": 646,
 											"width": 535,
 											"height": 13,
-											"text": "Personagens"
+											"text": "Characters"
 										},
 										{
 											"_type": "LabelView",
@@ -8029,7 +8029,7 @@
 											"top": 1006,
 											"width": 343,
 											"height": 13,
-											"text": "Obstaculos"
+											"text": "Obstacles"
 										},
 										{
 											"_type": "LabelView",
@@ -8169,7 +8169,7 @@
 											"top": 560,
 											"width": 103.3017578125,
 											"height": 13,
-											"text": "(from Obstaculos)"
+											"text": "(from Obstacles)"
 										},
 										{
 											"_type": "LabelView",
@@ -8489,7 +8489,7 @@
 											"top": 400,
 											"width": 103.3017578125,
 											"height": 13,
-											"text": "(from Obstaculos)"
+											"text": "(from Obstacles)"
 										},
 										{
 											"_type": "LabelView",
@@ -8773,7 +8773,7 @@
 											"top": 704,
 											"width": 103.3017578125,
 											"height": 13,
-											"text": "(from Obstaculos)"
+											"text": "(from Obstacles)"
 										},
 										{
 											"_type": "LabelView",
@@ -9339,7 +9339,7 @@
 											"top": -64,
 											"width": 114.8798828125,
 											"height": 13,
-											"text": "(from Personagens)"
+											"text": "(from Characters)"
 										},
 										{
 											"_type": "LabelView",
@@ -10073,7 +10073,7 @@
 											"top": -416,
 											"width": 114.8798828125,
 											"height": 13,
-											"text": "(from Personagens)"
+											"text": "(from Characters)"
 										},
 										{
 											"_type": "LabelView",
@@ -10573,7 +10573,7 @@
 											"top": 272,
 											"width": 114.8798828125,
 											"height": 13,
-											"text": "(from Personagens)"
+											"text": "(from Characters)"
 										},
 										{
 											"_type": "LabelView",
@@ -11359,7 +11359,7 @@
 											"top": 648,
 											"width": 114.8798828125,
 											"height": 13,
-											"text": "(from Personagens)"
+											"text": "(from Characters)"
 										},
 										{
 											"_type": "LabelView",
@@ -11715,7 +11715,7 @@
 											"top": 672,
 											"width": 114.8798828125,
 											"height": 13,
-											"text": "(from Personagens)"
+											"text": "(from Characters)"
 										},
 										{
 											"_type": "LabelView",
@@ -12295,7 +12295,7 @@
 											"top": 496,
 											"width": 114.8798828125,
 											"height": 13,
-											"text": "(from Personagens)"
+											"text": "(from Characters)"
 										},
 										{
 											"_type": "LabelView",
@@ -14322,7 +14322,7 @@
 											"top": 232,
 											"width": 103.3017578125,
 											"height": 13,
-											"text": "(from Obstaculos)"
+											"text": "(from Obstacles)"
 										},
 										{
 											"_type": "LabelView",
@@ -14624,7 +14624,7 @@
 											"top": 312,
 											"width": 103.3017578125,
 											"height": 13,
-											"text": "(from Obstaculos)"
+											"text": "(from Obstacles)"
 										},
 										{
 											"_type": "LabelView",
@@ -23192,7 +23192,7 @@
 					"_parent": {
 						"$ref": "AAAAAAFF+qBWK6M3Z8Y="
 					},
-					"name": "Fases",
+					"name": "Levels",
 					"ownedElements": [
 						{
 							"_type": "UMLClass",
@@ -24793,7 +24793,7 @@
 							"_parent": {
 								"$ref": "AAAAAAGA92K7mpCm1nk="
 							},
-							"name": "Obstaculos",
+							"name": "Obstacles",
 							"ownedElements": [
 								{
 									"_type": "UMLClass",
@@ -25438,8 +25438,7 @@
 										}
 									]
 								}
-							],
-							"stereotype": ""
+							]
 						},
 						{
 							"_type": "UMLClass",
@@ -25708,7 +25707,7 @@
 							"_parent": {
 								"$ref": "AAAAAAGA92K7mpCm1nk="
 							},
-							"name": "Personagens",
+							"name": "Characters",
 							"ownedElements": [
 								{
 									"_type": "UMLClass",
@@ -27438,8 +27437,7 @@
 										}
 									]
 								}
-							],
-							"stereotype": ""
+							]
 						}
 					]
 				},
