@@ -1,0 +1,33 @@
+# Jaime Adventures
+
+Um projeto feito para disciplina de Ténicas de Programação em linguagem de programação c++, utilizando a biblioteca gráfica sfml disponível para todas as plataformas em https://en.sfml-dev.org/
+
+# Compilar e rodar
+
+O projeto é construído utilizando o gerenciador de compilação CMAKE disponível para todas as plataformas em https://cmake.org 
+Através do CMAKE o compilador C++ será identificado e a configuração de build será feita para o sistema operacional host.
+
+Para rodar o projeto você precisa préviamente de algum compilador C++ além da biblioteca gráfica sfml instalada.
+Após a instalação de todos os requisitos pode-se construir o programa.
+
+cmake -S . -B ./build 
+cmake --build ./build/
+
+./build/game
+
+
+# Sobre
+
+Disciplina: Técnicas de Programação – CSE20 / S73  – Prof. Dr. Jean M. Simão
+
+Departamento Acadêmico de Informática – DAINF - Campus de Curitiba
+
+Curso Bacharelado em: Engenharia da Computação / Sistemas de Informação
+
+Universidade Tecnológica Federal do Paraná - UTFPR
+
+# Autores
+
+Fabio Henrique Kleis Ribas Correa e Francisco Luis Dunaiski Bruginski
+
+fabiohenrique@utfpr.edu.br, fbruginski@utfpr.edu.br
